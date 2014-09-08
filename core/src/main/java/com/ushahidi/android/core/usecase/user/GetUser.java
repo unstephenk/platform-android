@@ -6,11 +6,12 @@
  * @copyright 2014 Ushahidi
  * @license https://www.gnu.org/licenses/agpl-3.0.html GNU Affero General Public License Version 3 (AGPL3)
  */
-package com.ushahidi.android.core.usecase;
+package com.ushahidi.android.core.usecase.user;
 
 
 import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.core.exception.ErrorWrap;
+import com.ushahidi.android.core.usecase.Interactor;
 
 public interface GetUser extends Interactor {
     /**
