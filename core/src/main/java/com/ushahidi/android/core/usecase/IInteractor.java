@@ -1,5 +1,5 @@
 /**
- * Ushahidi Interactor
+ * Interactor, an interface for executing the different use cases
  *
  * @author Ushahidi Team <team@ushahidi.com>
  * @package com.ushahidi.android.domain.usecase
@@ -12,7 +12,7 @@ package com.ushahidi.android.core.usecase;
  * This interface represents a execution unit for different use cases. Use cases have to implement this
  * interface.
  */
-public interface Interactor extends Runnable {
+public interface IInteractor extends Runnable {
 
     /**
      * Execute asynchronously

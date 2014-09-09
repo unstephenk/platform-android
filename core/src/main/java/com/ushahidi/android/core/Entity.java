@@ -1,7 +1,7 @@
 package com.ushahidi.android.core;
 
 /**
- * Ushahidi Android Entity
+ * Entity, base class for all entities to be derive from
  *
  * @author     Ushahidi Team <team@ushahidi.com>
  * @package    Ushahidi\Android\Dowmain

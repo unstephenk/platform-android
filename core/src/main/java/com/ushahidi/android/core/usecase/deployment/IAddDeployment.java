@@ -8,8 +8,8 @@
  */
 package com.ushahidi.android.core.usecase.deployment;
 
-import com.ushahidi.android.core.usecase.Interactor;
+import com.ushahidi.android.core.usecase.IInteractor;
 
-public interface AddDeployment extends Interactor {
+public interface IAddDeployment extends IInteractor {
 
 }
