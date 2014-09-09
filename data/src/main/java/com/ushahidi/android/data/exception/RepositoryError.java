@@ -15,16 +15,34 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.core;
+package com.ushahidi.android.data.exception;
+
+import com.ushahidi.android.core.exception.ErrorWrap;
 
 /**
- * Entity base class
+ * Exception wrapper to manage errors around repositories
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class Entity {
+public class RepositoryError implements ErrorWrap {
 
-    public abstract int getId();
+    private final Exception mException;
 
-    public abstract void setId(int id);
+    public RepositoryError(Exception exception) {
+        mException = exception;
+    }
+
+    @Override
+    public Exception getException() {
+        return mException;
+    }
+
+    @Override
+    public String getErrorMessage() {
+
+        if (mException != null) {
+            mException.getMessage();
+        }
+        return "";
+    }
 }

@@ -15,16 +15,34 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.core;
-
 /**
- * Entity base class
+ *
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class Entity {
+package com.ushahidi.android.data.repository.datasource;
 
-    public abstract int getId();
+import com.ushahidi.android.data.entity.DeploymentEntity;
 
-    public abstract void setId(int id);
+/**
+ * DeploymentDataStore
+ */
+public interface IDeploymentDataStore {
+
+    /**
+     * Add an {@link com.ushahidi.android.core.entity.Deployment}.
+     *
+     * @param deploymentEntity        The DeploymentEntity to be saved.
+     * @param deploymentCallback A {@link DeploymentAddCallback} used for notifying clients.
+     * @author Ushahidi Team <team@ushahidi.com>
+     */
+    void addDeployment(DeploymentEntity deploymentEntity, DeploymentAddCallback deploymentCallback);
+
+    interface DeploymentAddCallback {
+
+        void onDeploymentAdded(DeploymentEntity deploymentEntity);
+
+        void onError(Exception exception);
+    }
+
 }

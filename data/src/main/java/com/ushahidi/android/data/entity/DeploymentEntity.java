@@ -14,16 +14,15 @@
  * along with this program in the file LICENSE-AGPL. If not, see
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
-package com.ushahidi.android.core.entity;
 
-import com.ushahidi.android.core.Entity;
+package com.ushahidi.android.data.entity;
+
+import com.ushahidi.android.data.Entity;
 
 /**
- * Deployment entity
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class Deployment extends Entity {
+public class DeploymentEntity extends Entity {
 
     private int mId;
 
@@ -32,6 +31,10 @@ public class Deployment extends Entity {
     private String mDescription;
 
     private String mUrl;
+
+    public DeploymentEntity() {
+
+    }
 
     @Override
     public int getId() {

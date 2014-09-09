@@ -15,7 +15,7 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.core;
+package com.ushahidi.android.data;
 
 /**
  * Entity base class

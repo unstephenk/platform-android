@@ -15,16 +15,24 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.core;
+package com.ushahidi.android.data.repository.datasource;
+
+import com.ushahidi.android.data.entity.DeploymentEntity;
 
 /**
- * Entity base class
+ * Factory for creating different implementation of the {@link com.ushahidi.android.data.repository.datasource.IDeploymentDataStore}
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class Entity {
+public class DeploymentDataStoreFactory {
 
-    public abstract int getId();
+    public DeploymentDataStoreFactory() {
 
-    public abstract void setId(int id);
+    }
+
+    public IDeploymentDataStore add() {
+        IDeploymentDataStore dataStore;
+
+        return dataStore;
+    }
 }
