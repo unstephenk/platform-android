@@ -21,7 +21,7 @@ import com.ushahidi.android.core.Entity;
 /**
  * User entity
  *
- * @author  Ushahidi Team <team@ushahidi.com>
+ * @author Ushahidi Team <team@ushahidi.com>
  */
 public class User extends Entity {
 

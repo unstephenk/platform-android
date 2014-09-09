@@ -21,11 +21,17 @@ import com.ushahidi.android.core.Entity;
 /**
  * Deployment entity
  *
- * @author  Ushahidi Team <team@ushahidi.com>
+ * @author Ushahidi Team <team@ushahidi.com>
  */
 public class Deployment extends Entity {
 
     private int mId;
+
+    private String mTitle;
+
+    private String mDescription;
+
+    private String mUrl;
 
     @Override
     protected int getId() {
@@ -35,5 +41,39 @@ public class Deployment extends Entity {
     @Override
     protected void setId(int id) {
         mId = id;
+    }
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String title) {
+        mTitle = title;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public void setDescription(String description) {
+        mDescription = description;
+    }
+
+    public String getUrl() {
+        return mUrl;
+    }
+
+    public void setUrl(String url) {
+        mUrl = url;
+    }
+
+    @Override
+    public String toString() {
+        return "Deployment{" +
+                "mId=" + mId +
+                ", mTitle='" + mTitle + '\'' +
+                ", mDescription='" + mDescription + '\'' +
+                ", mUrl='" + mUrl + '\'' +
+                '}';
     }
 }

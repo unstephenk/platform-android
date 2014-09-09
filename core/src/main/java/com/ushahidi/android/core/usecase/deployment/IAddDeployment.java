@@ -16,13 +16,34 @@
  */
 package com.ushahidi.android.core.usecase.deployment;
 
+import com.ushahidi.android.core.entity.Deployment;
+import com.ushahidi.android.core.exception.ErrorWrap;
 import com.ushahidi.android.core.usecase.IInteractor;
 
 /**
  * AddDeployment Implements Add Deployment Use Case
  *
- * @author  Ushahidi Team <team@ushahidi.com>
+ * @author Ushahidi Team <team@ushahidi.com>
  */
 public interface IAddDeployment extends IInteractor {
 
+    /**
+     * Executes this use case.
+     *
+     * @param deployment The deployment to be added.
+     * @param callback   A {@link com.ushahidi.android.core.usecase.deployment.IAddDeployment.Callback}
+     *                   used for notify the client.
+     * @author Ushahidi Team <team@ushahidi.com>
+     */
+    public void execute(Deployment deployment, Callback callback);
+
+    /**
+     * Callback used to be notified when either a user has been loaded or an error happened.
+     */
+    interface Callback {
+
+        void onDeploymentAdded(Deployment deployment);
+
+        void onError(ErrorWrap error);
+    }
 }
