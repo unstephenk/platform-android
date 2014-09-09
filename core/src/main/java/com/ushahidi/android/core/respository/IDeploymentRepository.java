@@ -14,28 +14,34 @@
  * along with this program in the file LICENSE-AGPL. If not, see
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
+
+/**
+ *
+ *
+ * @author Ushahidi Team <team@ushahidi.com>
+ */
 package com.ushahidi.android.core.respository;
 
-import com.ushahidi.android.core.entity.User;
+import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.exception.ErrorWrap;
 
 /**
- * Interface that represents a Repository for getting {@link User} related data.
+ * IDeploymentRepository
  */
-public interface UserRepository {
+public interface IDeploymentRepository {
 
     /**
-     * Get an {@link User} by id.
+     * Add an {@link com.ushahidi.android.core.entity.Deployment}.
      *
-     * @param id           The user id used to retrieve user data.
-     * @param userCallback A {@link UserCallback} used for notifying clients.
+     * @param deployment         The Deployment to be saved.
+     * @param deploymentCallback A {@link DeploymentAddCallback} used for notifying clients.
      * @author Ushahidi Team <team@ushahidi.com>
      */
-    void getUser(int id, UserCallback userCallback);
+    void addDeployment(Deployment deployment, DeploymentAddCallback deploymentCallback);
 
-    interface UserCallback {
+    interface DeploymentAddCallback {
 
-        void onUserLoaded(User user);
+        void onDeploymentAdded(Deployment deployment);
 
         void onError(ErrorWrap error);
     }
