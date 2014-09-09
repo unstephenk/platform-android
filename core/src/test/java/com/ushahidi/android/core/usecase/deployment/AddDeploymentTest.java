@@ -54,7 +54,7 @@ public class AddDeploymentTest {
     private IDeploymentRepository mMockDeploymentRepository;
 
     @Mock
-    private Deployment mDeployment;
+    private Deployment mMockDeployment;
 
     @Before
     public void setUp() {
@@ -71,7 +71,7 @@ public class AddDeploymentTest {
 
         AddDeployment.Callback mockAddDeploymentCallback = mock(AddDeployment.Callback.class);
 
-        mAddDeployment.execute(null, mockAddDeploymentCallback);
+        mAddDeployment.execute(mMockDeployment, mockAddDeploymentCallback);
 
         verify(mMockThreadExecutor).execute(any(IInteractor.class));
         verifyNoMoreInteractions(mMockThreadExecutor);
@@ -81,6 +81,19 @@ public class AddDeploymentTest {
 
     @Test
     public void testAddDeploymentRun() {
-        
+        doNothing().when(mMockThreadExecutor).execute(any(IInteractor.class));
+        AddDeployment.Callback mockAddDeploymentCallback = mock(AddDeployment.Callback.class);
+        doNothing().when(mMockDeploymentRepository).addDeployment(any(Deployment.class),
+                any(IDeploymentRepository.DeploymentAddCallback.class));
+
+        mAddDeployment.execute(mMockDeployment,mockAddDeploymentCallback);
+        mAddDeployment.run();
+
+        verify(mMockDeploymentRepository).addDeployment(any(Deployment.class),
+                any(IDeploymentRepository.DeploymentAddCallback.class));
+
+        verify(mMockThreadExecutor).execute(any(IInteractor.class));
+        verifyNoMoreInteractions(mMockDeploymentRepository);
+        verifyNoMoreInteractions(mMockPostExecutionThread);
     }
 }
