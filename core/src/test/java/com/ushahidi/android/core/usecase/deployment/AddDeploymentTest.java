@@ -96,4 +96,9 @@ public class AddDeploymentTest {
         verifyNoMoreInteractions(mMockDeploymentRepository);
         verifyNoMoreInteractions(mMockPostExecutionThread);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddDeploymentNullParameter() {
+        mAddDeployment.execute(mMockDeployment, null);
+    }
 }
