@@ -17,8 +17,10 @@
 package com.ushahidi.android.core.usecase;
 
 /**
- * This interface represents a execution unit for different use cases. Use cases have to implement this
- * interface.
+ * IInteractor, this interface represents a execution unit for different use cases. Use cases have to implement
+ * this interface.
+ *
+ * @author  Ushahidi Team <team@ushahidi.com>
  */
 public interface IInteractor extends Runnable {
 

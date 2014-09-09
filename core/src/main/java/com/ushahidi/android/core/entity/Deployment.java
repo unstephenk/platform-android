@@ -18,9 +18,15 @@ package com.ushahidi.android.core.entity;
 
 import com.ushahidi.android.core.Entity;
 
-public class Deployment extends Entity{
+/**
+ * Deployment entity
+ *
+ * @author  Ushahidi Team <team@ushahidi.com>
+ */
+public class Deployment extends Entity {
 
     private int mId;
+
     @Override
     protected int getId() {
         return 0;

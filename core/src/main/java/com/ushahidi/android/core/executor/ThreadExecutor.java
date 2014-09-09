@@ -17,7 +17,9 @@
 package com.ushahidi.android.core.executor;
 
 /**
- *  Use this class to execute an {@link com.ushahidi.android.core.usecase.IInteractor}.
+ * Use this class to execute an {@link com.ushahidi.android.core.usecase.IInteractor}.
+ *
+ * @author  Ushahidi Team <team@ushahidi.com>
  */
 public interface ThreadExecutor {
 

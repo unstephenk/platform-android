@@ -18,7 +18,12 @@ package com.ushahidi.android.core.entity;
 
 import com.ushahidi.android.core.Entity;
 
-public class User extends Entity{
+/**
+ * User entity
+ *
+ * @author  Ushahidi Team <team@ushahidi.com>
+ */
+public class User extends Entity {
 
     private int id;
 

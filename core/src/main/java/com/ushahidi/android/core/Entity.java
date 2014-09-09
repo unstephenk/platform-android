@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2014 Ushahidi.
  *
@@ -18,6 +17,11 @@
 
 package com.ushahidi.android.core;
 
+/**
+ * Entity base class
+ *
+ * @author Ushahidi Team <team@ushahidi.com>
+ */
 public abstract class Entity {
 
     protected abstract int getId();

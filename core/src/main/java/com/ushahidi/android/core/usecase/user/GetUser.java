@@ -23,8 +23,10 @@ import com.ushahidi.android.core.executor.ThreadExecutor;
 import com.ushahidi.android.core.respository.UserRepository;
 
 /**
- * This class is an implementation of {@link IGetUser} that represents a use case for
- * retrieving data related to a specific {@link User}.
+ * This class is an implementation of {@link IGetUser} that represents a use case for retrieving
+ * data related to a specific {@link User}.
+ *
+ * @author  Ushahidi Team <team@ushahidi.com>
  */
 public class GetUser implements IGetUser {
 
@@ -33,6 +35,18 @@ public class GetUser implements IGetUser {
     private final ThreadExecutor mThreadExecutor;
 
     private final PostExecutionThread mPostExecutionThread;
+
+    private final UserRepository.UserCallback mUserCallback = new UserRepository.UserCallback() {
+        @Override
+        public void onUserLoaded(User user) {
+
+        }
+
+        @Override
+        public void onError(ErrorWrap error) {
+
+        }
+    };
 
     private Callback mCallback;
 
@@ -51,7 +65,7 @@ public class GetUser implements IGetUser {
 
     @Override
     public void execute(int id, Callback callback) {
-        if (id < 0 ) {
+        if (id < 0) {
             throw new IllegalArgumentException("User id cannot be less than zero");
         }
         if (callback == null) {
@@ -65,20 +79,8 @@ public class GetUser implements IGetUser {
 
     @Override
     public void run() {
-        mUserRepository.getUser(mId,mUserCallback);
+        mUserRepository.getUser(mId, mUserCallback);
     }
-
-    private final UserRepository.UserCallback mUserCallback = new UserRepository.UserCallback() {
-        @Override
-        public void onUserLoaded(User user) {
-
-        }
-
-        @Override
-        public void onError(ErrorWrap error) {
-
-        }
-    };
 
     private void notifySuccess(final User user) {
         mPostExecutionThread.post(new Runnable() {

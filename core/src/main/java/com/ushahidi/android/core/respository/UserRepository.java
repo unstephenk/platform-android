@@ -24,17 +24,20 @@ import com.ushahidi.android.core.exception.ErrorWrap;
  */
 public interface UserRepository {
 
+    /**
+     * Get an {@link User} by id.
+     *
+     * @param id           The user id used to retrieve user data.
+     * @param userCallback A {@link UserCallback} used for notifying clients.
+     *
+     * @author  Ushahidi Team <team@ushahidi.com>
+     */
+    void getUser(int id, UserCallback userCallback);
+
     interface UserCallback {
+
         void onUserLoaded(User user);
 
         void onError(ErrorWrap error);
     }
-
-    /**
-     * Get an {@link User} by id.
-     *
-     * @param id The user id used to retrieve user data.
-     * @param userCallback A {@link UserCallback} used for notifying clients.
-     */
-    void getUser(int id, UserCallback userCallback);
 }

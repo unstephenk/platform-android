@@ -20,6 +20,8 @@ import com.ushahidi.android.core.usecase.IInteractor;
 
 /**
  * AddDeployment Implements Add Deployment Use Case
+ *
+ * @author  Ushahidi Team <team@ushahidi.com>
  */
 public interface IAddDeployment extends IInteractor {
 

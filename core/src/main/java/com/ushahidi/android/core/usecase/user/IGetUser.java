@@ -21,19 +21,24 @@ import com.ushahidi.android.core.exception.ErrorWrap;
 import com.ushahidi.android.core.usecase.IInteractor;
 
 public interface IGetUser extends IInteractor {
-    /**
-     * Callback used to be notified when either a user has been loaded or an error happened.
-     */
-    interface Callback {
-        void onUserLoaded(User user);
-        void onError(ErrorWrap error);
-    }
 
     /**
      * Executes this use case.
      *
-     * @param id The user id to retrieve.
+     * @param id       The user id to retrieve.
      * @param callback A {@link IGetUser.Callback} used for notify the client.
+     *
+     * @author  Ushahidi Team <team@ushahidi.com>
      */
     public void execute(int id, Callback callback);
+
+    /**
+     * Callback used to be notified when either a user has been loaded or an error happened.
+     */
+    interface Callback {
+
+        void onUserLoaded(User user);
+
+        void onError(ErrorWrap error);
+    }
 }
