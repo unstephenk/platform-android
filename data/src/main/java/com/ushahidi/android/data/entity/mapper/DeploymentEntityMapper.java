@@ -21,7 +21,7 @@ import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.data.entity.DeploymentEntity;
 
 /**
- * Mapper class used to transform {@link com.ushahidi.android.data.entity.DeploymentEntity} to {@link com.ushahidi.android.core.entity.Deployment} in
+ * Mapper class used to map {@link com.ushahidi.android.data.entity.DeploymentEntity} to {@link com.ushahidi.android.core.entity.Deployment} in
  * core
  *
  * @author Ushahidi Team <team@ushahidi.com>
@@ -30,7 +30,14 @@ public class DeploymentEntityMapper {
 
     public DeploymentEntityMapper() {}
 
-    public Deployment transform(DeploymentEntity deploymentEntity) {
+    /**
+     * Maps {@link com.ushahidi.android.data.entity.DeploymentEntity} to {@link com.ushahidi.android.core.entity.Deployment}
+     *
+     * @param deploymentEntity The {@link com.ushahidi.android.data.entity.DeploymentEntity} to be mapped
+     *
+     * @return  The {@link com.ushahidi.android.core.entity.Deployment} entity
+     */
+    public Deployment map(DeploymentEntity deploymentEntity) {
         Deployment deployment = null;
 
         if (deployment != null) {
