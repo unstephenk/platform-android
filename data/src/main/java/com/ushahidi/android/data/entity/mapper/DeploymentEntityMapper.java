@@ -21,26 +21,28 @@ import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.data.entity.DeploymentEntity;
 
 /**
- * Mapper class used to map {@link com.ushahidi.android.data.entity.DeploymentEntity} to {@link com.ushahidi.android.core.entity.Deployment} in
- * core
+ * Mapper class used to map {@link com.ushahidi.android.data.entity.DeploymentEntity} to {@link
+ * com.ushahidi.android.core.entity.Deployment} in core
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class DeploymentEntityMapper {
 
-    public DeploymentEntityMapper() {}
+    public DeploymentEntityMapper() {
+    }
 
     /**
-     * Maps {@link com.ushahidi.android.data.entity.DeploymentEntity} to {@link com.ushahidi.android.core.entity.Deployment}
+     * Maps {@link com.ushahidi.android.data.entity.DeploymentEntity} to {@link
+     * com.ushahidi.android.core.entity.Deployment}
      *
-     * @param deploymentEntity The {@link com.ushahidi.android.data.entity.DeploymentEntity} to be mapped
-     *
-     * @return  The {@link com.ushahidi.android.core.entity.Deployment} entity
+     * @param deploymentEntity The {@link com.ushahidi.android.data.entity.DeploymentEntity} to be
+     *                         mapped
+     * @return The {@link com.ushahidi.android.core.entity.Deployment} entity
      */
     public Deployment map(DeploymentEntity deploymentEntity) {
         Deployment deployment = null;
 
-        if (deployment != null) {
+        if (deploymentEntity != null) {
             deployment = new Deployment();
             deployment.setId(deploymentEntity.getId());
             deployment.setDescription(deploymentEntity.getDescription());
@@ -49,5 +51,18 @@ public class DeploymentEntityMapper {
         }
 
         return deployment;
+    }
+
+    public DeploymentEntity unmap(Deployment deployment) {
+        DeploymentEntity deploymentEntity = null;
+
+        if (deployment != null) {
+            deploymentEntity = new DeploymentEntity();
+            deploymentEntity.setId(deployment.getId());
+            deploymentEntity.setTitle(deployment.getTitle());
+            deploymentEntity.setDescription(deployment.getDescription());
+            deploymentEntity.setUrl(deployment.getUrl());
+        }
+        return deploymentEntity;
     }
 }

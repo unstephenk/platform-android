@@ -75,8 +75,8 @@ public class AddDeployment implements IAddDeployment{
             new IDeploymentRepository.DeploymentAddCallback() {
 
                 @Override
-                public void onDeploymentAdded(Deployment deployment) {
-                    notifySuccess(deployment);
+                public void onDeploymentAdded() {
+                    notifySuccess();
                 }
 
                 @Override
@@ -86,11 +86,11 @@ public class AddDeployment implements IAddDeployment{
 
             };
 
-    private void notifySuccess(final Deployment deployment) {
+    private void notifySuccess() {
         mPostExecutionThread.post(new Runnable() {
             @Override
             public void run() {
-                mCallback.onDeploymentAdded(deployment);
+                mCallback.onDeploymentAdded();
             }
         });
     }

@@ -36,8 +36,10 @@ public interface IDeploymentDatabaseHelper {
      * Puts a deployment entity into the database.
      *
      * @param deploymentEntity Deployment to insert into the database.
+     * @param callback         The {@link IDeploymentEntityAddedCallback} use to notify client.
      */
-    public void put(DeploymentEntity deploymentEntity);
+    public void put(DeploymentEntity deploymentEntity,
+            final IDeploymentEntityAddedCallback callback);
 
     /**
      * Gets a deployment from the database using a {@link IDeploymentEntityCallback}.
@@ -47,31 +49,43 @@ public interface IDeploymentDatabaseHelper {
      */
     public void get(final int id, final IDeploymentEntityCallback callback);
 
-    public void getDeploymentEntities(final IDeploymentDeploymentEntitiesCallback callback);
+    /**
+     * Gets a list of deployment entities.
+     *
+     * @param callback The {@link IDeploymentEntitiesCallback} to notify the client.
+     */
+    public void getDeploymentEntities(final IDeploymentEntitiesCallback callback);
 
     /**
      * Puts collection of deployment entity into the database
      *
      * @param deploymentEntities The collection of {@link com.ushahidi.android.data.entity.DeploymentEntity}
-     *                           to be added to the database
+     *                           to be added to the database.
+     * @param callback           The {@link IDeploymentEntityAddedCallback} use to notify client.
      */
-    public void put(Collection<DeploymentEntity> deploymentEntities);
+    public void put(final Collection<DeploymentEntity> deploymentEntities,
+            final IDeploymentEntityAddedCallback callback);
 
     /**
-     * Delete all deployment entities
+     * Deletes all deployment entities
+     *
+     * @param callback The {@link IDeploymentEntityDeletedCallback} use to notify client.
      */
-    public void deleteAll();
+    public void deleteAll(final IDeploymentEntityDeletedCallback callback);
 
     /**
-     * Delete a deployment entity
+     * Deletes a deployment entity
      *
      * @param deploymentEntity The {@link com.ushahidi.android.data.entity.DeploymentEntity} to be
      *                         deleted
+     * @param callback         The {@link IDeploymentEntityDeletedCallback} use to notify client.
      */
-    public void delete(DeploymentEntity deploymentEntity);
+    public void delete(final DeploymentEntity deploymentEntity,
+            final IDeploymentEntityDeletedCallback callback);
 
     /**
-     * Callback used to be notified when a {@link DeploymentEntity} has been loaded.
+     * Callback use to notify client when a {@link DeploymentEntity} has been loaded from the
+     * database.
      */
     public interface IDeploymentEntityCallback {
 
@@ -81,11 +95,33 @@ public interface IDeploymentDatabaseHelper {
     }
 
     /**
-     * Callback used to be notified when a list of {@link DeploymentEntity} has been loaded.
+     * Callback use to notify the client when a list of {@link DeploymentEntity} have been loaded
+     * from the database.
      */
-    public interface IDeploymentDeploymentEntitiesCallback {
+    public interface IDeploymentEntitiesCallback {
 
         void onDeploymentEntitiesLoaded(List<DeploymentEntity> deploymentEntities);
+
+        void onError(Exception exception);
+    }
+
+    /**
+     * Callback use to notify client when {@link DeploymentEntity} has been added to the database.
+     */
+    public interface IDeploymentEntityAddedCallback {
+
+        void onDeploymentEntityAdded();
+
+        void onError(Exception exception);
+    }
+
+    /**
+     * Callback use to notify client when {@link DeploymentEntity} has been deleted from the
+     * database.
+     */
+    public interface IDeploymentEntityDeletedCallback {
+
+        void onDeploymentEntityDeleted();
 
         void onError(Exception exception);
     }

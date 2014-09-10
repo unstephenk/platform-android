@@ -41,7 +41,7 @@ public interface IDeploymentRepository {
 
     interface DeploymentAddCallback {
 
-        void onDeploymentAdded(Deployment deployment);
+        void onDeploymentAdded();
 
         void onError(ErrorWrap error);
     }

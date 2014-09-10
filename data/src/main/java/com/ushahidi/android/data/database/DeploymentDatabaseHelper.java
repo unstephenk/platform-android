@@ -78,41 +78,54 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper<DeploymentEntity
     }
 
     @Override
-    public synchronized void put(final DeploymentEntity deploymentEntity) {
+    public synchronized void put(final DeploymentEntity deploymentEntity,
+            final IDeploymentEntityAddedCallback callback) {
         this.asyncRun(new Runnable() {
             @Override
             public void run() {
                 if (!isClosed()) {
                     try {
                         cupboard().withDatabase(getWritableDatabase()).put(deploymentEntity);
+                        callback.onDeploymentEntityAdded();
                     } catch (Exception e) {
-                        // TODO: catch exception
+                        callback.onError(e);
                     }
                 }
             }
         });
-    }
-
-    @Override
-    public synchronized void get(int id, IDeploymentEntityCallback callback) {
-        DeploymentEntity deploymentEntity = get(id);
-
-        if (deploymentEntity != null) {
-            callback.onDeploymentEntityLoaded(deploymentEntity);
-        } else {
-            callback.onError(new DeploymentNotFoundException());
-        }
 
     }
 
     @Override
-    public synchronized void getDeploymentEntities(IDeploymentDeploymentEntitiesCallback callback) {
-        List<DeploymentEntity> deploymentEntities = this.getDeployments();
-        if (deploymentEntities != null) {
-            callback.onDeploymentEntitiesLoaded(deploymentEntities);
-        } else {
-            callback.onError(new ListDeploymentNotFoundException());
-        }
+    public synchronized void get(final int id, final IDeploymentEntityCallback callback) {
+
+        this.asyncRun(new Runnable() {
+            @Override
+            public void run() {
+                final DeploymentEntity deploymentEntity = get(id);
+                if (deploymentEntity != null) {
+                    callback.onDeploymentEntityLoaded(deploymentEntity);
+                } else {
+                    callback.onError(new DeploymentNotFoundException());
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public synchronized void getDeploymentEntities(final IDeploymentEntitiesCallback callback) {
+        this.asyncRun(new Runnable() {
+            @Override
+            public void run() {
+                final List<DeploymentEntity> deploymentEntities = getDeployments();
+                if (deploymentEntities != null) {
+                    callback.onDeploymentEntitiesLoaded(deploymentEntities);
+                } else {
+                    callback.onError(new ListDeploymentNotFoundException());
+                }
+            }
+        });
     }
 
     private List<DeploymentEntity> getDeployments() {
@@ -126,7 +139,8 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper<DeploymentEntity
 
 
     @Override
-    public synchronized void put(final Collection<DeploymentEntity> deploymentEntities) {
+    public synchronized void put(final Collection<DeploymentEntity> deploymentEntities,
+            final IDeploymentEntityAddedCallback callback) {
         this.asyncRun(new Runnable() {
             @Override
             public void run() {
@@ -139,8 +153,9 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper<DeploymentEntity
                         cupboard().withDatabase(db).put(deploymentEntity);
                     }
                     db.setTransactionSuccessful();
+                    callback.onDeploymentEntityAdded();
                 } catch (Exception e) {
-                    // TODO: Handle error
+                    callback.onError(e);
                 } finally {
                     if (db != null) {
                         db.endTransaction();
@@ -151,33 +166,43 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper<DeploymentEntity
     }
 
     @Override
-    public synchronized void deleteAll() {
-        deleteAll(getWritableDatabase());
-    }
-
-    public void deleteAll(SQLiteDatabase db) {
-        if (!isClosed()) {
-            try {
-                final int numDeleted = cupboard().withDatabase(db)
-                        .delete(DeploymentEntity.class, null);
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "delete all deployment entities. Deleted " + numDeleted + " rows.");
+    public synchronized void deleteAll(final IDeploymentEntityDeletedCallback callback) {
+        this.asyncRun(new Runnable() {
+            @Override
+            public void run() {
+                if (!isClosed()) {
+                    try {
+                        final int numRows = cupboard().withDatabase(getWritableDatabase())
+                                .delete(DeploymentEntity.class, null);
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, "delete all deployment entities. Deleted " + numRows
+                                    + " rows.");
+                        }
+                        callback.onDeploymentEntityDeleted();
+                    } catch (Exception e) {
+                        callback.onError(e);
+                    }
                 }
-            } catch (Exception e) {
-                // TODO: Handle exception message here
             }
-        }
+        });
     }
 
     @Override
-    public synchronized void delete(DeploymentEntity deploymentEntity) {
-        if (!isClosed()) {
-            try {
-                cupboard().withDatabase(getWritableDatabase()).delete(deploymentEntity);
-            } catch (Exception e) {
-                // TODO: Handle exception message here
+    public synchronized void delete(final DeploymentEntity deploymentEntity,
+            final IDeploymentEntityDeletedCallback callback) {
+        this.asyncRun(new Runnable() {
+            @Override
+            public void run() {
+                if (!isClosed()) {
+                    try {
+                        cupboard().withDatabase(getWritableDatabase()).delete(deploymentEntity);
+                        callback.onDeploymentEntityDeleted();
+                    } catch (Exception e) {
+                        callback.onError(e);
+                    }
+                }
             }
-        }
+        });
     }
 
 

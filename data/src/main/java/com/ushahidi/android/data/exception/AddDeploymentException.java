@@ -15,24 +15,26 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.data.repository.datasource;
-
-import com.ushahidi.android.data.entity.DeploymentEntity;
+package com.ushahidi.android.data.exception;
 
 /**
- * Factory for creating different implementation of the {@link com.ushahidi.android.data.repository.datasource.IDeploymentDataStore}
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentDataStoreFactory {
+public class AddDeploymentException extends Exception {
 
-    public DeploymentDataStoreFactory() {
-
+    public AddDeploymentException() {
+        super();
     }
 
-    public IDeploymentDataStore add() {
-        IDeploymentDataStore dataStore = null;
+    public AddDeploymentException(final String message) {
+        super(message);
+    }
 
-        return dataStore;
+    public AddDeploymentException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public AddDeploymentException(final Throwable cause) {
+        super(cause);
     }
 }

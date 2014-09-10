@@ -19,7 +19,10 @@ package com.ushahidi.android.data.repository;
 
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.respository.IDeploymentRepository;
+import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
+import com.ushahidi.android.data.database.IDeploymentDatabaseHelper;
 import com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper;
+import com.ushahidi.android.data.exception.RepositoryError;
 
 /**
  * {@link com.ushahidi.android.core.respository.IDeploymentRepository} for retrieving deployment
@@ -33,23 +36,41 @@ public class DeploymentDataRepository implements IDeploymentRepository {
 
     private final DeploymentEntityMapper mDeploymentEntityMapper;
 
+    private final DeploymentDatabaseHelper mDeploymentDatabaseHelper;
 
-    public static synchronized  DeploymentDataRepository getInstance(DeploymentEntityMapper entityMapper){
+    protected DeploymentDataRepository(DeploymentDatabaseHelper deploymentDatabaseHelper,
+            DeploymentEntityMapper entityMapper) {
+        if (entityMapper == null) {
+            throw new IllegalArgumentException("Invalid null parameter");
+        }
+        mDeploymentEntityMapper = entityMapper;
+        mDeploymentDatabaseHelper = deploymentDatabaseHelper;
+    }
+
+    public static synchronized DeploymentDataRepository getInstance(DeploymentDatabaseHelper
+            deploymentDatabaseHelper, DeploymentEntityMapper entityMapper) {
         if (sDeploymentDataRepository == null) {
-            sDeploymentDataRepository = new DeploymentDataRepository(entityMapper);
+            sDeploymentDataRepository = new DeploymentDataRepository(deploymentDatabaseHelper,
+                    entityMapper);
         }
         return sDeploymentDataRepository;
     }
 
-    public DeploymentDataRepository(DeploymentEntityMapper entityMapper) {
-        if ( entityMapper == null) {
-            throw new IllegalArgumentException("Invalid null parameter");
-        }
-        mDeploymentEntityMapper = entityMapper;
-    }
-
     @Override
-    public void addDeployment(Deployment deployment, DeploymentAddCallback deploymentCallback) {
+    public void addDeployment(Deployment deployment,
+            final DeploymentAddCallback deploymentCallback) {
+        mDeploymentDatabaseHelper.put(mDeploymentEntityMapper.unmap(deployment),
+                new IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback() {
 
+                    @Override
+                    public void onDeploymentEntityAdded() {
+                        deploymentCallback.onDeploymentAdded();
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        deploymentCallback.onError(new RepositoryError(exception));
+                    }
+                });
     }
 }

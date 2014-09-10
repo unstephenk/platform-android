@@ -42,7 +42,7 @@ public interface IAddDeployment extends IInteractor {
      */
     interface Callback {
 
-        void onDeploymentAdded(Deployment deployment);
+        void onDeploymentAdded();
 
         void onError(ErrorWrap error);
     }
