@@ -68,7 +68,7 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-
+        resetSingleton(DeploymentDataRepository.class);
         mDeploymentDataRepository = DeploymentDataRepository
                 .getInstance(mMockDeploymentDatabaseHelper, mMockDeploymentEntityMapper);
 
@@ -76,11 +76,9 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
 
     @Test
     public void shouldInvalidateConstructorsNullParameters() {
-        //resetSingleton(UserDataRepository.class);
-
+        resetSingleton(DeploymentDataRepository.class);
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Invalid null parameter");
-
         mDeploymentDataRepository = DeploymentDataRepository.getInstance(null, null);
     }
 }

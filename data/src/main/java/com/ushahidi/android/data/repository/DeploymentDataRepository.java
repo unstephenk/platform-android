@@ -32,7 +32,7 @@ import com.ushahidi.android.data.exception.RepositoryError;
  */
 public class DeploymentDataRepository implements IDeploymentRepository {
 
-    private static DeploymentDataRepository sDeploymentDataRepository;
+    private static DeploymentDataRepository sInstance;
 
     private final DeploymentEntityMapper mDeploymentEntityMapper;
 
@@ -49,11 +49,11 @@ public class DeploymentDataRepository implements IDeploymentRepository {
 
     public static synchronized DeploymentDataRepository getInstance(DeploymentDatabaseHelper
             deploymentDatabaseHelper, DeploymentEntityMapper entityMapper) {
-        if (sDeploymentDataRepository == null) {
-            sDeploymentDataRepository = new DeploymentDataRepository(deploymentDatabaseHelper,
+        if (sInstance == null) {
+            sInstance = new DeploymentDataRepository(deploymentDatabaseHelper,
                     entityMapper);
         }
-        return sDeploymentDataRepository;
+        return sInstance;
     }
 
     /**

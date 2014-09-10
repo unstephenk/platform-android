@@ -21,13 +21,35 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.lang.reflect.Field;
+
 /**
  * Base class for Robolectric tests. Inherit from this class to create a test.
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Config(manifest = "./src/main/AndroidManifest.xml")
-@RunWith(RobolectricTestRunner.class)
+@RunWith(CustomRobolectricTestRunner.class)
 public class BaseTestCase {
 
+    /**
+     * Resets a Singleton class. Uses Reflection to find a private field called sInstance
+     * then nullifies the field.
+     *
+     *
+     * @param clazz The class to reset.
+     */
+    protected void resetSingleton(Class clazz) {
+        Field instance;
+        try {
+            instance = clazz.getDeclaredField("sInstance");
+            instance.setAccessible(true);
+            instance.set(null, null);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
