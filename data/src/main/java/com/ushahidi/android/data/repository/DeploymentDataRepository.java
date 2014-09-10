@@ -33,15 +33,19 @@ public class DeploymentDataRepository implements IDeploymentRepository {
 
     private final DeploymentEntityMapper mDeploymentEntityMapper;
 
-    protected DeploymentDataRepository() {
-
-    }
 
     public static synchronized  DeploymentDataRepository getInstance(DeploymentEntityMapper entityMapper){
         if (sDeploymentDataRepository == null) {
-            sDeploymentDataRepository = new DeploymentDataRepository();
+            sDeploymentDataRepository = new DeploymentDataRepository(entityMapper);
         }
         return sDeploymentDataRepository;
+    }
+
+    public DeploymentDataRepository(DeploymentEntityMapper entityMapper) {
+        if ( entityMapper == null) {
+            throw new IllegalArgumentException("Invalid null parameter");
+        }
+        mDeploymentEntityMapper = entityMapper;
     }
 
     @Override

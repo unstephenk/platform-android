@@ -31,7 +31,7 @@ public class DeploymentDataStoreFactory {
     }
 
     public IDeploymentDataStore add() {
-        IDeploymentDataStore dataStore;
+        IDeploymentDataStore dataStore = null;
 
         return dataStore;
     }

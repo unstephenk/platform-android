@@ -31,5 +31,5 @@ dependencies {
     compile core
 
     //library dependencies
-    compile('com.google.code.gson:gson:2.2.4')
+    compile ('nl.qbusict:cupboard:2.+')
 }
