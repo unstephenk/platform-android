@@ -56,6 +56,12 @@ public class DeploymentDataRepository implements IDeploymentRepository {
         return sDeploymentDataRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param deployment         The Deployment to be saved.
+     * @param deploymentCallback A {@link DeploymentAddCallback} used for notifying clients.
+     */
     @Override
     public void addDeployment(Deployment deployment,
             final DeploymentAddCallback deploymentCallback) {
