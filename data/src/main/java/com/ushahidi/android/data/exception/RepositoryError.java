@@ -43,6 +43,6 @@ public class RepositoryError implements ErrorWrap {
         if (mException != null) {
             mException.getMessage();
         }
-        return "";
+        return null;
     }
 }
