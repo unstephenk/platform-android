@@ -23,6 +23,7 @@ import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
 import com.ushahidi.android.data.database.IDeploymentDatabaseHelper;
 import com.ushahidi.android.data.entity.DeploymentEntity;
 import com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper;
+import com.ushahidi.android.data.exception.RepositoryError;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,6 +38,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
@@ -98,5 +100,22 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
 
         verify(mMockDeploymentEntityMapper).unmap(mMockDeployment);
         verify(mMockDeploymentAddCallback).onDeploymentAdded();
+    }
+
+    @Test
+    public void shouldFailToAddADeployment() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback) invocation
+                        .getArguments()[1]).onError(any(Exception.class));
+                return null;
+            }
+        }).when(mMockDeploymentDatabaseHelper).put(any(DeploymentEntity.class),
+                any(IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback.class));
+
+        mDeploymentDataRepository.addDeployment(mMockDeployment,mMockDeploymentAddCallback);
+
+        verify(mMockDeploymentAddCallback).onError(any(RepositoryError.class));
     }
 }
