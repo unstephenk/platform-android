@@ -15,9 +15,9 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.data.executor;
+package com.ushahidi.android.data.task;
 
-import com.ushahidi.android.core.executor.ThreadExecutor;
+import com.ushahidi.android.core.task.ThreadExecutor;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class JobExecutor implements ThreadExecutor {
+public class TaskExecutor implements ThreadExecutor {
 
     private static final int INITIAL_POOL_SIZE = 3;
 
@@ -48,13 +48,13 @@ public class JobExecutor implements ThreadExecutor {
 
     private final ThreadPoolExecutor threadPoolExecutor;
 
-    private JobExecutor() {
+    private TaskExecutor() {
         this.workQueue = new LinkedBlockingQueue<Runnable>();
         this.threadPoolExecutor = new ThreadPoolExecutor(INITIAL_POOL_SIZE, MAX_POOL_SIZE,
                 KEEP_ALIVE_TIME, KEEP_ALIVE_TIME_UNIT, this.workQueue);
     }
 
-    public static JobExecutor getInstance() {
+    public static TaskExecutor getInstance() {
         return LazyHolder.INSTANCE;
     }
 
@@ -73,6 +73,6 @@ public class JobExecutor implements ThreadExecutor {
 
     private static class LazyHolder {
 
-        private static final JobExecutor INSTANCE = new JobExecutor();
+        private static final TaskExecutor INSTANCE = new TaskExecutor();
     }
 }

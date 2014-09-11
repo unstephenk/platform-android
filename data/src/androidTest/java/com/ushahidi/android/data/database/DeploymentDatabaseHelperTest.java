@@ -17,7 +17,7 @@
 
 package com.ushahidi.android.data.database;
 
-import com.ushahidi.android.core.executor.ThreadExecutor;
+import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.data.BaseTestCase;
 import com.ushahidi.android.data.entity.DeploymentEntity;
 
@@ -27,12 +27,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.robolectric.Robolectric;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
 /**

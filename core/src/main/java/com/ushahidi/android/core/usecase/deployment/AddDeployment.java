@@ -19,8 +19,8 @@ package com.ushahidi.android.core.usecase.deployment;
 
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.exception.ErrorWrap;
-import com.ushahidi.android.core.executor.PostExecutionThread;
-import com.ushahidi.android.core.executor.ThreadExecutor;
+import com.ushahidi.android.core.task.PostExecutionThread;
+import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.respository.IDeploymentRepository;
 
 /**

@@ -17,7 +17,7 @@
 
 package com.ushahidi.android.data.database;
 
-import com.ushahidi.android.core.executor.ThreadExecutor;
+import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.data.BuildConfig;
 import com.ushahidi.android.data.entity.DeploymentEntity;
 import com.ushahidi.android.data.exception.DeploymentNotFoundException;

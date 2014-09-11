@@ -14,21 +14,19 @@
  * along with this program in the file LICENSE-AGPL. If not, see
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
-package com.ushahidi.android.core.executor;
+package com.ushahidi.android.core.task;
 
 /**
- * Thread abstraction created to change the execution context from any thread to any other thread.
- * implementation of this interface will change context and update the UI.
+ * Use this class to execute an {@link com.ushahidi.android.core.usecase.IInteractor}.
  *
  * @author  Ushahidi Team <team@ushahidi.com>
  */
-public interface PostExecutionThread {
+public interface ThreadExecutor {
 
     /**
-     * Causes the {@link Runnable} to be added to the message queue of the Main UI Thread of the
-     * application.
+     * Executes a {@link Runnable}.
      *
-     * @param runnable {@link Runnable} to be executed.
+     * @param runnable The class that implements {@link Runnable} interface.
      */
-    void post(Runnable runnable);
+    void execute(final Runnable runnable);
 }
