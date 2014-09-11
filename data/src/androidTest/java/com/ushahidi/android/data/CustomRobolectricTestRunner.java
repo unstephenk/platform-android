@@ -43,7 +43,6 @@ public class CustomRobolectricTestRunner extends RobolectricTestRunner {
         String manifestProperty = System.getProperty("android.manifest");
         if (config.manifest().equals(Config.DEFAULT) && manifestProperty != null) {
             String resProperty = System.getProperty("android.resources");
-            String assetsProperty = System.getProperty("android.assets");
             return new AndroidManifest(Fs.fileFromPath(manifestProperty), Fs.fileFromPath(resProperty)) {
                 @Override
                 public int getTargetSdkVersion() {
