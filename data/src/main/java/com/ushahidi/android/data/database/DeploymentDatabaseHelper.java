@@ -35,7 +35,7 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentDatabaseHelper extends BaseDatabseHelper<DeploymentEntity>
+public class DeploymentDatabaseHelper extends BaseDatabseHelper
         implements IDeploymentDatabaseHelper {
 
     private static DeploymentDatabaseHelper mSDeploymentDatabaseHelper;

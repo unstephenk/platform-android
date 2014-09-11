@@ -30,7 +30,7 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class BaseDatabseHelper<E extends Entity> extends SQLiteOpenHelper {
+public abstract class BaseDatabseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "ushahidi.db";
 
