@@ -65,7 +65,7 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
     private DeploymentDataRepository.DeploymentAddCallback mMockDeploymentAddCallback;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         clearSingleton(DeploymentDataRepository.class);
         mDeploymentDataRepository = DeploymentDataRepository

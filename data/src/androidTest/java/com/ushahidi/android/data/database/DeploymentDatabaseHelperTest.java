@@ -17,9 +17,23 @@
 
 package com.ushahidi.android.data.database;
 
+import com.ushahidi.android.core.executor.ThreadExecutor;
 import com.ushahidi.android.data.BaseTestCase;
+import com.ushahidi.android.data.entity.DeploymentEntity;
 
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.robolectric.Robolectric;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
 
 /**
  * Test cases for {@link com.ushahidi.android.data.database.BaseDatabseHelper}
@@ -28,10 +42,35 @@ import org.junit.Before;
  */
 public class DeploymentDatabaseHelperTest extends BaseTestCase {
 
-    private DeploymentDatabaseHelperTest mBaseDatabseHelper;
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    private DeploymentDatabaseHelper mBaseDatabseHelper;
+
+    @Mock
+    private ThreadExecutor mMockThreadExecutor;
+
+    @Mock
+    private DeploymentDatabaseHelper.IDeploymentEntityAddedCallback
+            mMockDeploymentEntityAddedCallback;
+
+    @Mock
+    private DeploymentEntity mMockDeploymentEntity;
 
     @Before
     public void setUp() throws Exception {
-        mBaseDatabseHelper = new DeploymentDatabaseHelperTest();
+        MockitoAnnotations.initMocks(this);
+        clearSingleton(DeploymentDatabaseHelper.class);
+        mBaseDatabseHelper = DeploymentDatabaseHelper
+                .getInstance(Robolectric.application, mMockThreadExecutor);
     }
+
+    @Test
+    public void shouldInvalidateConstructorsNullParameters() throws Exception {
+        clearSingleton(DeploymentDatabaseHelper.class);
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Invalid null parameter");
+        mBaseDatabseHelper = DeploymentDatabaseHelper.getInstance(null, null);
+    }
+
 }

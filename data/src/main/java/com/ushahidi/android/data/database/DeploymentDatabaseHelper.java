@@ -49,7 +49,7 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
 
     private final ThreadExecutor mThreadExecutor;
 
-    public DeploymentDatabaseHelper(Context context, ThreadExecutor threadExecutor) {
+    private DeploymentDatabaseHelper(Context context, ThreadExecutor threadExecutor) {
         super(context);
 
         if (threadExecutor == null) {
