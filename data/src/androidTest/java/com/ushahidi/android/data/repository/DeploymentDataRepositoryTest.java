@@ -38,7 +38,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
@@ -96,7 +95,7 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
                 any(IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback.class));
         given(mMockDeploymentEntityMapper.unmap(mMockDeployment)).willReturn(mMockDeploymentEntity);
 
-        mDeploymentDataRepository.addDeployment(mMockDeployment,mMockDeploymentAddCallback);
+        mDeploymentDataRepository.addDeployment(mMockDeployment, mMockDeploymentAddCallback);
 
         verify(mMockDeploymentEntityMapper).unmap(mMockDeployment);
         verify(mMockDeploymentAddCallback).onDeploymentAdded();
@@ -114,7 +113,7 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
         }).when(mMockDeploymentDatabaseHelper).put(any(DeploymentEntity.class),
                 any(IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback.class));
 
-        mDeploymentDataRepository.addDeployment(mMockDeployment,mMockDeploymentAddCallback);
+        mDeploymentDataRepository.addDeployment(mMockDeployment, mMockDeploymentAddCallback);
 
         verify(mMockDeploymentAddCallback).onError(any(RepositoryError.class));
     }
