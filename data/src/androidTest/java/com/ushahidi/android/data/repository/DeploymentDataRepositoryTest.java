@@ -20,6 +20,7 @@ package com.ushahidi.android.data.repository;
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.data.BaseTestCase;
 import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
+import com.ushahidi.android.data.database.IDeploymentDatabaseHelper;
 import com.ushahidi.android.data.entity.DeploymentEntity;
 import com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper;
 
@@ -29,8 +30,12 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -50,7 +55,7 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
     private DeploymentEntity mMockDeploymentEntity;
 
     @Mock
-    private Deployment mMock;
+    private Deployment mMockDeployment;
 
     @Mock
     private DeploymentDatabaseHelper mMockDeploymentDatabaseHelper;
@@ -68,12 +73,30 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
     }
 
     @Test
-    public void shouldInvalidateConstructorsNullParameters() {
+    public void shouldInvalidateConstructorsNullParameters() throws Exception {
         clearSingleton(DeploymentDataRepository.class);
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Invalid null parameter");
         mDeploymentDataRepository = DeploymentDataRepository.getInstance(null, null);
     }
 
+    @Test
+    public void shouldSuccessfullyAddADeployment() throws Exception {
+        doAnswer(new Answer() {
 
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback) invocation
+                        .getArguments()[1]).onDeploymentEntityAdded();
+                return null;
+            }
+        }).when(mMockDeploymentDatabaseHelper).put(any(DeploymentEntity.class),
+                any(IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback.class));
+        given(mMockDeploymentEntityMapper.unmap(mMockDeployment)).willReturn(mMockDeploymentEntity);
+
+        mDeploymentDataRepository.addDeployment(mMockDeployment,mMockDeploymentAddCallback);
+
+        verify(mMockDeploymentEntityMapper).unmap(mMockDeployment);
+        verify(mMockDeploymentAddCallback).onDeploymentAdded();
+    }
 }
