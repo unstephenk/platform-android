@@ -23,6 +23,7 @@ import com.ushahidi.android.data.entity.DeploymentEntity;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.robolectric.annotation.Config;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -33,6 +34,7 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
+@Config(emulateSdk = 18)
 public class DeploymentEntityMapperTest extends BaseTestCase {
 
     private static final int DUMMY_ID = 1;

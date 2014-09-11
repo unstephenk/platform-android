@@ -38,7 +38,7 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 public class DeploymentDatabaseHelper extends BaseDatabseHelper
         implements IDeploymentDatabaseHelper {
 
-    private static DeploymentDatabaseHelper mSDeploymentDatabaseHelper;
+    private static DeploymentDatabaseHelper sInstance;
 
     private static String TAG = DeploymentDatabaseHelper.class.getSimpleName();
 
@@ -62,10 +62,10 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
     public static synchronized DeploymentDatabaseHelper getInstance(Context context,
             ThreadExecutor threadExecutor) {
 
-        if (mSDeploymentDatabaseHelper == null) {
-            mSDeploymentDatabaseHelper = new DeploymentDatabaseHelper(context, threadExecutor);
+        if (sInstance == null) {
+            sInstance = new DeploymentDatabaseHelper(context, threadExecutor);
         }
-        return mSDeploymentDatabaseHelper;
+        return sInstance;
     }
 
     /**
