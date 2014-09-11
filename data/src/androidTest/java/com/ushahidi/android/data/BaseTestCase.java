@@ -38,7 +38,7 @@ public class BaseTestCase {
      *
      * @param clazz The class to reset.
      */
-    protected void resetSingleton(Class clazz) {
+    protected void clearSingleton(Class clazz) {
         Field instance;
         try {
             instance = clazz.getDeclaredField("sInstance");

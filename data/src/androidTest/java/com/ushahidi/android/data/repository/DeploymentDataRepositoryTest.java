@@ -29,16 +29,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
@@ -68,7 +61,7 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        resetSingleton(DeploymentDataRepository.class);
+        clearSingleton(DeploymentDataRepository.class);
         mDeploymentDataRepository = DeploymentDataRepository
                 .getInstance(mMockDeploymentDatabaseHelper, mMockDeploymentEntityMapper);
 
@@ -76,9 +69,11 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
 
     @Test
     public void shouldInvalidateConstructorsNullParameters() {
-        resetSingleton(DeploymentDataRepository.class);
+        clearSingleton(DeploymentDataRepository.class);
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Invalid null parameter");
         mDeploymentDataRepository = DeploymentDataRepository.getInstance(null, null);
     }
+
+
 }
