@@ -35,7 +35,7 @@ public class Deployment extends Entity {
 
     @Override
     public int getId() {
-        return 0;
+        return mId;
     }
 
     @Override
