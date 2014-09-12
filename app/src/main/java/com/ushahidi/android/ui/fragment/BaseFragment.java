@@ -17,9 +17,149 @@
 
 package com.ushahidi.android.ui.fragment;
 
+import android.app.Fragment;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.Toast;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 /**
+ * Base {@link android.app.Fragment} class that every Fragment in this app will have to implement.
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class BaseFragment {
+public abstract class BaseFragment extends Fragment {
 
+    /**
+     * Layout resource id
+     */
+    protected final int layout;
+
+    /**
+     * Menu resource id
+     */
+    protected final int menu;
+
+    /**
+     * BaseActivity
+     *
+     * @param menu menu resource id
+     */
+    protected BaseFragment(int layout, int menu) {
+        this.layout = layout;
+        this.menu = menu;
+    }
+
+    /**
+     * Initializes the {@link com.ushahidi.android.presenter.Presenter} for this fragment in a MVP
+     * pattern used to architect the application presentation layer.
+     */
+    abstract void initPresenter();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        initPresenter();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater,
+            ViewGroup container, Bundle savedInstanceState) {
+        android.view.View root = null;
+        if (layout != 0) {
+            root = inflater.inflate(layout, container, false);
+        }
+        return root;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (this.menu != 0) {
+            inflater.inflate(this.menu, menu);
+        }
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        return super.onContextItemSelected(item);
+    }
+
+    protected View fadeIn(final android.view.View view, final boolean animate) {
+        if (view != null) {
+            if (animate) {
+                view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                        android.R.anim.fade_in));
+
+            } else {
+
+                view.clearAnimation();
+            }
+        }
+
+        return view;
+
+    }
+
+    protected View fadeOut(final android.view.View view, final boolean animate) {
+        if (view != null) {
+            if (animate) {
+                view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                        android.R.anim.fade_out));
+            } else {
+                view.clearAnimation();
+            }
+        }
+        return view;
+
+    }
+
+    protected View setViewGone(final View view) {
+        return setViewGone(view, true);
+    }
+
+    protected View setViewGone(final View view, final boolean gone) {
+        if (view != null) {
+            if (gone) {
+                if (GONE != view.getVisibility()) {
+
+                    fadeOut(view, true);
+
+                    view.setVisibility(GONE);
+                }
+            } else {
+                if (VISIBLE != view.getVisibility()) {
+                    view.setVisibility(VISIBLE);
+
+                    fadeIn(view, true);
+
+                }
+            }
+        }
+        return view;
+    }
+
+    /**
+     * Shows a {@link android.widget.Toast} message.
+     *
+     * @param message A message resource
+     */
+    protected void showToast(int message) {
+        Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG)
+                .show();
+    }
 }
