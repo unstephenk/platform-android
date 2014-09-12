@@ -17,13 +17,35 @@
 
 package com.ushahidi.android.presenter;
 
+import com.ushahidi.android.core.entity.Deployment;
+import com.ushahidi.android.core.exception.ErrorWrap;
+import com.ushahidi.android.exception.ErrorMessageFactory;
+import com.ushahidi.android.model.DeploymentModel;
+import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
+import com.ushahidi.android.ui.view.IDeploymentListView;
+
+import java.util.List;
+
 /**
- * {@link IPresenter} facilitates interactions between deployment list
- * view and deployment models.
+ * {@link IPresenter} facilitates interactions between deployment list view and deployment models.
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class DeploymentListPresenter implements IPresenter {
+
+    private final IDeploymentListView mIDeploymentListView;
+
+    private final DeploymentModelDataMapper mDeploymentModelDataMapper;
+
+    public DeploymentListPresenter(IDeploymentListView deploymentListView,
+            DeploymentModelDataMapper deploymentModelDataMapper) {
+        if (deploymentListView == null || deploymentModelDataMapper == null) {
+            throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
+        }
+
+        mIDeploymentListView = deploymentListView;
+        mDeploymentModelDataMapper = deploymentModelDataMapper;
+    }
 
     @Override
     public void resume() {
@@ -34,4 +56,64 @@ public class DeploymentListPresenter implements IPresenter {
     public void pause() {
 
     }
+
+    public void init() {
+        loadList();
+    }
+
+    private void loadList() {
+        hideViewRetry();
+        showViewLoading();
+        getDeploymentList();
+    }
+
+    public void onUserClicked(DeploymentModel deploymentModel) {
+        // TODO implement when a deployment is clicked
+    }
+
+    private void showViewLoading() {
+        mIDeploymentListView.showLoading();
+    }
+
+    private void hideViewLoading() {
+        mIDeploymentListView.hideLoading();
+    }
+
+    private void showViewRetry() {
+        mIDeploymentListView.showRetry();
+    }
+
+    private void hideViewRetry() {
+        mIDeploymentListView.hideRetry();
+    }
+
+    private void showErrorMessage(ErrorWrap errorWrap) {
+        String errorMessage = ErrorMessageFactory.create(mIDeploymentListView.getContext(),
+                errorWrap.getException());
+        mIDeploymentListView.showError(errorMessage);
+    }
+
+    private void showUsersCollectionInView(List<Deployment> listDeployments) {
+        final List<DeploymentModel> deploymentModelsList =
+                mDeploymentModelDataMapper.map(listDeployments);
+        mIDeploymentListView.renderUserList(deploymentModelsList);
+    }
+
+    private void getDeploymentList() {
+        // TODO: List deployments
+    }
+
+    /**private final GetUserListUseCase.Callback userListCallback = new GetUserListUseCase.Callback() {
+    @Override public void onUserListLoaded(Collection<User> usersCollection) {
+    UserListPresenter.this.showUsersCollectionInView(usersCollection);
+    UserListPresenter.this.hideViewLoading();
+    }
+
+    @Override public void onError(ErrorBundle errorBundle) {
+    UserListPresenter.this.hideViewLoading();
+    UserListPresenter.this.showErrorMessage(errorBundle);
+    UserListPresenter.this.showViewRetry();
+    }
+    };**/
+
 }

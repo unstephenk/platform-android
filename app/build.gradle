@@ -1,11 +1,15 @@
+lpreview = hasProperty('lpreview')
+
 apply plugin: 'com.android.application'
 apply plugin: 'checkstyle'
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion lpreview ? "android-L" : 19
     buildToolsVersion "20.0.0"
 
-    defaultConfig {
+    productFlavors { lpreview ? lpreview{} : classic{} }
+
+    defaultConfig lpreview ? {} : {
         applicationId "com.ushahidi.android"
         minSdkVersion 14
         targetSdkVersion 19
@@ -54,6 +58,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:5.1.+'
     compile 'com.jakewharton.timber:timber:2.4.+'
     compile 'com.squareup.picasso:picasso:2.3.+'
+    //compile 'com.android.support:support-v4:20.0.+'
 }
 
 task checkstyle(type: Checkstyle) {
