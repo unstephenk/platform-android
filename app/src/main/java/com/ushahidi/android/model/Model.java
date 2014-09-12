@@ -15,23 +15,21 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.presenter;
+package com.ushahidi.android.model;
 
 /**
- * {@link com.ushahidi.android.presenter.Presenter} facilitates interactions between deployment list
- * view and deployment models.
- *
+ * Base model class
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentListPresenter implements Presenter {
+public abstract class Model {
 
-    @Override
-    public void resume() {
+    protected long id;
 
+    public long getId() {
+        return id;
     }
 
-    @Override
-    public void pause() {
-
+    public void setId(long id) {
+        this.id = id;
     }
 }

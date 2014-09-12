@@ -41,21 +41,21 @@ public abstract class BaseFragment extends Fragment {
     /**
      * Layout resource id
      */
-    protected final int layout;
+    protected final int mLayout;
 
     /**
      * Menu resource id
      */
-    protected final int menu;
+    protected final int mMenu;
 
     /**
      * BaseActivity
      *
-     * @param menu menu resource id
+     * @param menu mMenu resource id
      */
     protected BaseFragment(int layout, int menu) {
-        this.layout = layout;
-        this.menu = menu;
+        this.mLayout = layout;
+        this.mMenu = menu;
     }
 
     /**
@@ -75,16 +75,16 @@ public abstract class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         android.view.View root = null;
-        if (layout != 0) {
-            root = inflater.inflate(layout, container, false);
+        if (mLayout != 0) {
+            root = inflater.inflate(mLayout, container, false);
         }
         return root;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (this.menu != 0) {
-            inflater.inflate(this.menu, menu);
+        if (this.mMenu != 0) {
+            inflater.inflate(this.mMenu, menu);
         }
 
     }
