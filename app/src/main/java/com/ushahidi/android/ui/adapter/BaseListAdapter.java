@@ -43,7 +43,7 @@ public abstract class BaseListAdapter<M extends Model> extends BaseAdapter {
     public BaseListAdapter(Context context) {
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
-        mItems = new ArrayList<M>();
+        mItems = new ArrayList<>();
     }
 
     public int getCount() {

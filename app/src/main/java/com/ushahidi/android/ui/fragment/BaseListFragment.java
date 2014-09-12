@@ -17,13 +17,21 @@
 
 package com.ushahidi.android.ui.fragment;
 
+import com.ushahidi.android.model.Model;
 import com.ushahidi.android.ui.adapter.BaseListAdapter;
 
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.InflateException;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -34,7 +42,8 @@ import timber.log.Timber;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class BaseListFragment<L extends BaseListAdapter> extends ListFragment {
+public abstract class BaseListFragment<M extends Model, L extends BaseListAdapter>
+        extends ListFragment {
 
     private static String TAG = BaseListFragment.class.getSimpleName();
 
@@ -78,12 +87,9 @@ public abstract class BaseListFragment<L extends BaseListAdapter> extends ListFr
     /**
      * Uses reflection to create a new instance of a class
      *
-     * @param type The class to create an instance
-     *
+     * @param type        The class to create an instance
      * @param constructor The constructor of the class
-     *
-     * @param params The parameters to pass to the constructor
-     *
+     * @param params      The parameters to pass to the constructor
      * @return The created instance
      */
     private static <T> T createInstance(Class type, Class constructor,
@@ -130,4 +136,43 @@ public abstract class BaseListFragment<L extends BaseListAdapter> extends ListFr
      */
     abstract void initPresenter();
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        if (mMenu != 0) {
+            inflater.inflate(mMenu, menu);
+        }
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater,
+            ViewGroup container, Bundle savedInstanceState) {
+        android.view.View root = null;
+        if (mLayout != 0) {
+            root = inflater.inflate(mLayout, container, false);
+        }
+        return root;
+    }
+
+    protected M getSelectedItem() {
+        return (M) mListView.getSelectedItem();
+    }
+
+    public void onItemSelected(AdapterView<?> adapterView,
+            android.view.View view, int position, long id) {
+    }
+
+    public void onNothingSelected(AdapterView<?> adapterView) {
+    }
+
+    /**
+     * Shows a {@link android.widget.Toast} message.
+     *
+     * @param message A message resource
+     */
+    protected void showToast(int message) {
+        Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG)
+                .show();
+    }
 }
