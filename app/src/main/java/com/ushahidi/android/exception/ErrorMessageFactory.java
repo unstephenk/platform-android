@@ -25,6 +25,8 @@ import com.ushahidi.android.data.exception.ListDeploymentNotFoundException;
 import android.content.Context;
 
 /**
+ * Error message factory. Creates relevant error messages
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class ErrorMessageFactory {
