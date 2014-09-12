@@ -39,19 +39,19 @@ import static android.view.View.VISIBLE;
 public abstract class BaseFragment extends Fragment {
 
     /**
-     * Layout resource id
+     * Layout resource mId
      */
     protected final int mLayout;
 
     /**
-     * Menu resource id
+     * Menu resource mId
      */
     protected final int mMenu;
 
     /**
      * BaseActivity
      *
-     * @param menu mMenu resource id
+     * @param menu mMenu resource mId
      */
     protected BaseFragment(int layout, int menu) {
         this.mLayout = layout;

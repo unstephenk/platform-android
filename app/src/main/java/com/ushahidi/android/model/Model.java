@@ -23,13 +23,13 @@ package com.ushahidi.android.model;
  */
 public abstract class Model {
 
-    protected long id;
+    protected long mId;
 
     public long getId() {
-        return id;
+        return mId;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.mId = id;
     }
 }

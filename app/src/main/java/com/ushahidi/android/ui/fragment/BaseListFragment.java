@@ -48,17 +48,17 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
     private static String TAG = BaseListFragment.class.getSimpleName();
 
     /**
-     * Layout resource id
+     * Layout resource mId
      */
     protected final int mLayout;
 
     /**
-     * Menu resource id
+     * Menu resource mId
      */
     protected final int mMenu;
 
     /**
-     * ListView resource id
+     * ListView resource mId
      */
     private final int mListViewId;
 

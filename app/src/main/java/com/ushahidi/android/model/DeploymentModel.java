@@ -20,6 +20,45 @@ package com.ushahidi.android.model;
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentModel {
+public class DeploymentModel extends Model {
 
+    private String mTitle;
+
+    private String mDescription;
+
+    private String mUrl;
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String title) {
+        mTitle = title;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public void setDescription(String description) {
+        mDescription = description;
+    }
+
+    public String getUrl() {
+        return mUrl;
+    }
+
+    public void setUrl(String url) {
+        mUrl = url;
+    }
+
+    @Override
+    public String toString() {
+        return "Deployment{" +
+                "mId=" + mId +
+                ", mTitle='" + mTitle + '\'' +
+                ", mDescription='" + mDescription + '\'' +
+                ", mUrl='" + mUrl + '\'' +
+                '}';
+    }
 }
