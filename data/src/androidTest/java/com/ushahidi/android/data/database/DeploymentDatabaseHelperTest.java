@@ -29,11 +29,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-
 /**
- * Test cases for {@link com.ushahidi.android.data.database.BaseDatabseHelper}
+ * Tests {@link com.ushahidi.android.data.database.BaseDatabseHelper}
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */

@@ -40,6 +40,8 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
 /**
+ * Tests {@link com.ushahidi.android.data.database.DeploymentDatabaseHelper}
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class DeploymentDataRepositoryTest extends BaseTestCase {

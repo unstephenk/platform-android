@@ -27,6 +27,8 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.verify;
 
 /**
+ * Tests {@link com.ushahidi.android.data.exception.RepositoryError}
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class RepositoryErrorTest extends BaseTestCase {

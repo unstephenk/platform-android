@@ -27,6 +27,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.instanceOf;
 
 /**
+ * Tests {@link com.ushahidi.android.data.entity.DeploymentEntity}
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class DeploymentEntityTest extends BaseTestCase {

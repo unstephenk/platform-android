@@ -30,7 +30,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 /**
- * Test suite for testing Deployment Entity class
+ * Tests {@link com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper}
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
