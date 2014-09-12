@@ -17,9 +17,21 @@
 
 package com.ushahidi.android.ui.view;
 
+import com.ushahidi.android.model.DeploymentModel;
+
+import java.util.List;
+
 /**
+ * Renders deployment list views
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public interface IDeploymentListView {
+public interface IDeploymentListView extends ILoadViewData {
 
+    /**
+     * Render a deployment list in the UI.
+     *
+     * @param deploymentModel The collection of {@link DeploymentModel} that will be shown.
+     */
+    void renderUserList(List<DeploymentModel> deploymentModel);
 }
