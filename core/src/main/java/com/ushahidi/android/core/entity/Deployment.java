@@ -25,7 +25,7 @@ import com.ushahidi.android.core.Entity;
  */
 public class Deployment extends Entity {
 
-    private int mId;
+    private long mId;
 
     private String mTitle;
 
@@ -34,12 +34,12 @@ public class Deployment extends Entity {
     private String mUrl;
 
     @Override
-    public int getId() {
+    public long getId() {
         return mId;
     }
 
     @Override
-    public void setId(int id) {
+    public void setId(long id) {
         mId = id;
     }
 

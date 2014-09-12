@@ -37,7 +37,7 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 @Config(emulateSdk = 18)
 public class DeploymentEntityMapperTest extends BaseTestCase {
 
-    private static final int DUMMY_ID = 1;
+    private static final long DUMMY_ID = 1;
 
     private static final String DUMMY_TITLE = "Dummy Deployment Title";
 
@@ -45,7 +45,7 @@ public class DeploymentEntityMapperTest extends BaseTestCase {
 
     private static final String DUMMY_URL = "http://deployment.com";
 
-    private static final int DEPLOYMENT_DUMMY_ID = 1;
+    private static final long DEPLOYMENT_DUMMY_ID = 1;
 
     private static final String DEPLOYMENT_DUMMY_TITLE = "Dummy Deployment Title";
 

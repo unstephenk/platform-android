@@ -35,7 +35,7 @@ public class DeploymentEntityTest extends BaseTestCase {
 
     private DeploymentEntity mDeploymentEntity;
 
-    private static final int DUMMY_ID = 1;
+    private static final long DUMMY_ID = 1;
 
     private static final String DUMMY_TITLE = "Dummy Deployment Title";
 
