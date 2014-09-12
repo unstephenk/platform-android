@@ -23,74 +23,77 @@ import com.ushahidi.android.core.respository.IDeploymentRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 
+import java.util.List;
+
 /**
- * Use case for adding a new deployment
+ * Implements {@link com.ushahidi.android.core.usecase.deployment.IListDeployment} that fetches list
+ * of {@link com.ushahidi.android.core.entity.Deployment}
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class AddDeployment implements IAddDeployment {
+public class ListDeployment implements IListDeployment {
+
+    private final IDeploymentRepository mIDeploymentRepository;
 
     private final ThreadExecutor mThreadExecutor;
 
     private final PostExecutionThread mPostExecutionThread;
 
-    private final IDeploymentRepository mDeploymentRepository;
+    private final IDeploymentRepository.DeploymentListCallback mRepositoryCallback
+            = new IDeploymentRepository.DeploymentListCallback() {
 
-    private final IDeploymentRepository.DeploymentAddCallback mRepositoryCallback =
-            new IDeploymentRepository.DeploymentAddCallback() {
+        @Override
+        public void onDeploymentListLoaded(List<Deployment> deploymentList) {
+            notifySuccess(deploymentList);
+        }
 
-                @Override
-                public void onDeploymentAdded() {
-                    notifySuccess();
-                }
-
-                @Override
-                public void onError(ErrorWrap error) {
-                    notifyFailure(error);
-                }
-
-            };
-
-    private Deployment mDeployment;
+        @Override
+        public void onError(ErrorWrap error) {
+            notifyFailure(error);
+        }
+    };
 
     private Callback mCallback;
 
-    public AddDeployment(IDeploymentRepository deploymentRepository, ThreadExecutor threadExecutor,
+    /**
+     * Constructor.
+     *
+     * @param deploymentRepository A {@link com.ushahidi.android.core.respository.IDeploymentRepository}
+     *                             as a source for retrieving data.
+     * @param threadExecutor       {@link ThreadExecutor} used to execute this use case in a
+     *                             background thread.
+     * @param postExecutionThread  {@link PostExecutionThread} used to post updates when the use
+     *                             case has been executed.
+     */
+    public ListDeployment(IDeploymentRepository deploymentRepository, ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
         if (deploymentRepository == null || threadExecutor == null || postExecutionThread == null) {
-            throw new IllegalArgumentException("Constructor parameters cannot be null");
+            throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
         }
-
-        mDeploymentRepository = deploymentRepository;
+        mIDeploymentRepository = deploymentRepository;
         mThreadExecutor = threadExecutor;
         mPostExecutionThread = postExecutionThread;
     }
 
     @Override
-    public void execute(Deployment deployment, Callback callback) {
-        if (deployment == null) {
-            throw new IllegalArgumentException("Deployment cannot be null");
-        }
-
+    public void execute(Callback callback) {
         if (callback == null) {
-            throw new IllegalArgumentException("Use case callback cannot be null");
+            throw new IllegalArgumentException("Interactor callback cannot be null!!!");
         }
-
-        mDeployment = deployment;
         mCallback = callback;
         mThreadExecutor.execute(this);
     }
 
     @Override
     public void run() {
-        mDeploymentRepository.addDeployment(mDeployment, mRepositoryCallback);
+        mIDeploymentRepository.getDeploymentList(mRepositoryCallback);
     }
 
-    private void notifySuccess() {
+    private void notifySuccess(final List<Deployment> deploymentList) {
         mPostExecutionThread.post(new Runnable() {
             @Override
             public void run() {
-                mCallback.onDeploymentAdded();
+                mCallback.onDeploymentListLoaded(deploymentList);
             }
         });
     }

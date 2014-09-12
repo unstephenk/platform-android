@@ -25,6 +25,8 @@ package com.ushahidi.android.core.respository;
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.exception.ErrorWrap;
 
+import java.util.List;
+
 /**
  * IDeploymentRepository
  */
@@ -35,14 +37,53 @@ public interface IDeploymentRepository {
      *
      * @param deployment         The Deployment to be saved.
      * @param deploymentCallback A {@link DeploymentAddCallback} used for notifying clients.
+     *
      * @author Ushahidi Team <team@ushahidi.com>
      */
     void addDeployment(Deployment deployment, DeploymentAddCallback deploymentCallback);
+
+    /**
+     * Get a list of {@link com.ushahidi.android.core.entity.Deployment}.
+     *
+     * @param deploymentListCallback A {@link DeploymentListCallback} used for notifying clients.
+     */
+    void getDeploymentList(DeploymentListCallback deploymentListCallback);
+
+    /**
+     * Get an {@link com.ushahidi.android.core.entity.Deployment} by id.
+     *
+     * @param deploymentId              The user id used to retrieve user data.
+     * @param deploymentDetailsCallback A {@link DeploymentDetailsCallback} used for notifying
+     *                                  clients.
+     */
+    void getDeploymentById(final long deploymentId,
+            DeploymentDetailsCallback deploymentDetailsCallback);
 
     interface DeploymentAddCallback {
 
         void onDeploymentAdded();
 
         void onError(ErrorWrap error);
+    }
+
+    /**
+     * Callback used to be notified when either a deployment list has been loaded or an error
+     * occurs.
+     */
+    interface DeploymentListCallback {
+
+        void onDeploymentListLoaded(List<Deployment> deploymentList);
+
+        void onError(ErrorWrap errorWrap);
+    }
+
+    /**
+     * Callback used to be notified when either a deployment has been loaded or an error occurs.
+     */
+    interface DeploymentDetailsCallback {
+
+        void onDeploymentLoaded(Deployment deployment);
+
+        void onError(ErrorWrap errorWrap);
     }
 }
