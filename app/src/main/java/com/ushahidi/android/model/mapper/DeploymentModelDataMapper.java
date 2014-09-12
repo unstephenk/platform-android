@@ -17,9 +17,55 @@
 
 package com.ushahidi.android.model.mapper;
 
+import com.ushahidi.android.core.entity.Deployment;
+import com.ushahidi.android.model.DeploymentModel;
+
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class DeploymentModelDataMapper {
 
+    public DeploymentModelDataMapper() {
+    }
+
+    /**
+     * Maps {@link com.ushahidi.android.core.entity.Deployment} to {@link DeploymentModel}
+     *
+     * @param deployment The {@link com.ushahidi.android.core.entity.Deployment} to be mapped
+     * @return The {@link DeploymentModel} entity
+     */
+    public DeploymentModel map(Deployment deployment) {
+        if (deployment == null) {
+            throw new IllegalArgumentException("Cannot map a null value");
+        }
+
+        DeploymentModel deploymentModel = new DeploymentModel();
+        deploymentModel.setId(deployment.getId());
+        deploymentModel.setDescription(deployment.getDescription());
+        deploymentModel.setTitle(deployment.getTitle());
+        deploymentModel.setUrl(deployment.getUrl());
+        return deploymentModel;
+    }
+
+    /**
+     * Unmaps from {@link DeploymentModel} to {@link com.ushahidi.android.core.entity.Deployment}
+     *
+     * @param deploymentModel The {@link DeploymentModel} to be unmapped
+     * @return The {@link com.ushahidi.android.core.entity.Deployment} entity
+     */
+
+    public Deployment unmap(DeploymentModel deploymentModel) {
+
+        if (deploymentModel == null) {
+            throw new IllegalArgumentException("Cannot unmap a null value");
+        }
+
+        Deployment deployment = new Deployment();
+        deployment.setTitle(deploymentModel.getTitle());
+        deployment.setDescription(deploymentModel.getDescription());
+        deployment.setUrl(deploymentModel.getUrl());
+        deployment.setId(deploymentModel.getId());
+
+        return deployment;
+    }
 }
