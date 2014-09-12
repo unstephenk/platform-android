@@ -18,12 +18,12 @@
 package com.ushahidi.android.presenter;
 
 /**
- * {@link com.ushahidi.android.presenter.Presenter} facilitates interactions between deployment list
+ * {@link IPresenter} facilitates interactions between deployment list
  * view and deployment models.
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentListPresenter implements Presenter {
+public class DeploymentListPresenter implements IPresenter {
 
     @Override
     public void resume() {

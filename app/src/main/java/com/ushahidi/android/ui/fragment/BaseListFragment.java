@@ -131,7 +131,7 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
     }
 
     /**
-     * Initializes the {@link com.ushahidi.android.presenter.Presenter} for this fragment in a MVP
+     * Initializes the {@link com.ushahidi.android.presenter.IPresenter} for this fragment in a MVP
      * pattern used to architect the application presentation layer.
      */
     abstract void initPresenter();

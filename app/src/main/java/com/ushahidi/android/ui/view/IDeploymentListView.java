@@ -20,6 +20,6 @@ package com.ushahidi.android.ui.view;
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentListView {
+public interface IDeploymentListView {
 
 }

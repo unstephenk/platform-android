@@ -15,24 +15,28 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.presenter;
+package com.ushahidi.android.data.exception;
 
 /**
- * All Presenters have to implement this interface
+ * Exception thrown when a query for a particular deployment does not return any result
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public interface Presenter {
+public class NetworkConnectionException extends Exception {
 
-    /**
-     * Method that control the lifecycle of the view. It should be called in the view's (Activity or
-     * Fragment) onResume() method.
-     */
-    void resume();
+    public NetworkConnectionException() {
+        super();
+    }
 
-    /**
-     * Method that control the lifecycle of the view. It should be called in the view's (Activity or
-     * Fragment) onPause() method.
-     */
-    void pause();
+    public NetworkConnectionException(final String message) {
+        super(message);
+    }
+
+    public NetworkConnectionException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public NetworkConnectionException(final Throwable cause) {
+        super(cause);
+    }
 }

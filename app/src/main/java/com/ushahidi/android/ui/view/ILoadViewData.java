@@ -24,7 +24,7 @@ import android.content.Context;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public interface LoadViewData {
+public interface ILoadViewData {
 
     /**
      * Get a {@link android.content.Context}.

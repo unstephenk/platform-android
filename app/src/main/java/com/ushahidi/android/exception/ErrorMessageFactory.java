@@ -20,7 +20,7 @@ package com.ushahidi.android.exception;
 import com.ushahidi.android.R;
 import com.ushahidi.android.data.exception.AddDeploymentException;
 import com.ushahidi.android.data.exception.DeploymentNotFoundException;
-import com.ushahidi.android.data.exception.ListDeploymentNotFoundException;
+import com.ushahidi.android.data.exception.NetworkConnectionException;
 
 import android.content.Context;
 
@@ -43,7 +43,7 @@ public class ErrorMessageFactory {
     public static String create(Context context, Exception exception) {
         String message = context.getString(R.string.exception_message_generic);
 
-        if (exception instanceof ListDeploymentNotFoundException) {
+        if (exception instanceof NetworkConnectionException) {
             message = context.getString(R.string.exception_message_no_connection);
         } else if (exception instanceof DeploymentNotFoundException) {
             message = context.getString(R.string.exception_message_deployment_not_found);

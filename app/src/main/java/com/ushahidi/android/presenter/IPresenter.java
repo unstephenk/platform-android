@@ -15,28 +15,24 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.data.exception;
+package com.ushahidi.android.presenter;
 
 /**
- * Exception thrown when a query for a particular deployment does not return any result
+ * All Presenters have to implement this interface
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class ListDeploymentNotFoundException extends Exception {
+public interface IPresenter {
 
-    public ListDeploymentNotFoundException() {
-        super();
-    }
+    /**
+     * Method that control the lifecycle of the view. It should be called in the view's (Activity or
+     * Fragment) onResume() method.
+     */
+    void resume();
 
-    public ListDeploymentNotFoundException(final String message) {
-        super(message);
-    }
-
-    public ListDeploymentNotFoundException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
-
-    public ListDeploymentNotFoundException(final Throwable cause) {
-        super(cause);
-    }
+    /**
+     * Method that control the lifecycle of the view. It should be called in the view's (Activity or
+     * Fragment) onPause() method.
+     */
+    void pause();
 }

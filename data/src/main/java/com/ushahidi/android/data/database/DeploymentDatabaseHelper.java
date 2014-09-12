@@ -21,7 +21,6 @@ import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.data.BuildConfig;
 import com.ushahidi.android.data.entity.DeploymentEntity;
 import com.ushahidi.android.data.exception.DeploymentNotFoundException;
-import com.ushahidi.android.data.exception.ListDeploymentNotFoundException;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -122,7 +121,7 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
                 if (deploymentEntities != null) {
                     callback.onDeploymentEntitiesLoaded(deploymentEntities);
                 } else {
-                    callback.onError(new ListDeploymentNotFoundException());
+                    callback.onError(new DeploymentNotFoundException());
                 }
             }
         });

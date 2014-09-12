@@ -18,7 +18,6 @@
 package com.ushahidi.android.data.database;
 
 import com.ushahidi.android.data.BuildConfig;
-import com.ushahidi.android.data.Entity;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
