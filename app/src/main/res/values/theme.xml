@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2014 Ushahidi.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under
+  ~ the terms of the GNU Affero General Public License as published by the Free
+  ~ Software Foundation, either version 3 of the License, or (at your option)
+  ~ any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT
+  ~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program in the file LICENSE-AGPL. If not, see
+  ~ https://www.gnu.org/licenses/agpl-3.0.html
+  -->
+<resources>
+
+    <style name="Base.Theme" parent="android:Theme.Holo.Light.DarkActionBar"/>
+
+    <style name="Base.ActionBar" parent="android:Widget.Holo.ActionBar"/>
+
+    <style name="Base.ActionBar.TitleText" parent="android:TextAppearance.Holo.Widget.ActionBar.Title"/>
+
+    <style name="Base.ActionBar.TabBar" parent="android:Widget.Holo.ActionBar.TabBar"/>
+
+    <style name="Base.EditText" parent="android:Widget.Holo.Light.EditText"/>
+
+    <style name="Base.Widget" parent="android:Theme.Holo"/>
+
+    <style name="Base.Widget.ActionButton.Overflow" parent="android:Widget.Holo.ActionButton.Overflow"/>
+
+    <style name="Base.Widget.Spinner" parent="android:Widget.Holo.Light.Spinner"/>
+
+    <style name="Base.Widget.ListView.DropDown" parent="android:Widget.Holo.Light.ListView.DropDown"/>
+
+    <style name="Base.Widget.PopupMenu" parent="android:Widget.Holo.Light.PopupMenu"/>
+
+    <style name="Base.TextAppearance.Widget.PopupMenu.Large" parent="android:TextAppearance.Holo.Widget.PopupMenu.Large"/>
+
+    <style name="Theme" parent="Base.Theme">
+        <!-- Only needed for pre-L -->
+        <item name="android:actionBarWidgetTheme">@style/Theme.Ushahidi.Widget</item>
+        <item name="android:actionDropDownStyle">@style/Widget.Ushahidi.HeaderBar.Spinner</item>
+    </style>
+
+    <style name="Theme.Ushahidi" parent="Theme">
+        <item name="actionBarOverlayTopOffset">?android:actionBarSize</item>
+        <item name="actionBarInsetStart">?android:actionBarSize</item>
+        <item name="spinnerBarInsetStart">?android:actionBarSize</item>
+        <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
+        <item name="popupItemBackground">?android:selectableItemBackground</item>
+        <item name="photoItemForeground">?android:selectableItemBackground</item>
+
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+
+        <item name="android:popupMenuStyle">@style/Widget.Ushahidi.PopupMenu</item>
+        <item name="android:listPopupWindowStyle">@style/Widget.Ushahidi.PopupMenu</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/TextAppearance.LargePopupMenu
+        </item>
+    </style>
+</resources>

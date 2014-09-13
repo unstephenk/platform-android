@@ -1,8 +1,116 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <!-- Action bar -->
+    <style name="ActionBar.Base" parent="Base.ActionBar">
+        <item name="android:background">@drawable/actionbar_background</item>
+        <item name="android:displayOptions">showHome|showTitle</item>
+        <item name="android:titleTextStyle">@style/ActionBar.TitleText</item>
     </style>
 
+    <style name="ActionBar" parent="ActionBar.Base"/>
+
+    <style name="ActionBar.TitleText" parent="Base.ActionBar.TitleText">
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- Widgets -->
+    <style name="Theme.Ushahidi.Widget" parent="Base.Widget">
+        <item name="android:popupMenuStyle">@style/Widget.Ushahidi.PopupMenu</item>
+        <item name="android:listPopupWindowStyle">@style/Widget.Ushahidi.PopupMenu</item>
+        <item name="android:dropDownListViewStyle">@style/Widget.Ushahidi.ListView.DropDown</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/TextAppearance.LargePopupMenu
+        </item>
+    </style>
+
+    <!-- PopupMenu -->
+    <style name="TextAppearance.LargePopupMenu" parent="Base.TextAppearance.Widget.PopupMenu.Large">
+        <item name="android:textColor">@color/body_text_1</item>
+    </style>
+
+    <style name="Widget.Ushahidi.PopupMenu" parent="Base.Widget.PopupMenu"/>
+
+    <!-- Spinner -->
+    <style name="Widget.Ushahidi.HeaderBar.Spinner.Base" parent="Base.Widget.Spinner">
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:divider">@null</item>
+        <item name="android:dividerHeight">0dp</item>
+    </style>
+
+    <!-- ListView Dropdown -->
+    <style name="Widget.Ushahidi.ListView.DropDown" parent="Base.Widget.ListView.DropDown">
+
+        <item name="android:divider">@null</item>
+        <item name="android:dividerHeight">0dp</item>
+    </style>
+
+    <style name="Widget.Ushahidi.HeaderBar.Spinner" parent="Widget.Ushahidi.HeaderBar.Spinner.Base"/>
+
+    <!-- Transparent Action Bar -->
+    <style name="TransparentActionBar" parent="ActionBar">
+        <item name="android:background">@null</item>
+    </style>
+
+    <!-- Empty views -->
+    <style name="EmptyText">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/body_text_disabled</item>
+    </style>
+
+    <!-- Body content -->
+    <style name="TextHeader">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/body_text_1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
+    <style name="TextHeaderSub">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/body_text_2</item>
+    </style>
+
+    <style name="TextBody">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/body_text_1</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+    </style>
+
+    <!-- ListView -->
+    <style name="ListView" parent="@android:style/Widget.ListView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:fastScrollEnabled">true</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollingCache">true</item>
+        <item name="android:smoothScrollbar">true</item>
+    </style>
+
+    <!-- List item primary_text -->
+    <style name="ListItemPrimaryText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/list_item_primary_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/body_text_1</item>
+    </style>
+
+    <style name="ListItemSecondayText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/list_item_secondary_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/body_text_2</item>
+    </style>
+
+    <!-- List item right icon item -->
+    <style name="ListItemRightIcon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:padding">@dimen/list_text_padding</item>
+    </style>
 </resources>

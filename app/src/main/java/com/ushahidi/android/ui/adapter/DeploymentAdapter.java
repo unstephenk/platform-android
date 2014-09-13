@@ -17,7 +17,6 @@
 
 package com.ushahidi.android.ui.adapter;
 
-import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.model.DeploymentModel;
 
 import android.content.Context;
@@ -37,6 +36,7 @@ public class DeploymentAdapter extends BaseListAdapter<DeploymentModel> {
         this(context);
         setItems(deploymentModelList);
     }
+
     public DeploymentAdapter(Context context) {
         super(context);
     }
