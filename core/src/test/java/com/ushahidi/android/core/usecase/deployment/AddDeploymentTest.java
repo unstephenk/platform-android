@@ -18,9 +18,9 @@
 package com.ushahidi.android.core.usecase.deployment;
 
 import com.ushahidi.android.core.entity.Deployment;
+import com.ushahidi.android.core.respository.IDeploymentRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
-import com.ushahidi.android.core.respository.IDeploymentRepository;
 import com.ushahidi.android.core.usecase.IInteractor;
 
 import org.junit.Before;
@@ -86,7 +86,7 @@ public class AddDeploymentTest {
         doNothing().when(mMockDeploymentRepository).addDeployment(any(Deployment.class),
                 any(IDeploymentRepository.DeploymentAddCallback.class));
 
-        mAddDeployment.execute(mMockDeployment,mockAddDeploymentCallback);
+        mAddDeployment.execute(mMockDeployment, mockAddDeploymentCallback);
         mAddDeployment.run();
 
         verify(mMockDeploymentRepository).addDeployment(any(Deployment.class),
