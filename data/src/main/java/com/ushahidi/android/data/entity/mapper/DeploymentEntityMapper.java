@@ -76,7 +76,7 @@ public class DeploymentEntityMapper {
      * @return {@link Deployment}
      */
     public List<Deployment> map(List<DeploymentEntity> deploymentEntityList) {
-        List<Deployment> deploymentList = new ArrayList<>();
+        List<Deployment> deploymentList = new ArrayList<Deployment>();
         Deployment deployment;
         for (DeploymentEntity deploymentEntity : deploymentEntityList) {
             deployment = map(deploymentEntity);

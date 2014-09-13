@@ -19,6 +19,7 @@ package com.ushahidi.android.presenter;
 
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.exception.ErrorWrap;
+import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
@@ -37,12 +38,33 @@ public class DeploymentListPresenter implements IPresenter {
 
     private final DeploymentModelDataMapper mDeploymentModelDataMapper;
 
+    private final ListDeployment mListDeployment;
+
+    private final ListDeployment.Callback mListCallback = new ListDeployment.Callback() {
+
+        @Override
+        public void onDeploymentListLoaded(List<Deployment> listDeployment) {
+            showDeploymentsListInView(listDeployment);
+            hideViewLoading();
+        }
+
+        @Override
+        public void onError(ErrorWrap error) {
+            hideViewLoading();
+            showErrorMessage(error);
+            showViewRetry();
+        }
+    };
+
     public DeploymentListPresenter(IDeploymentListView deploymentListView,
+            ListDeployment listDeployment,
             DeploymentModelDataMapper deploymentModelDataMapper) {
-        if (deploymentListView == null || deploymentModelDataMapper == null) {
+        if (deploymentListView == null || listDeployment == null
+                || deploymentModelDataMapper == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
         }
 
+        mListDeployment = listDeployment;
         mIDeploymentListView = deploymentListView;
         mDeploymentModelDataMapper = deploymentModelDataMapper;
     }
@@ -67,7 +89,7 @@ public class DeploymentListPresenter implements IPresenter {
         getDeploymentList();
     }
 
-    public void onUserClicked(DeploymentModel deploymentModel) {
+    public void onDeploymentClicked(DeploymentModel deploymentModel) {
         // TODO implement when a deployment is clicked
     }
 
@@ -100,20 +122,6 @@ public class DeploymentListPresenter implements IPresenter {
     }
 
     private void getDeploymentList() {
-        // TODO: List deployments
+        mListDeployment.execute(mListCallback);
     }
-
-    /**private final GetUserListUseCase.Callback userListCallback = new GetUserListUseCase.Callback() {
-    @Override public void onUserListLoaded(Collection<User> usersCollection) {
-    UserListPresenter.this.showUsersCollectionInView(usersCollection);
-    UserListPresenter.this.hideViewLoading();
-    }
-
-    @Override public void onError(ErrorBundle errorBundle) {
-    UserListPresenter.this.hideViewLoading();
-    UserListPresenter.this.showErrorMessage(errorBundle);
-    UserListPresenter.this.showViewRetry();
-    }
-    };**/
-
 }
