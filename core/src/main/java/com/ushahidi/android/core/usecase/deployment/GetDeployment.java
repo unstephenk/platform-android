@@ -42,12 +42,12 @@ public class GetDeployment implements IGetDeployment {
 
                 @Override
                 public void onDeploymentLoaded(Deployment deployment) {
-
+                    notifySuccess(deployment);
                 }
 
                 @Override
                 public void onError(ErrorWrap errorWrap) {
-
+                    notifyFailure(errorWrap);
                 }
             };
 
