@@ -20,6 +20,9 @@ package com.ushahidi.android.data.entity.mapper;
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.data.entity.DeploymentEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Mapper class used to map {@link com.ushahidi.android.data.entity.DeploymentEntity} to {@link
  * com.ushahidi.android.core.entity.Deployment} in core
@@ -64,5 +67,24 @@ public class DeploymentEntityMapper {
             deploymentEntity.setUrl(deployment.getUrl());
         }
         return deploymentEntity;
+    }
+
+    /**
+     * Maps a list {@link DeploymentEntity} into a list of {@link Deployment}.
+     *
+     * @param deploymentEntityList Object Collection to be transformed.
+     * @return {@link Deployment}
+     */
+    public List<Deployment> map(List<DeploymentEntity> deploymentEntityList) {
+        List<Deployment> deploymentList = new ArrayList<>();
+        Deployment deployment;
+        for (DeploymentEntity deploymentEntity : deploymentEntityList) {
+            deployment = map(deploymentEntity);
+            if (deployment != null) {
+                deploymentList.add(deployment);
+            }
+        }
+
+        return deploymentList;
     }
 }

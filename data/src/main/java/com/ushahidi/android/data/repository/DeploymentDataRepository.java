@@ -21,8 +21,11 @@ import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.respository.IDeploymentRepository;
 import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
 import com.ushahidi.android.data.database.IDeploymentDatabaseHelper;
+import com.ushahidi.android.data.entity.DeploymentEntity;
 import com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper;
 import com.ushahidi.android.data.exception.RepositoryError;
+
+import java.util.List;
 
 /**
  * {@link com.ushahidi.android.core.respository.IDeploymentRepository} for retrieving deployment
@@ -76,6 +79,45 @@ public class DeploymentDataRepository implements IDeploymentRepository {
                     @Override
                     public void onError(Exception exception) {
                         deploymentCallback.onError(new RepositoryError(exception));
+                    }
+                });
+    }
+
+    @Override
+    public void getDeploymentList(final DeploymentListCallback deploymentListCallback) {
+        mDeploymentDatabaseHelper.getDeploymentEntities(
+                new IDeploymentDatabaseHelper.IDeploymentEntitiesCallback() {
+
+                    @Override
+                    public void onDeploymentEntitiesLoaded(
+                            List<DeploymentEntity> deploymentEntities) {
+                        final List<Deployment> deployments = mDeploymentEntityMapper
+                                .map(deploymentEntities);
+                        deploymentListCallback.onDeploymentListLoaded(deployments);
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        deploymentListCallback.onError(new RepositoryError(exception));
+                    }
+                });
+    }
+
+    @Override
+    public void getDeploymentById(long deploymentId,
+            final DeploymentDetailsCallback deploymentDetailsCallback) {
+        mDeploymentDatabaseHelper.get(deploymentId,
+                new IDeploymentDatabaseHelper.IDeploymentEntityCallback() {
+
+                    @Override
+                    public void onDeploymentEntityLoaded(DeploymentEntity deploymentEntity) {
+                        final Deployment deployment = mDeploymentEntityMapper.map(deploymentEntity);
+                        deploymentDetailsCallback.onDeploymentLoaded(deployment);
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        deploymentDetailsCallback.onError(new RepositoryError(exception));
                     }
                 });
     }

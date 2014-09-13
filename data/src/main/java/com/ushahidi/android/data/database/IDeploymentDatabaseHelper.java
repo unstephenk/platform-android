@@ -24,7 +24,6 @@ package com.ushahidi.android.data.database;
 
 import com.ushahidi.android.data.entity.DeploymentEntity;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -47,7 +46,7 @@ public interface IDeploymentDatabaseHelper {
      * @param id       The user id to retrieve data.
      * @param callback The {@link IDeploymentEntityCallback} to notify the client.
      */
-    public void get(final int id, final IDeploymentEntityCallback callback);
+    public void get(final long id, final IDeploymentEntityCallback callback);
 
     /**
      * Gets a list of deployment entities.
@@ -57,13 +56,13 @@ public interface IDeploymentDatabaseHelper {
     public void getDeploymentEntities(final IDeploymentEntitiesCallback callback);
 
     /**
-     * Puts collection of deployment entity into the database
+     * Puts list of deployment entity into the database
      *
-     * @param deploymentEntities The collection of {@link com.ushahidi.android.data.entity.DeploymentEntity}
+     * @param deploymentEntities The list of {@link com.ushahidi.android.data.entity.DeploymentEntity}
      *                           to be added to the database.
      * @param callback           The {@link IDeploymentEntityAddedCallback} use to notify client.
      */
-    public void put(final Collection<DeploymentEntity> deploymentEntities,
+    public void put(final List<DeploymentEntity> deploymentEntities,
             final IDeploymentEntityAddedCallback callback);
 
     /**
