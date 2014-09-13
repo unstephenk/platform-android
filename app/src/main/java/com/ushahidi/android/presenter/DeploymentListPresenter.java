@@ -93,7 +93,7 @@ public class DeploymentListPresenter implements IPresenter {
         mIDeploymentListView.showError(errorMessage);
     }
 
-    private void showUsersCollectionInView(List<Deployment> listDeployments) {
+    private void showDeploymentsListInView(List<Deployment> listDeployments) {
         final List<DeploymentModel> deploymentModelsList =
                 mDeploymentModelDataMapper.map(listDeployments);
         mIDeploymentListView.renderUserList(deploymentModelsList);

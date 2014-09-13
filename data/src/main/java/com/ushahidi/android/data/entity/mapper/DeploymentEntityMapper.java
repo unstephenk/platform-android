@@ -72,7 +72,7 @@ public class DeploymentEntityMapper {
     /**
      * Maps a list {@link DeploymentEntity} into a list of {@link Deployment}.
      *
-     * @param deploymentEntityList Object Collection to be transformed.
+     * @param deploymentEntityList List to be mapped.
      * @return {@link Deployment}
      */
     public List<Deployment> map(List<DeploymentEntity> deploymentEntityList) {

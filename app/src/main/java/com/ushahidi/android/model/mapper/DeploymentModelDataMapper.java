@@ -20,6 +20,9 @@ package com.ushahidi.android.model.mapper;
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.model.DeploymentModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
@@ -67,5 +70,24 @@ public class DeploymentModelDataMapper {
         deployment.setId(deploymentModel.getId());
 
         return deployment;
+    }
+
+    /**
+     * Maps a list {@link Deployment} into a list of {@link DeploymentModel}.
+     *
+     * @param deploymentList List to be mapped.
+     *
+     * @return {@link DeploymentModel}
+     */
+    public List<DeploymentModel> map(List<Deployment> deploymentList) {
+        List<DeploymentModel> deploymentModels = new ArrayList<>();
+
+        if (deploymentList != null && !deploymentList.isEmpty()) {
+            for (Deployment deployment : deploymentList) {
+                deploymentModels.add(map(deployment));
+            }
+        }
+
+        return deploymentModels;
     }
 }
