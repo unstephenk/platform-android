@@ -96,7 +96,7 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
     }
 
     @Override
-    public synchronized void get(final int id, final IDeploymentEntityCallback callback) {
+    public synchronized void get(final long id, final IDeploymentEntityCallback callback) {
 
         this.asyncRun(new Runnable() {
             @Override
@@ -131,14 +131,14 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
         return cupboard().withDatabase(getReadableDatabase()).query(DeploymentEntity.class).list();
     }
 
-    private DeploymentEntity get(int id) {
+    private DeploymentEntity get(long id) {
         return cupboard().withDatabase(getReadableDatabase()).query(DeploymentEntity.class)
                 .byId(Long.valueOf(id)).get();
     }
 
 
     @Override
-    public synchronized void put(final Collection<DeploymentEntity> deploymentEntities,
+    public synchronized void put(final List<DeploymentEntity> deploymentEntities,
             final IDeploymentEntityAddedCallback callback) {
         this.asyncRun(new Runnable() {
             @Override
