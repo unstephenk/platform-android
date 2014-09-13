@@ -24,11 +24,12 @@ import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 
 /**
- * Use case for adding a new deployment
+ * Implements {@link com.ushahidi.android.core.usecase.deployment.IGetDeployment} that fetches list
+ * of {@link com.ushahidi.android.core.entity.Deployment}
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class AddDeployment implements IAddDeployment {
+public class GetDeployment implements IGetDeployment {
 
     private final ThreadExecutor mThreadExecutor;
 
@@ -36,26 +37,25 @@ public class AddDeployment implements IAddDeployment {
 
     private final IDeploymentRepository mDeploymentRepository;
 
-    private final IDeploymentRepository.DeploymentAddCallback mRepositoryCallback =
-            new IDeploymentRepository.DeploymentAddCallback() {
+    private final IDeploymentRepository.DeploymentDetailsCallback mDeploymentDetailsCallback =
+            new IDeploymentRepository.DeploymentDetailsCallback() {
 
                 @Override
-                public void onDeploymentAdded() {
-                    notifySuccess();
+                public void onDeploymentLoaded(Deployment deployment) {
+
                 }
 
                 @Override
-                public void onError(ErrorWrap error) {
-                    notifyFailure(error);
-                }
+                public void onError(ErrorWrap errorWrap) {
 
+                }
             };
 
-    private Deployment mDeployment;
+    private IGetDeployment.Callback mCallback;
 
-    private Callback mCallback;
+    private long mDeploymentId;
 
-    public AddDeployment(IDeploymentRepository deploymentRepository, ThreadExecutor threadExecutor,
+    public GetDeployment(IDeploymentRepository deploymentRepository, ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
         if (deploymentRepository == null || threadExecutor == null || postExecutionThread == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null");
@@ -67,31 +67,20 @@ public class AddDeployment implements IAddDeployment {
     }
 
     @Override
-    public void execute(Deployment deployment, Callback callback) {
-        if (deployment == null) {
-            throw new IllegalArgumentException("Deployment cannot be null");
+    public void execute(long deploymentId, IGetDeployment.Callback callback) {
+        if (deploymentId < 0 || callback == null) {
+            throw new IllegalArgumentException("Callback cannot be null!!!");
         }
-
-        if (callback == null) {
-            throw new IllegalArgumentException("Use case callback cannot be null");
-        }
-
-        mDeployment = deployment;
+        mDeploymentId = deploymentId;
         mCallback = callback;
         mThreadExecutor.execute(this);
     }
 
-    @Override
-    public void run() {
-        mDeploymentRepository.addDeployment(mDeployment, mRepositoryCallback);
-    }
-
-
-    private void notifySuccess() {
+    private void notifySuccess(final Deployment deployment) {
         mPostExecutionThread.post(new Runnable() {
             @Override
             public void run() {
-                mCallback.onDeploymentAdded();
+                mCallback.onDeploymentLoaded(deployment);
             }
         });
     }
@@ -103,5 +92,10 @@ public class AddDeployment implements IAddDeployment {
                 mCallback.onError(errorWrap);
             }
         });
+    }
+
+    @Override
+    public void run() {
+        mDeploymentRepository.getDeploymentById(mDeploymentId, mDeploymentDetailsCallback);
     }
 }

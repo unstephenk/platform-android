@@ -21,29 +21,27 @@ import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.exception.ErrorWrap;
 import com.ushahidi.android.core.usecase.IInteractor;
 
-import java.util.List;
-
 /**
- * Get deployment use case interface
+ * Get deployment use case
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public interface IListDeployment extends IInteractor {
+public interface IGetDeployment extends IInteractor {
 
     /**
      * Executes this use case.
      *
-     * @param callback A {@link IListDeployment.Callback} used to notify the client.
+     * @param callback     A {@link IGetDeployment.Callback} used to notify the client.
+     * @param deploymentId The deployment ID
      */
-    void execute(Callback callback);
+    void execute(long deploymentId, Callback callback);
 
     /**
-     * Notify client when a list of deployments are successfully loaded or an error occurred in the
-     * process.
+     * Notify client when a deployment is successfully loaded or an error occurred in the process
      */
     interface Callback {
 
-        void onDeploymentListLoaded(List<Deployment> listDeployment);
+        void onDeploymentLoaded(Deployment deployment);
 
         void onError(ErrorWrap error);
     }

@@ -78,7 +78,7 @@ public class ListDeployment implements IListDeployment {
     @Override
     public void execute(Callback callback) {
         if (callback == null) {
-            throw new IllegalArgumentException("Interactor callback cannot be null!!!");
+            throw new IllegalArgumentException("Callback cannot be null!!!");
         }
         mCallback = callback;
         mThreadExecutor.execute(this);
