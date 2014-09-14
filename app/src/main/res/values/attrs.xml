@@ -15,8 +15,13 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
-
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-       android:shape="rectangle">
-    <solid android:color="@color/theme_primary"/>
-</shape>
+<resources>
+    <declare-styleable name="BaseTheme">
+        <attr name="actionBarOverlayTopOffset" format="dimension" />
+        <attr name="actionBarInsetStart" format="dimension" />
+        <attr name="spinnerBarInsetStart" format="dimension" />
+        <attr name="selectableItemBackgroundBorderless" format="dimension" />
+        <attr name="popupItemBackground" format="dimension" />
+        <attr name="photoItemForeground" format="dimension" />
+    </declare-styleable>
+</resources>
