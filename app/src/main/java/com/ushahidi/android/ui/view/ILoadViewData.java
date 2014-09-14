@@ -27,35 +27,35 @@ import android.content.Context;
 public interface ILoadViewData {
 
     /**
-     * Get a {@link android.content.Context}.
+     * Gets a {@link android.content.Context}.
      */
     public Context getContext();
 
     /**
-     * Show a view with a progress bar indicating a loading process.
+     * Shows a view with a progress bar indicating a loading process.
      */
     public void showLoading();
 
     /**
-     * Hide a loading view.
+     * Hides a loading view.
      */
     public void hideLoading();
 
     /**
-     * Show a retry view in case of an error when retrieving data.
+     * Shows a retry view in case of an error when retrieving data.
      */
     public void showRetry();
 
     /**
-     * Hide a retry view shown if there was an error when retrieving data.
+     * Hides a retry view shown if there was an error when retrieving data.
      */
     public void hideRetry();
 
     /**
-     * Show an error message
+     * Shows an error message
      *
-     * @param message A string representing an error.
+     * @param message A string resource representing an error.
      */
-    public void showError(String message);
+    public void showError(int message);
 
 }

@@ -18,8 +18,10 @@
 package com.ushahidi.android.ui.fragment;
 
 import com.ushahidi.android.model.Model;
+import com.ushahidi.android.ui.activity.BaseActivity;
 import com.ushahidi.android.ui.adapter.BaseListAdapter;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -35,6 +37,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.InvocationTargetException;
 
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
@@ -146,6 +149,12 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        injectDependencies();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         android.view.View root = null;
@@ -153,6 +162,20 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
             root = inflater.inflate(mLayout, container, false);
         }
         return root;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        injectViews(view);
+    }
+
+    /**
+     * Replace every field annotated using @Inject annotation with the provided dependency specified
+     * inside a Dagger module value.
+     */
+    private void injectDependencies() {
+        ((BaseActivity) getActivity()).inject(this);
     }
 
     protected M getSelectedItem() {
@@ -164,6 +187,16 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
     }
 
     public void onNothingSelected(AdapterView<?> adapterView) {
+    }
+
+    /**
+     * Replace every field annotated with ButterKnife annotations like @InjectView with the proper
+     * value.
+     *
+     * @param view to extract each widget injected in the fragment.
+     */
+    private void injectViews(final View view) {
+        ButterKnife.inject(this, view);
     }
 
     /**

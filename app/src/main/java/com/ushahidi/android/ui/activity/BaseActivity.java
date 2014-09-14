@@ -24,6 +24,10 @@ import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import java.util.List;
+
+import dagger.ObjectGraph;
+
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -32,7 +36,7 @@ import static android.view.View.VISIBLE;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity {
 
     /**
      * Layout resource id
@@ -44,11 +48,45 @@ public class BaseActivity extends Activity {
      */
     protected final int mMenu;
 
+    private ObjectGraph activityScopeGraph;
+
 
     protected BaseActivity(int layout, int menu) {
         mLayout = layout;
         mMenu = menu;
     }
+
+    /**
+     * Method used to resolve dependencies provided by Dagger modules. Inject an object to provide
+     * every @Inject annotation contained.
+     *
+     * @param object to inject.
+     */
+    public void inject(Object object) {
+        activityScopeGraph.inject(object);
+    }
+
+    /**
+     * Get a list of Dagger modules with Activity scope needed for this Activity.
+     *
+     * @return modules.
+     */
+    protected abstract List<Object> getModules();
+
+    /**
+     * Creates a new Dagger ObjectGraph to add new dependencies using a plus operation and inject the
+     * declared one in the activity. This new graph will be destroyed once the activity lifecycle
+     * finishes.
+     *
+     */
+    private void injectDependencies() {
+        TvShowsApplication tvShowsApplication = (TvShowsApplication) getApplication();
+        List<Object> activityScopeModules = getModules();
+        activityScopeModules.add(new ActivityModule(this));
+        activityScopeGraph = tvShowsApplication.plus(activityScopeModules);
+        inject(this);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -17,11 +17,87 @@
 
 package com.ushahidi.android.ui.fragment;
 
+import com.ushahidi.android.R;
+import com.ushahidi.android.model.DeploymentModel;
+import com.ushahidi.android.presenter.DeploymentListPresenter;
+import com.ushahidi.android.ui.adapter.DeploymentAdapter;
+import com.ushahidi.android.ui.view.IDeploymentListView;
+
+import android.content.Context;
+import android.os.Bundle;
+
+import java.util.List;
+
 /**
  * Shows list of deployment.
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class ListDeploymentFragment {
+public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, DeploymentAdapter>
+        implements
+        IDeploymentListView {
 
+    private DeploymentListPresenter mDeploymentListPresenter;
+
+    public ListDeploymentFragment() {
+        super(DeploymentAdapter.class, R.layout.list_deployment, 0, android.R.id.list);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mDeploymentListPresenter.init();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mDeploymentListPresenter.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mDeploymentListPresenter.pause();
+    }
+
+    @Override
+    void initPresenter() {
+
+    }
+
+    @Override
+    public void renderUserList(List<DeploymentModel> deploymentModel) {
+
+    }
+
+    @Override
+    public Context getContext() {
+        return getActivity().getApplicationContext();
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showRetry() {
+
+    }
+
+    @Override
+    public void hideRetry() {
+
+    }
+
+    @Override
+    public void showError(int message) {
+        showToast(message);
+    }
 }
