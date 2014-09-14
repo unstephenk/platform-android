@@ -17,6 +17,8 @@
 
 package com.ushahidi.android.ui.activity;
 
+import com.ushahidi.android.UshahidiApplication;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -80,7 +82,7 @@ public abstract class BaseActivity extends Activity {
      *
      */
     private void injectDependencies() {
-        TvShowsApplication tvShowsApplication = (TvShowsApplication) getApplication();
+        UshahidiApplication tvShowsApplication = (UshahidiApplication) getApplication();
         List<Object> activityScopeModules = getModules();
         activityScopeModules.add(new ActivityModule(this));
         activityScopeGraph = tvShowsApplication.plus(activityScopeModules);
