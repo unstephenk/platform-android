@@ -17,11 +17,14 @@
 
 package com.ushahidi.android.ui.adapter;
 
+import com.ushahidi.android.R;
 import com.ushahidi.android.model.DeploymentModel;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckedTextView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -42,7 +45,60 @@ public class DeploymentAdapter extends BaseListAdapter<DeploymentModel> {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        return null;
+    public View getView(int position, View view, ViewGroup viewGroup) {
+        Widgets widgets;
+        if (view == null) {
+            view = mInflater.inflate(R.layout.list_deployment_item, null);
+            widgets = new Widgets(view);
+            view.setTag(widgets);
+        } else {
+            widgets = (Widgets) view.getTag();
+        }
+
+        // initialize view with content
+        widgets.title.setText(getItem(position).getTitle());
+        widgets.description.setText(getItem(position).getDescription());
+        widgets.position = position;
+
+        /*if (getItem(position).getStatus() == 1) {
+            widgets.listCheckBox.setChecked(true);
+        } else {
+            widgets.listCheckBox.setChecked(false);
+        }*/
+
+        return view;
+    }
+
+    public class Widgets implements View.OnClickListener {
+
+        TextView title;
+
+        TextView description;
+
+        CheckedTextView listCheckBox;
+
+        int position = 0;
+
+        public Widgets(View convertView) {
+
+            title = (TextView) convertView.findViewById(R.id.deployment_title);
+            description = (TextView) convertView.findViewById(R.id.deployment_description);
+
+            listCheckBox = (CheckedTextView) convertView
+                    .findViewById(R.id.deployment_selected);
+
+            listCheckBox.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (listCheckBox.isChecked()) {
+                listCheckBox.setChecked(false);
+            } else {
+
+                listCheckBox.setChecked(true);
+            }
+        }
     }
 }
