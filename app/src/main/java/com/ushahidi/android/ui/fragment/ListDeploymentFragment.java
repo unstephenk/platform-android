@@ -51,13 +51,13 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     @Inject
     DeploymentModelDataMapper mDeploymentModelDataMapper;
 
-    private DeploymentListPresenter mDeploymentListPresenter;
-
     @InjectView(R.id.loading_list_progress)
     ProgressBar mListLoadingProgress;
 
     @InjectView(android.R.id.empty)
     TextView mEmptyView;
+
+    private DeploymentListPresenter mDeploymentListPresenter;
 
     public ListDeploymentFragment() {
         super(DeploymentAdapter.class, R.layout.list_deployment, 0, android.R.id.list);
@@ -102,8 +102,8 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
 
     @Override
     public void showLoading() {
-        setViewGone(mListLoadingProgress,false);
         setViewGone(mEmptyView);
+        setViewGone(mListLoadingProgress, false);
     }
 
     @Override

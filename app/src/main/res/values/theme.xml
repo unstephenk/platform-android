@@ -46,12 +46,6 @@
     </style>
 
     <style name="Theme.Ushahidi" parent="Theme">
-        <item name="actionBarOverlayTopOffset">?android:actionBarSize</item>
-        <item name="actionBarInsetStart">?android:actionBarSize</item>
-        <item name="spinnerBarInsetStart">?android:actionBarSize</item>
-        <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
-        <item name="popupItemBackground">?android:selectableItemBackground</item>
-        <item name="photoItemForeground">?android:selectableItemBackground</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>

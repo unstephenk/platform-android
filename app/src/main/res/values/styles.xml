@@ -5,6 +5,7 @@
         <item name="android:background">@drawable/actionbar_background</item>
         <item name="android:displayOptions">showHome|showTitle</item>
         <item name="android:titleTextStyle">@style/ActionBar.TitleText</item>
+
     </style>
 
     <style name="ActionBar" parent="ActionBar.Base"/>
