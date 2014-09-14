@@ -76,7 +76,6 @@ public class DeploymentModelDataMapper {
      * Maps a list {@link Deployment} into a list of {@link DeploymentModel}.
      *
      * @param deploymentList List to be mapped.
-     *
      * @return {@link DeploymentModel}
      */
     public List<DeploymentModel> map(List<Deployment> deploymentList) {

@@ -131,6 +131,8 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
             mListView.setAdapter(mAdapter);
         }
 
+        initPresenter();
+
     }
 
     /**
@@ -206,6 +208,16 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
      */
     protected void showToast(int message) {
         Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG)
+                .show();
+    }
+
+    /**
+     * Shows a {@link android.widget.Toast} message.
+     *
+     * @param message A message string
+     */
+    protected void showToast(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG)
                 .show();
     }
 }

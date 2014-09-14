@@ -15,22 +15,35 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.model;
+package com.ushahidi.android.module;
+
+import com.ushahidi.android.qualifier.ActivityContext;
+
+import android.app.Activity;
+import android.content.Context;
+
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Base model class
+ * Dagger module created to provide some common activity scope dependencies as @ActivityContext.
+ * This module is going to be added to the graph generated for every activity during the activity
+ * creation lifecycle.
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class Model {
+@Module(library = true)
+public class ActivityModule {
 
-    protected long mId;
+    private final Activity activity;
 
-    public long getId() {
-        return mId;
+    public ActivityModule(Activity activity) {
+        this.activity = activity;
     }
 
-    public void setId(long id) {
-        this.mId = id;
+    @ActivityContext
+    @Provides
+    Context provideActivityContext() {
+        return activity;
     }
 }

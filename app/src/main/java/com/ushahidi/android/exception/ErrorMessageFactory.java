@@ -31,12 +31,13 @@ import android.content.Context;
  */
 public class ErrorMessageFactory {
 
-    private ErrorMessageFactory() {}
+    private ErrorMessageFactory() {
+    }
 
     /**
      * Creates a String representing an error message.
      *
-     * @param context Context needed to retrieve string resources.
+     * @param context   Context needed to retrieve string resources.
      * @param exception An exception used as a condition to retrieve the correct error message.
      * @return {@link String} an error message.
      */

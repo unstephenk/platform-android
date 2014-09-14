@@ -15,22 +15,26 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.model;
+package com.ushahidi.android.ui.activity;
+
+import com.ushahidi.android.R;
+import com.ushahidi.android.module.DeploymentUiModule;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
- * Base model class
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class Model {
+public class DeploymentActivity extends BaseActivity {
 
-    protected long mId;
-
-    public long getId() {
-        return mId;
+    public DeploymentActivity() {
+        super(R.layout.activity_deployment_list,0);
     }
-
-    public void setId(long id) {
-        this.mId = id;
+    @Override
+    protected List<Object> getModules() {
+        List<Object> modules = new LinkedList<Object>();
+        modules.add(new DeploymentUiModule());
+        return modules;
     }
 }

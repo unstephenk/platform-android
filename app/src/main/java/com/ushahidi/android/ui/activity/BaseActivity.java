@@ -18,6 +18,7 @@
 package com.ushahidi.android.ui.activity;
 
 import com.ushahidi.android.UshahidiApplication;
+import com.ushahidi.android.module.ActivityModule;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
 import dagger.ObjectGraph;
 
 import static android.view.View.GONE;
@@ -76,16 +78,15 @@ public abstract class BaseActivity extends Activity {
     protected abstract List<Object> getModules();
 
     /**
-     * Creates a new Dagger ObjectGraph to add new dependencies using a plus operation and inject the
-     * declared one in the activity. This new graph will be destroyed once the activity lifecycle
-     * finishes.
-     *
+     * Creates a new Dagger ObjectGraph to add new dependencies using a plus operation and inject
+     * the declared one in the activity. This new graph will be destroyed once the activity
+     * lifecycle finishes.
      */
     private void injectDependencies() {
-        UshahidiApplication tvShowsApplication = (UshahidiApplication) getApplication();
+        UshahidiApplication ushahidiApplication = (UshahidiApplication) getApplication();
         List<Object> activityScopeModules = getModules();
         activityScopeModules.add(new ActivityModule(this));
-        activityScopeGraph = tvShowsApplication.plus(activityScopeModules);
+        activityScopeGraph = ushahidiApplication.plus(activityScopeModules);
         inject(this);
     }
 
@@ -93,7 +94,8 @@ public abstract class BaseActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        injectDependencies();
+        injectViews();
         if (mLayout != 0) {
             setContentView(mLayout);
         }
@@ -184,6 +186,14 @@ public abstract class BaseActivity extends Activity {
             }
         }
         return view;
+    }
+
+    /**
+     * Replace every field annotated with ButterKnife annotations like @InjectView with the proper
+     * value.
+     */
+    private void injectViews() {
+        ButterKnife.inject(this);
     }
 
     /**

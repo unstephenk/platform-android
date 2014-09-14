@@ -56,6 +56,6 @@ public interface ILoadViewData {
      *
      * @param message A string resource representing an error.
      */
-    public void showError(int message);
+    public void showError(String message);
 
 }

@@ -15,22 +15,20 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.model;
+package com.ushahidi.android.qualifier;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import javax.inject.Qualifier;
 
 /**
- * Base model class
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class Model {
+@Qualifier
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ActivityContext {
 
-    protected long mId;
-
-    public long getId() {
-        return mId;
-    }
-
-    public void setId(long id) {
-        this.mId = id;
-    }
 }

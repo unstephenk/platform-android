@@ -1,5 +1,7 @@
 package com.ushahidi.android;
 
+import com.ushahidi.android.module.UshahidiModule;
+
 import android.app.Application;
 
 import java.util.List;
@@ -10,17 +12,18 @@ import timber.log.Timber;
 
 public class UshahidiApplication extends Application {
 
-    private ObjectGraph objectGraph;
+    private ObjectGraph mObjectGraph;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        initializeDependencyInjector();
+
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         } else {
             Timber.plant(new CrashReportingTree());
         }
+        initializeDependencyInjector();
     }
 
     /**
@@ -30,7 +33,7 @@ public class UshahidiApplication extends Application {
      * @param object to inject.
      */
     public void inject(Object object) {
-        objectGraph.inject(object);
+        mObjectGraph.inject(object);
     }
 
     /**
@@ -44,13 +47,13 @@ public class UshahidiApplication extends Application {
             throw new IllegalArgumentException(
                     "You can't plus a null module, review your getModules() implementation");
         }
-        return objectGraph.plus(modules.toArray());
+        return mObjectGraph.plus(modules.toArray());
     }
 
     private void initializeDependencyInjector() {
-        objectGraph = ObjectGraph.create(null);
-        objectGraph.inject(this);
-        objectGraph.injectStatics();
+        mObjectGraph = ObjectGraph.create(new UshahidiModule(this));
+        mObjectGraph.inject(this);
+        mObjectGraph.injectStatics();
     }
 
     /**

@@ -18,7 +18,9 @@
 package com.ushahidi.android.ui.fragment;
 
 import com.ushahidi.android.R;
+import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.model.DeploymentModel;
+import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.DeploymentListPresenter;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
 import com.ushahidi.android.ui.view.IDeploymentListView;
@@ -28,6 +30,8 @@ import android.os.Bundle;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Shows list of deployment.
  *
@@ -36,6 +40,13 @@ import java.util.List;
 public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, DeploymentAdapter>
         implements
         IDeploymentListView {
+
+    @Inject
+    ListDeployment mListDeployment;
+
+    @Inject
+    DeploymentModelDataMapper mDeploymentModelDataMapper;
+
 
     private DeploymentListPresenter mDeploymentListPresenter;
 
@@ -63,7 +74,8 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
 
     @Override
     void initPresenter() {
-
+        mDeploymentListPresenter = new DeploymentListPresenter(this, mListDeployment,
+                mDeploymentModelDataMapper);
     }
 
     @Override
@@ -97,7 +109,7 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     }
 
     @Override
-    public void showError(int message) {
+    public void showError(String message) {
         showToast(message);
     }
 }
