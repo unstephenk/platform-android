@@ -33,5 +33,5 @@ public interface IDeploymentListView extends ILoadViewData {
      *
      * @param deploymentModel The collection of {@link DeploymentModel} that will be shown.
      */
-    void renderUserList(List<DeploymentModel> deploymentModel);
+    void renderDeploymentList(List<DeploymentModel> deploymentModel);
 }

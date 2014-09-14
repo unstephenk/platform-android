@@ -118,7 +118,7 @@ public class DeploymentListPresenter implements IPresenter {
     private void showDeploymentsListInView(List<Deployment> listDeployments) {
         final List<DeploymentModel> deploymentModelsList =
                 mDeploymentModelDataMapper.map(listDeployments);
-        mIDeploymentListView.renderUserList(deploymentModelsList);
+        mIDeploymentListView.renderDeploymentList(deploymentModelsList);
     }
 
     private void getDeploymentList() {

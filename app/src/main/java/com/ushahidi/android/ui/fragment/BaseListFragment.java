@@ -31,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -39,6 +40,9 @@ import java.lang.reflect.InvocationTargetException;
 
 import butterknife.ButterKnife;
 import timber.log.Timber;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  * Base {@link android.app.ListFragment} that every fragment list will extend from.
@@ -170,6 +174,60 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         injectViews(view);
+    }
+
+    protected View fadeIn(final android.view.View view, final boolean animate) {
+        if (view != null) {
+            if (animate) {
+                view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                        android.R.anim.fade_in));
+
+            } else {
+
+                view.clearAnimation();
+            }
+        }
+
+        return view;
+
+    }
+
+    protected View fadeOut(final android.view.View view, final boolean animate) {
+        if (view != null) {
+            if (animate) {
+                view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                        android.R.anim.fade_out));
+            } else {
+                view.clearAnimation();
+            }
+        }
+        return view;
+
+    }
+
+    protected View setViewGone(final View view) {
+        return setViewGone(view, true);
+    }
+
+    protected View setViewGone(final View view, final boolean gone) {
+        if (view != null) {
+            if (gone) {
+                if (GONE != view.getVisibility()) {
+
+                    fadeOut(view, true);
+
+                    view.setVisibility(GONE);
+                }
+            } else {
+                if (VISIBLE != view.getVisibility()) {
+                    view.setVisibility(VISIBLE);
+
+                    fadeIn(view, true);
+
+                }
+            }
+        }
+        return view;
     }
 
     /**

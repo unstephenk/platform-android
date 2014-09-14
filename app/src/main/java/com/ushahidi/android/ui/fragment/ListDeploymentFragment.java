@@ -27,10 +27,14 @@ import com.ushahidi.android.ui.view.IDeploymentListView;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import butterknife.InjectView;
 
 /**
  * Shows list of deployment.
@@ -47,8 +51,13 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     @Inject
     DeploymentModelDataMapper mDeploymentModelDataMapper;
 
-
     private DeploymentListPresenter mDeploymentListPresenter;
+
+    @InjectView(R.id.loading_list_progress)
+    ProgressBar mListLoadingProgress;
+
+    @InjectView(android.R.id.empty)
+    TextView mEmptyView;
 
     public ListDeploymentFragment() {
         super(DeploymentAdapter.class, R.layout.list_deployment, 0, android.R.id.list);
@@ -79,8 +88,11 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     }
 
     @Override
-    public void renderUserList(List<DeploymentModel> deploymentModel) {
-
+    public void renderDeploymentList(List<DeploymentModel> deploymentModel) {
+        if (deploymentModel != null && mAdapter != null) {
+            mAdapter.setItems(deploymentModel);
+            mListView.setAdapter(mAdapter);
+        }
     }
 
     @Override
@@ -90,12 +102,14 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
 
     @Override
     public void showLoading() {
-
+        setViewGone(mListLoadingProgress,false);
+        setViewGone(mEmptyView);
     }
 
     @Override
     public void hideLoading() {
-
+        setViewGone(mListLoadingProgress);
+        setViewGone(mEmptyView, false);
     }
 
     @Override
