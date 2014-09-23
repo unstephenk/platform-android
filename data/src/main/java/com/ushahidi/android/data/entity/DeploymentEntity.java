@@ -28,7 +28,7 @@ public class DeploymentEntity extends Entity {
 
     private String mTitle;
 
-    private String mDescription;
+    private int mStatus;
 
     private String mUrl;
 
@@ -38,7 +38,7 @@ public class DeploymentEntity extends Entity {
 
     @Override
     public long getId() {
-       return mId;
+        return mId;
     }
 
     @Override
@@ -54,12 +54,12 @@ public class DeploymentEntity extends Entity {
         mTitle = title;
     }
 
-    public String getDescription() {
-        return mDescription;
+    public int getStatus() {
+        return mStatus;
     }
 
-    public void setDescription(String description) {
-        mDescription = description;
+    public void setStatus(int status) {
+        mStatus = status;
     }
 
     public String getUrl() {
@@ -75,7 +75,7 @@ public class DeploymentEntity extends Entity {
         return "Deployment{" +
                 "mId=" + mId +
                 ", mTitle='" + mTitle + '\'' +
-                ", mDescription='" + mDescription + '\'' +
+                ", mStatus='" + mStatus + '\'' +
                 ", mUrl='" + mUrl + '\'' +
                 '}';
     }

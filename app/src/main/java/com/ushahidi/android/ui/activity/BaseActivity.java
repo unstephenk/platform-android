@@ -55,7 +55,7 @@ public abstract class BaseActivity extends Activity {
     private ObjectGraph activityScopeGraph;
 
 
-    protected BaseActivity(int layout, int menu) {
+    public BaseActivity(int layout, int menu) {
         mLayout = layout;
         mMenu = menu;
     }
@@ -85,9 +85,12 @@ public abstract class BaseActivity extends Activity {
     private void injectDependencies() {
         UshahidiApplication ushahidiApplication = (UshahidiApplication) getApplication();
         List<Object> activityScopeModules = getModules();
-        activityScopeModules.add(new ActivityModule(this));
-        activityScopeGraph = ushahidiApplication.plus(activityScopeModules);
-        inject(this);
+
+        if (activityScopeModules != null) {
+            activityScopeModules.add(new ActivityModule(this));
+            activityScopeGraph = ushahidiApplication.plus(activityScopeModules);
+            inject(this);
+        }
     }
 
 

@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2014 Ushahidi.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under
+  ~ the terms of the GNU Affero General Public License as published by the Free
+  ~ Software Foundation, either version 3 of the License, or (at your option)
+  ~ any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT
+  ~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program in the file LICENSE-AGPL. If not, see
+  ~ https://www.gnu.org/licenses/agpl-3.0.html
+  -->
+
 <resources>
 
     <string name="app_name">Ushahidi Android</string>
@@ -7,9 +25,20 @@
 
     <string name="empty_list">Empty list.</string>
 
-    // Exception messages
+    <!--Exception messages -->
     <string name="exception_message_generic">Oops, an application error occurred</string>
     <string name="exception_message_no_connection">There is no internet connection</string>
     <string name="exception_message_deployment_not_found">Cannot retrieve deployment data.</string>
     <string name="exception_message_deployment_not_added">Could not add a deployment</string>
+
+    <!-- Add Deployment -->
+    <string name="add_deployment_title_hint">Deployment Title Required</string>
+    <string name="add_deployment_description_hint">Deployment Description Optional</string>
+    <string name="add_deployment_url_hint">Deployment URL Required</string>
+    <string name="add_deployment_button">Add</string>
+    <string name="add_deployment_cancel">Cancel</string>
+    <string name="menu_create_account">Create account</string>
+    <string name="menu_sign_in">Sign in</string>
+    <string name="add_deployment_actionbar_title">Add Deployment</string>
+    <string name="add_deployment_empty_title">Please enter a title for your deployment</string>
 </resources>

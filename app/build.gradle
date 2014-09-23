@@ -1,7 +1,7 @@
 lpreview = hasProperty('lpreview')
 
+apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
-apply plugin: 'checkstyle'
 
 android {
     compileSdkVersion lpreview ? "android-L" : 19
@@ -15,7 +15,7 @@ android {
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
+        //testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
     }
 
     compileOptions {
@@ -58,14 +58,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:5.1.+'
     compile 'com.jakewharton.timber:timber:2.4.+'
     compile 'com.squareup.picasso:picasso:2.3.+'
-    //compile 'com.android.support:support-v4:20.0.+'
-}
-
-task checkstyle(type: Checkstyle) {
-    configFile file('../config/checkstyle/checkstyle.xml')
-    source 'src/main/java'
-    include '**/*.java'
-    exclude '**/gen/**'
-
-    classpath = files(project.configurations.compile.asPath)
+    compile 'com.android.support:support-v13:20.+'
+    compile 'com.android.support:support-v4:20.+'
+    compile 'com.andreabaccega:android-form-edittext:1.0.5@aar'
 }

@@ -15,12 +15,20 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
-
-<!-- List deployments -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-    <include layout="@layout/list_items"/>
-</RelativeLayout>
-
+<set
+        android:zAdjustment="bottom"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <alpha
+            android:interpolator="@android:anim/accelerate_interpolator"
+            android:duration="300"
+            android:fromAlpha="1.0"
+            android:toAlpha="0.5"/>
+    <scale
+            android:duration="300"
+            android:pivotX="50.0%"
+            android:pivotY="50.0%"
+            android:fromXScale="1.0"
+            android:toXScale="0.9"
+            android:fromYScale="1.0"
+            android:toYScale="0.9"/>
+</set>

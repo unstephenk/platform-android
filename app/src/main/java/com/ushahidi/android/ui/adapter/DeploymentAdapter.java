@@ -26,19 +26,12 @@ import android.view.ViewGroup;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
 
-import java.util.List;
-
 /**
  * Manages list of deployments
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class DeploymentAdapter extends BaseListAdapter<DeploymentModel> {
-
-    public DeploymentAdapter(Context context, List<DeploymentModel> deploymentModelList) {
-        this(context);
-        setItems(deploymentModelList);
-    }
 
     public DeploymentAdapter(Context context) {
         super(context);
@@ -55,9 +48,9 @@ public class DeploymentAdapter extends BaseListAdapter<DeploymentModel> {
             widgets = (Widgets) view.getTag();
         }
 
-        // initialize view with content
+        // Initialize view with content
         widgets.title.setText(getItem(position).getTitle());
-        widgets.description.setText(getItem(position).getDescription());
+        widgets.url.setText(getItem(position).getUrl());
         widgets.position = position;
 
         /*if (getItem(position).getStatus() == 1) {
@@ -73,7 +66,7 @@ public class DeploymentAdapter extends BaseListAdapter<DeploymentModel> {
 
         TextView title;
 
-        TextView description;
+        TextView url;
 
         CheckedTextView listCheckBox;
 
@@ -82,7 +75,7 @@ public class DeploymentAdapter extends BaseListAdapter<DeploymentModel> {
         public Widgets(View convertView) {
 
             title = (TextView) convertView.findViewById(R.id.deployment_title);
-            description = (TextView) convertView.findViewById(R.id.deployment_description);
+            url = (TextView) convertView.findViewById(R.id.deployment_description);
 
             listCheckBox = (CheckedTextView) convertView
                     .findViewById(R.id.deployment_selected);

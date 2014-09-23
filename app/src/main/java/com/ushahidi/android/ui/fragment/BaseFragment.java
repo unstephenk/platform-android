@@ -17,6 +17,10 @@
 
 package com.ushahidi.android.ui.fragment;
 
+import com.andreabaccega.widget.FormEditText;
+import com.ushahidi.android.ui.activity.BaseActivity;
+
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,6 +31,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
+
+import butterknife.ButterKnife;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -49,11 +55,11 @@ public abstract class BaseFragment extends Fragment {
     protected final int mMenu;
 
     /**
-     * BaseActivity
+     * BaseFragment
      *
      * @param menu mMenu resource mId
      */
-    protected BaseFragment(int layout, int menu) {
+    public BaseFragment(int layout, int menu) {
         this.mLayout = layout;
         this.mMenu = menu;
     }
@@ -72,6 +78,12 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        injectDependencies();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         android.view.View root = null;
@@ -79,6 +91,12 @@ public abstract class BaseFragment extends Fragment {
             root = inflater.inflate(mLayout, container, false);
         }
         return root;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        injectViews(view);
     }
 
     @Override
@@ -154,6 +172,24 @@ public abstract class BaseFragment extends Fragment {
     }
 
     /**
+     * Replace every field annotated using @Inject annotation with the provided dependency specified
+     * inside a Dagger module value.
+     */
+    private void injectDependencies() {
+        ((BaseActivity) getActivity()).inject(this);
+    }
+
+    /**
+     * Replace every field annotated with ButterKnife annotations like @InjectView with the proper
+     * value.
+     *
+     * @param view to extract each widget injected in the fragment.
+     */
+    private void injectViews(final View view) {
+        ButterKnife.inject(this, view);
+    }
+
+    /**
      * Shows a {@link android.widget.Toast} message.
      *
      * @param message A message resource
@@ -161,5 +197,44 @@ public abstract class BaseFragment extends Fragment {
     protected void showToast(int message) {
         Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG)
                 .show();
+    }
+
+    /**
+     * Shows a {@link android.widget.Toast} message.
+     *
+     * @param message A message string
+     */
+    protected void showToast(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG)
+                .show();
+    }
+
+    protected boolean validateForm(FormEditText item) {
+        return validateForm(item, true);
+    }
+
+    private boolean validateForm(FormEditText item, boolean isFocus) {
+        if (item.testValidity()) {
+            return true;
+        } else {
+            if (isFocus) {
+                item.requestFocus();
+            }
+            return false;
+        }
+    }
+
+    protected boolean validateForms(FormEditText... list) {
+        return validateForms(list, true);
+    }
+
+    private boolean validateForms(FormEditText[] list, boolean isFocus) {
+        boolean result = true;
+        for (FormEditText item : list) {
+            if (!validateForm(item, result && isFocus)) {
+                result = false;
+            }
+        }
+        return result;
     }
 }

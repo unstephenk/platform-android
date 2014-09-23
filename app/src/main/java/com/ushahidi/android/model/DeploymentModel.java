@@ -24,7 +24,7 @@ public class DeploymentModel extends Model {
 
     private String mTitle;
 
-    private String mDescription;
+    private int mStatus;
 
     private String mUrl;
 
@@ -36,12 +36,12 @@ public class DeploymentModel extends Model {
         mTitle = title;
     }
 
-    public String getDescription() {
-        return mDescription;
+    public int getStatus() {
+        return mStatus;
     }
 
-    public void setDescription(String description) {
-        mDescription = description;
+    public void setStatus(int status) {
+        mStatus = status;
     }
 
     public String getUrl() {
@@ -57,7 +57,7 @@ public class DeploymentModel extends Model {
         return "Deployment{" +
                 "mId=" + mId +
                 ", mTitle='" + mTitle + '\'' +
-                ", mDescription='" + mDescription + '\'' +
+                ", mStatus='" + mStatus + '\'' +
                 ", mUrl='" + mUrl + '\'' +
                 '}';
     }

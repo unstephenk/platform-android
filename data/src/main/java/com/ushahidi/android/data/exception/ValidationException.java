@@ -15,27 +15,28 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.ui.activity;
-
-import com.ushahidi.android.R;
-import com.ushahidi.android.module.DeploymentUiModule;
-
-import java.util.LinkedList;
-import java.util.List;
+package com.ushahidi.android.data.exception;
 
 /**
+ * Exception thrown when a validation fails
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentActivity extends BaseActivity {
+public class ValidationException extends Exception {
 
-    public DeploymentActivity() {
-        super(R.layout.activity_deployment_list, 0);
+    public ValidationException() {
+        super();
     }
 
-    @Override
-    protected List<Object> getModules() {
-        List<Object> modules = new LinkedList<Object>();
-        modules.add(new DeploymentUiModule());
-        return modules;
+    public ValidationException(final String message) {
+        super(message);
+    }
+
+    public ValidationException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public ValidationException(final Throwable cause) {
+        super(cause);
     }
 }

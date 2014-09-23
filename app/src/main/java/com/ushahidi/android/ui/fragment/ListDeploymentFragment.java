@@ -28,7 +28,6 @@ import com.ushahidi.android.ui.view.IDeploymentListView;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -53,9 +52,6 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
 
     @InjectView(R.id.loading_list_progress)
     ProgressBar mListLoadingProgress;
-
-    @InjectView(android.R.id.empty)
-    TextView mEmptyView;
 
     private DeploymentListPresenter mDeploymentListPresenter;
 
@@ -102,14 +98,12 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
 
     @Override
     public void showLoading() {
-        setViewGone(mEmptyView);
         setViewGone(mListLoadingProgress, false);
     }
 
     @Override
     public void hideLoading() {
         setViewGone(mListLoadingProgress);
-        setViewGone(mEmptyView, false);
     }
 
     @Override

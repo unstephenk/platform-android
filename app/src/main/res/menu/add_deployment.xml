@@ -15,12 +15,15 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_search"
+          android:icon="@drawable/ic_action_create_account"
+          android:title="@string/menu_create_account"
+          android:orderInCategory="1"
+          android:showAsAction="always" />
 
-<!-- List deployments -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-    <include layout="@layout/list_items"/>
-</RelativeLayout>
-
+    <item android:id="@+id/menu_refresh"
+          android:title="@string/menu_sign_in"
+          android:orderInCategory="1"
+          android:showAsAction="never" />
+</menu>

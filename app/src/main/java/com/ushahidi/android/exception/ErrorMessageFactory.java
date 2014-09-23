@@ -21,6 +21,7 @@ import com.ushahidi.android.R;
 import com.ushahidi.android.data.exception.AddDeploymentException;
 import com.ushahidi.android.data.exception.DeploymentNotFoundException;
 import com.ushahidi.android.data.exception.NetworkConnectionException;
+import com.ushahidi.android.data.exception.ValidationException;
 
 import android.content.Context;
 
@@ -50,6 +51,8 @@ public class ErrorMessageFactory {
             message = context.getString(R.string.exception_message_deployment_not_found);
         } else if (exception instanceof AddDeploymentException) {
             message = context.getString(R.string.exception_message_deployment_not_added);
+        } else if (exception instanceof ValidationException) {
+            message = exception.getMessage();
         }
 
         return message;

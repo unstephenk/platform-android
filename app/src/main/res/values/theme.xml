@@ -17,40 +17,28 @@
   -->
 <resources>
 
-    <style name="Base.Theme" parent="android:Theme.Holo.Light.DarkActionBar"/>
-
-    <style name="Base.ActionBar" parent="android:Widget.Holo.ActionBar"/>
-
-    <style name="Base.ActionBar.TitleText" parent="android:TextAppearance.Holo.Widget.ActionBar.Title"/>
-
-    <style name="Base.ActionBar.TabBar" parent="android:Widget.Holo.ActionBar.TabBar"/>
-
-    <style name="Base.EditText" parent="android:Widget.Holo.Light.EditText"/>
-
-    <style name="Base.Widget" parent="android:Theme.Holo"/>
-
-    <style name="Base.Widget.ActionButton.Overflow" parent="android:Widget.Holo.ActionButton.Overflow"/>
-
-    <style name="Base.Widget.Spinner" parent="android:Widget.Holo.Light.Spinner"/>
-
-    <style name="Base.Widget.ListView.DropDown" parent="android:Widget.Holo.Light.ListView.DropDown"/>
-
-    <style name="Base.Widget.PopupMenu" parent="android:Widget.Holo.Light.PopupMenu"/>
-
-    <style name="Base.TextAppearance.Widget.PopupMenu.Large" parent="android:TextAppearance.Holo.Widget.PopupMenu.Large"/>
-
-    <style name="Theme" parent="Base.Theme">
-        <!-- Only needed for pre-L -->
+    <style name="Theme.Ushahidi" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarWidgetTheme">@style/Theme.Ushahidi.Widget</item>
-        <item name="android:actionDropDownStyle">@style/Widget.Ushahidi.HeaderBar.Spinner</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
+        <item name="android:editTextStyle">@style/Ushahidi.Widget.EditText</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Solid</item>
+        <item name="android:popupMenuStyle">@style/Ushahidi.Widget.PopupMenu</item>
+        <item name="android:listPopupWindowStyle">@style/Ushahidi.Widget.PopupMenu</item>
+        <item name="android:dropDownListViewStyle">@style/ActionbarDropdown.ListView.DropDown</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/TextAppearance.LargePopupMenu
+        </item>
     </style>
 
-    <style name="Theme.Ushahidi" parent="Theme">
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:actionBarStyle">@style/ActionBar</item>
-        <item name="android:popupMenuStyle">@style/Widget.Ushahidi.PopupMenu</item>
-        <item name="android:listPopupWindowStyle">@style/Widget.Ushahidi.PopupMenu</item>
+    <style name="Theme.Ushahidi.NoActionBar" parent="android:Theme.Light.NoTitleBar.Fullscreen"/>
+
+    <style name="Theme.Ushahidi.Actionbar.Black" parent="Transparent"/>
+
+    <style name="Theme.Ushahidi.PopupActivity" parent="Theme.Ushahidi"/>
+
+    <style name="Theme.Ushahidi.Widget" parent="Ushahidi.Widget">
+        <item name="android:popupMenuStyle">@style/Ushahidi.Widget.PopupMenu</item>
+        <item name="android:listPopupWindowStyle">@style/Ushahidi.Widget.PopupMenu</item>
+        <item name="android:dropDownListViewStyle">@style/ActionbarDropdown.ListView.DropDown</item>
         <item name="android:textAppearanceLargePopupMenu">@style/TextAppearance.LargePopupMenu
         </item>
     </style>

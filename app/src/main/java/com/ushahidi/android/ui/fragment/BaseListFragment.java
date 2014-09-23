@@ -132,7 +132,7 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
             mAdapter = BaseListFragment.createInstance(mAdapterClass, Context.class, getActivity());
             mListView.setFocusable(true);
             mListView.setFocusableInTouchMode(true);
-            mListView.setAdapter(mAdapter);
+            setListAdapter(mAdapter);
         }
 
         initPresenter();

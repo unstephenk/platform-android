@@ -17,6 +17,9 @@
 
 package com.ushahidi.android.data.repository;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.respository.IDeploymentRepository;
 import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
@@ -24,6 +27,10 @@ import com.ushahidi.android.data.database.IDeploymentDatabaseHelper;
 import com.ushahidi.android.data.entity.DeploymentEntity;
 import com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper;
 import com.ushahidi.android.data.exception.RepositoryError;
+import com.ushahidi.android.data.exception.ValidationException;
+import com.ushahidi.android.validator.Validator;
+
+import android.util.Log;
 
 import java.util.List;
 
@@ -41,20 +48,26 @@ public class DeploymentDataRepository implements IDeploymentRepository {
 
     private final DeploymentDatabaseHelper mDeploymentDatabaseHelper;
 
+    private final Validator mValidator;
+
     protected DeploymentDataRepository(DeploymentDatabaseHelper deploymentDatabaseHelper,
-            DeploymentEntityMapper entityMapper) {
+            DeploymentEntityMapper entityMapper, Validator validator) {
         if (entityMapper == null) {
             throw new IllegalArgumentException("Invalid null parameter");
         }
+        Preconditions.checkNotNull(deploymentDatabaseHelper, "DatabaseHelper cannot be null");
+        Preconditions.checkNotNull(entityMapper, "Entity mapper cannot be null");
+        Preconditions.checkNotNull(validator, "Validator cannot be null");
         mDeploymentEntityMapper = entityMapper;
         mDeploymentDatabaseHelper = deploymentDatabaseHelper;
+        mValidator = validator;
     }
 
     public static synchronized DeploymentDataRepository getInstance(DeploymentDatabaseHelper
-            deploymentDatabaseHelper, DeploymentEntityMapper entityMapper) {
+            deploymentDatabaseHelper, DeploymentEntityMapper entityMapper, Validator validator) {
         if (sInstance == null) {
             sInstance = new DeploymentDataRepository(deploymentDatabaseHelper,
-                    entityMapper);
+                    entityMapper, validator);
         }
         return sInstance;
     }
@@ -68,19 +81,35 @@ public class DeploymentDataRepository implements IDeploymentRepository {
     @Override
     public void addDeployment(Deployment deployment,
             final DeploymentAddCallback deploymentCallback) {
-        mDeploymentDatabaseHelper.put(mDeploymentEntityMapper.unmap(deployment),
-                new IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback() {
+        // Check for required fields
+        boolean isValid = true;
+        if (Strings.isNullOrEmpty(deployment.getTitle())) {
+            isValid = false;
+            deploymentCallback.onError(new RepositoryError(
+                    new ValidationException("Deployment URL cannot be null or empty")));
+        }
 
-                    @Override
-                    public void onDeploymentEntityAdded() {
-                        deploymentCallback.onDeploymentAdded();
-                    }
+        if (!mValidator.isValid(deployment.getUrl())) {
+            isValid = false;
+            deploymentCallback.onError(
+                    new RepositoryError(new ValidationException("Deployment URL is invalid")));
+        }
 
-                    @Override
-                    public void onError(Exception exception) {
-                        deploymentCallback.onError(new RepositoryError(exception));
-                    }
-                });
+        if (isValid) {
+            mDeploymentDatabaseHelper.put(mDeploymentEntityMapper.unmap(deployment),
+                    new IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback() {
+
+                        @Override
+                        public void onDeploymentEntityAdded() {
+                            deploymentCallback.onDeploymentAdded();
+                        }
+
+                        @Override
+                        public void onError(Exception exception) {
+                            deploymentCallback.onError(new RepositoryError(exception));
+                        }
+                    });
+        }
     }
 
     @Override

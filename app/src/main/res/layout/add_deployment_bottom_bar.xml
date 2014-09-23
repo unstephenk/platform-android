@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2014 Ushahidi.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under
+  ~ the terms of the GNU Affero General Public License as published by the Free
+  ~ Software Foundation, either version 3 of the License, or (at your option)
+  ~ any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT
+  ~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program in the file LICENSE-AGPL. If not, see
+  ~ https://www.gnu.org/licenses/agpl-3.0.html
+  -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:background="@android:drawable/divider_horizontal_textfield"
+            android:layout_height="1dp"
+            android:orientation="horizontal"/>
+
+    <RelativeLayout
+            android:layout_height="48dp"
+            android:layout_width="match_parent"
+            android:paddingLeft="@dimen/activity_vertical_padding"
+            android:paddingRight="@dimen/activity_vertical_padding">
+
+        <Button
+                android:id="@+id/add_deployment_add"
+                style="@style/FLatButton.Ok"
+                android:text="@string/add_deployment_button"
+                android:layout_gravity="right"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"/>
+
+        <Button
+                android:id="@+id/add_deployment_cancel"
+                style="@style/FLatButton"
+                android:layout_gravity="right"
+                android:text="@string/add_deployment_cancel"
+                android:layout_toStartOf="@+id/add_deployment_add"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/add_deployment_add"/>
+
+    </RelativeLayout>
+</merge>

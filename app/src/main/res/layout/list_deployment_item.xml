@@ -24,6 +24,7 @@
     <TextView
             android:id="@+id/deployment_title"
             style="@style/ListItemPrimaryText"
+            android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/deployment_selected"/>
 
     <TextView

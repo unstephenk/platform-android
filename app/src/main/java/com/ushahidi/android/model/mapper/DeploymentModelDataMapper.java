@@ -44,7 +44,7 @@ public class DeploymentModelDataMapper {
 
         DeploymentModel deploymentModel = new DeploymentModel();
         deploymentModel.setId(deployment.getId());
-        deploymentModel.setDescription(deployment.getDescription());
+        deploymentModel.setStatus(deployment.getStatus());
         deploymentModel.setTitle(deployment.getTitle());
         deploymentModel.setUrl(deployment.getUrl());
         return deploymentModel;
@@ -65,7 +65,7 @@ public class DeploymentModelDataMapper {
 
         Deployment deployment = new Deployment();
         deployment.setTitle(deploymentModel.getTitle());
-        deployment.setDescription(deploymentModel.getDescription());
+        deployment.setStatus(deploymentModel.getStatus());
         deployment.setUrl(deploymentModel.getUrl());
         deployment.setId(deploymentModel.getId());
 

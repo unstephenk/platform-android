@@ -39,7 +39,7 @@ public class DeploymentEntityTest extends BaseTestCase {
 
     private static final String DUMMY_TITLE = "Dummy Deployment Title";
 
-    private static final String DUMMY_DESCRIPTION = "Dummy Deployment Description";
+    private static final int DUMMY_STATUS = 0;
 
     private static final String DUMMY_URL = "http://deployment.com";
 
@@ -52,13 +52,13 @@ public class DeploymentEntityTest extends BaseTestCase {
     public void shouldCreateDeploymentEntity() throws  Exception {
         mDeploymentEntity.setId(DUMMY_ID);
         mDeploymentEntity.setTitle(DUMMY_TITLE);
-        mDeploymentEntity.setDescription(DUMMY_DESCRIPTION);
+        mDeploymentEntity.setStatus(DUMMY_STATUS);
         mDeploymentEntity.setUrl(DUMMY_URL);
 
         assertThat(mDeploymentEntity, is(instanceOf(DeploymentEntity.class)));
         assertThat(mDeploymentEntity.getId(), is(DUMMY_ID));
         assertThat(mDeploymentEntity.getTitle(), is(DUMMY_TITLE));
-        assertThat(mDeploymentEntity.getDescription(),is(DUMMY_DESCRIPTION));
+        assertThat(mDeploymentEntity.getStatus(),is(DUMMY_STATUS));
         assertThat(mDeploymentEntity.getUrl(), is(DUMMY_URL));
     }
 }

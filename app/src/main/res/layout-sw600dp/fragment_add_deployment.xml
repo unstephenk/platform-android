@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2014 Ushahidi.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under
+  ~ the terms of the GNU Affero General Public License as published by the Free
+  ~ Software Foundation, either version 3 of the License, or (at your option)
+  ~ any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT
+  ~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program in the file LICENSE-AGPL. If not, see
+  ~ https://www.gnu.org/licenses/agpl-3.0.html
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:ushEditTextForm="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center|center_vertical|center_horizontal">
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="false">
+
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/activity_horizontal_padding"
+                    android:paddingLeft="@dimen/activity_vertical_padding"
+                    android:paddingRight="@dimen/activity_vertical_padding">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    <LinearLayout
+                            style="@style/LabelInputTextHorizontalLayout">
+
+                        <TextView
+                                android:id="@+id/titleLabel"
+                                style="@style/FormLabel"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.40"
+                                android:layout_marginRight="16dp"
+                                android:text="@string/add_deployment_title_hint"/>
+
+                        <com.andreabaccega.widget.FormEditText
+                                android:id="@+id/add_deployment_title"
+                                style="@style/FormInputText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                ushEditTextForm:emptyErrorString="@string/add_deployment_empty_title"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                            style="@style/LabelInputTextHorizontalLayout">
+
+                        <TextView
+                                android:id="@+id/add_deployment_url_label"
+                                style="@style/FormLabel"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.40"
+                                android:layout_marginRight="16dp"
+                                android:text="@string/add_deployment_url_hint"/>
+
+                        <com.andreabaccega.widget.FormEditText
+                                android:id="@+id/add_deployment_url"
+                                style="@style/FormUriInputText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                ushEditTextForm:testType="webUrl"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </FrameLayout>
+        </ScrollView>
+
+    </FrameLayout>
+
+    <!-- Button bar -->
+    <include layout="@layout/add_deployment_bottom_bar"/>
+</LinearLayout>
