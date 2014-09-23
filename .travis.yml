@@ -1,14 +1,10 @@
 language: android
-
 android:
   components:
-    - build-tools-19.1.0
-    - android-19
-
-script:
-  ./gradlew build
-
+  - build-tools-19.1.0
+  - android-19
+script: ./gradlew build
 notifications:
-    hipchat:
-      rooms:
-        secure: Pz5CQX/NtKLkk8c6kjhxipMS6kdQTj5jaeN9LC2k1IzERsqCYnx/nD2EV0cG4YJO0W3sMK3vaVgL5lLE3xHpe7wsLB/LWmxLY8QV0NJaSGOqqXAC4S5Yo7MRFd2S5fPWN7MC05SPpqiDveEle1fK6Gz7oHXSZxAFMyYnLRcaX3M=
+  hipchat:
+    rooms:
+      secure: KFRLdAAmWJ1tW0VxMAuh3NPJwSx5RnuTsvtd3hrmknYhAyKQ1mzi9leOLelXJ0Iix9DXsaC1/a7Syc7Q3pw79IyXOpIdY77Ls/uQY/y23XlnsTFYlmoEjzL7GDiZzTuPsG9ddpuBdzmVs3DknA2KCG5ZZBaG2IEJ/MHDu5IiNpo=
