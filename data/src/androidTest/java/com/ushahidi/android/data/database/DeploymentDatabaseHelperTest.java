@@ -45,7 +45,7 @@ public class DeploymentDatabaseHelperTest extends BaseTestCase {
     private ThreadExecutor mMockThreadExecutor;
 
     @Mock
-    private DeploymentDatabaseHelper.IDeploymentEntityAddedCallback
+    private IDeploymentDatabaseHelper.IDeploymentEntityPutCallback
             mMockDeploymentEntityAddedCallback;
 
     @Mock

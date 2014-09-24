@@ -37,7 +37,6 @@ public interface IDeploymentRepository {
      *
      * @param deployment         The Deployment to be saved.
      * @param deploymentCallback A {@link DeploymentAddCallback} used for notifying clients.
-     *
      * @author Ushahidi Team <team@ushahidi.com>
      */
     void addDeployment(Deployment deployment, DeploymentAddCallback deploymentCallback);
@@ -58,6 +57,8 @@ public interface IDeploymentRepository {
      */
     void getDeploymentById(final long deploymentId,
             DeploymentDetailsCallback deploymentDetailsCallback);
+
+    void updateDeployment(Deployment deployment, DeploymentUpdateCallback callback);
 
     interface DeploymentAddCallback {
 
@@ -85,5 +86,15 @@ public interface IDeploymentRepository {
         void onDeploymentLoaded(Deployment deployment);
 
         void onError(ErrorWrap errorWrap);
+    }
+
+    /**
+     * Callback used to be notified when either a deployment has been updated or failed.
+     */
+    interface DeploymentUpdateCallback {
+
+        void onDeploymentUpdated();
+
+        void onError(ErrorWrap error);
     }
 }

@@ -35,10 +35,10 @@ public interface IDeploymentDatabaseHelper {
      * Puts a deployment entity into the database.
      *
      * @param deploymentEntity Deployment to insert into the database.
-     * @param callback         The {@link IDeploymentEntityAddedCallback} use to notify client.
+     * @param callback         The {@link com.ushahidi.android.data.database.IDeploymentDatabaseHelper.IDeploymentEntityPutCallback} use to notify client.
      */
     public void put(DeploymentEntity deploymentEntity,
-            final IDeploymentEntityAddedCallback callback);
+            final IDeploymentEntityPutCallback callback);
 
     /**
      * Gets a deployment from the database using a {@link IDeploymentEntityCallback}.
@@ -60,10 +60,10 @@ public interface IDeploymentDatabaseHelper {
      *
      * @param deploymentEntities The list of {@link com.ushahidi.android.data.entity.DeploymentEntity}
      *                           to be added to the database.
-     * @param callback           The {@link IDeploymentEntityAddedCallback} use to notify client.
+     * @param callback           The {@link com.ushahidi.android.data.database.IDeploymentDatabaseHelper.IDeploymentEntityPutCallback} use to notify client.
      */
     public void put(final List<DeploymentEntity> deploymentEntities,
-            final IDeploymentEntityAddedCallback callback);
+            final IDeploymentEntityPutCallback callback);
 
     /**
      * Deletes all deployment entities
@@ -107,9 +107,9 @@ public interface IDeploymentDatabaseHelper {
     /**
      * Callback use to notify client when {@link DeploymentEntity} has been added to the database.
      */
-    public interface IDeploymentEntityAddedCallback {
+    public interface IDeploymentEntityPutCallback {
 
-        void onDeploymentEntityAdded();
+        void onDeploymentEntityPut();
 
         void onError(Exception exception);
     }

@@ -70,6 +70,9 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
     private DeploymentDataRepository.DeploymentAddCallback mMockDeploymentAddCallback;
 
     @Mock
+    private DeploymentDataRepository.DeploymentUpdateCallback mMockDeploymentUpdateCallback;
+
+    @Mock
     private UrlValidator mMockUrlValidator;
 
     private Deployment mDeployment;
@@ -113,12 +116,12 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
 
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback) invocation
-                        .getArguments()[1]).onDeploymentEntityAdded();
+                ((IDeploymentDatabaseHelper.IDeploymentEntityPutCallback) invocation
+                        .getArguments()[1]).onDeploymentEntityPut();
                 return null;
             }
         }).when(mMockDeploymentDatabaseHelper).put(any(DeploymentEntity.class),
-                any(IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback.class));
+                any(IDeploymentDatabaseHelper.IDeploymentEntityPutCallback.class));
         given(mMockUrlValidator.isValid(mDeployment.getUrl())).willReturn(true);
         given(mMockDeploymentEntityMapper.unmap(mDeployment)).willReturn(mMockDeploymentEntity);
 
@@ -134,12 +137,12 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback) invocation
+                ((IDeploymentDatabaseHelper.IDeploymentEntityPutCallback) invocation
                         .getArguments()[1]).onError(any(Exception.class));
                 return null;
             }
         }).when(mMockDeploymentDatabaseHelper).put(any(DeploymentEntity.class),
-                any(IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback.class));
+                any(IDeploymentDatabaseHelper.IDeploymentEntityPutCallback.class));
 
         mDeploymentDataRepository.addDeployment(mMockDeployment, mMockDeploymentAddCallback);
 
@@ -152,12 +155,12 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback) invocation
+                ((IDeploymentDatabaseHelper.IDeploymentEntityPutCallback) invocation
                         .getArguments()[1]).onError(any(ValidationException.class));
                 return null;
             }
         }).when(mMockDeploymentDatabaseHelper).put(any(DeploymentEntity.class),
-                any(IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback.class));
+                any(IDeploymentDatabaseHelper.IDeploymentEntityPutCallback.class));
 
         given(mMockUrlValidator.isValid(mDeployment.getUrl())).willReturn(false);
 
@@ -172,17 +175,56 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback) invocation
+                ((IDeploymentDatabaseHelper.IDeploymentEntityPutCallback) invocation
                         .getArguments()[1]).onError(any(ValidationException.class));
                 return null;
             }
         }).when(mMockDeploymentDatabaseHelper).put(any(DeploymentEntity.class),
-                any(IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback.class));
+                any(IDeploymentDatabaseHelper.IDeploymentEntityPutCallback.class));
 
         given(mMockUrlValidator.isValid(mDeployment.getUrl())).willReturn(true);
 
         mDeploymentDataRepository.addDeployment(mDeployment, mMockDeploymentAddCallback);
 
         verify(mMockDeploymentAddCallback).onError(any(RepositoryError.class));
+    }
+
+    @Test
+    public void shouldSuccessfullyUpdateADeployment() throws Exception {
+
+        doAnswer(new Answer() {
+
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((IDeploymentDatabaseHelper.IDeploymentEntityPutCallback) invocation
+                        .getArguments()[1]).onDeploymentEntityPut();
+                return null;
+            }
+        }).when(mMockDeploymentDatabaseHelper).put(any(DeploymentEntity.class),
+                any(IDeploymentDatabaseHelper.IDeploymentEntityPutCallback.class));
+        given(mMockUrlValidator.isValid(mDeployment.getUrl())).willReturn(true);
+        given(mMockDeploymentEntityMapper.unmap(mDeployment)).willReturn(mMockDeploymentEntity);
+
+        mDeploymentDataRepository.updateDeployment(mDeployment, mMockDeploymentUpdateCallback);
+
+        verify(mMockDeploymentEntityMapper).unmap(mDeployment);
+        verify(mMockDeploymentUpdateCallback).onDeploymentUpdated();
+    }
+
+    @Test
+    public void shouldFailToUpdateADeployment() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((IDeploymentDatabaseHelper.IDeploymentEntityPutCallback) invocation
+                        .getArguments()[1]).onError(any(Exception.class));
+                return null;
+            }
+        }).when(mMockDeploymentDatabaseHelper).put(any(DeploymentEntity.class),
+                any(IDeploymentDatabaseHelper.IDeploymentEntityPutCallback.class));
+
+        mDeploymentDataRepository.updateDeployment(mMockDeployment, mMockDeploymentUpdateCallback);
+
+        verify(mMockDeploymentUpdateCallback, times(2)).onError(any(RepositoryError.class));
     }
 }

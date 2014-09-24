@@ -14,6 +14,7 @@
  * along with this program in the file LICENSE-AGPL. If not, see
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
+
 package com.ushahidi.android.core.usecase.deployment;
 
 import com.ushahidi.android.core.entity.Deployment;
@@ -21,27 +22,27 @@ import com.ushahidi.android.core.exception.ErrorWrap;
 import com.ushahidi.android.core.usecase.IInteractor;
 
 /**
- * AddDeployment Implements Add Deployment Use Case
+ * Update deployment use case
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public interface IAddDeployment extends IInteractor {
+public interface IUpdateDeployment extends IInteractor {
 
     /**
-     * Executes this use case.
+     * Executes this use case
      *
      * @param deployment The deployment to be added.
-     * @param callback   A {@link com.ushahidi.android.core.usecase.deployment.IAddDeployment.Callback}
-     *                   used for notifying the client.
+     * @param callback   A {@link com.ushahidi.android.core.usecase.deployment.IUpdateDeployment.Callback}
+     *                   used for notifying the client about the execute method call.
      */
-    public void execute(Deployment deployment, Callback callback);
+    void execute(Deployment deployment, Callback callback);
 
     /**
-     * Callback used to be notified when either a user has been loaded or an error happened.
+     * Notifies client when a deployment is successfully updated or error occurs
      */
     interface Callback {
 
-        void onDeploymentAdded();
+        void onDeploymentUpdated();
 
         void onError(ErrorWrap error);
     }

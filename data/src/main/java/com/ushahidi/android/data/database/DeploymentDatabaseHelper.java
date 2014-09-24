@@ -26,7 +26,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.util.Collection;
 import java.util.List;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
@@ -78,14 +77,14 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
 
     @Override
     public synchronized void put(final DeploymentEntity deploymentEntity,
-            final IDeploymentEntityAddedCallback callback) {
+            final IDeploymentEntityPutCallback callback) {
         this.asyncRun(new Runnable() {
             @Override
             public void run() {
                 if (!isClosed()) {
                     try {
                         cupboard().withDatabase(getWritableDatabase()).put(deploymentEntity);
-                        callback.onDeploymentEntityAdded();
+                        callback.onDeploymentEntityPut();
                     } catch (Exception e) {
                         callback.onError(e);
                     }
@@ -139,7 +138,7 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
 
     @Override
     public synchronized void put(final List<DeploymentEntity> deploymentEntities,
-            final IDeploymentEntityAddedCallback callback) {
+            final IDeploymentEntityPutCallback callback) {
         this.asyncRun(new Runnable() {
             @Override
             public void run() {
@@ -152,7 +151,7 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
                         cupboard().withDatabase(db).put(deploymentEntity);
                     }
                     db.setTransactionSuccessful();
-                    callback.onDeploymentEntityAdded();
+                    callback.onDeploymentEntityPut();
                 } catch (Exception e) {
                     callback.onError(e);
                 } finally {

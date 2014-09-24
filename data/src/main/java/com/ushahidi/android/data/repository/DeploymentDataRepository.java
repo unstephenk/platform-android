@@ -30,8 +30,6 @@ import com.ushahidi.android.data.exception.RepositoryError;
 import com.ushahidi.android.data.exception.ValidationException;
 import com.ushahidi.android.validator.Validator;
 
-import android.util.Log;
-
 import java.util.List;
 
 /**
@@ -97,10 +95,10 @@ public class DeploymentDataRepository implements IDeploymentRepository {
 
         if (isValid) {
             mDeploymentDatabaseHelper.put(mDeploymentEntityMapper.unmap(deployment),
-                    new IDeploymentDatabaseHelper.IDeploymentEntityAddedCallback() {
+                    new IDeploymentDatabaseHelper.IDeploymentEntityPutCallback() {
 
                         @Override
-                        public void onDeploymentEntityAdded() {
+                        public void onDeploymentEntityPut() {
                             deploymentCallback.onDeploymentAdded();
                         }
 
@@ -149,5 +147,45 @@ public class DeploymentDataRepository implements IDeploymentRepository {
                         deploymentDetailsCallback.onError(new RepositoryError(exception));
                     }
                 });
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param deployment         The Deployment to be saved.
+     * @param deploymentCallback A {@link DeploymentUpdateCallback} used for notifying clients.
+     */
+    @Override
+    public void updateDeployment(Deployment deployment,
+            final DeploymentUpdateCallback deploymentCallback) {
+        // Check for required fields
+        boolean isValid = true;
+        if (Strings.isNullOrEmpty(deployment.getTitle())) {
+            isValid = false;
+            deploymentCallback.onError(new RepositoryError(
+                    new ValidationException("Deployment URL cannot be null or empty")));
+        }
+
+        if (!mValidator.isValid(deployment.getUrl())) {
+            isValid = false;
+            deploymentCallback.onError(
+                    new RepositoryError(new ValidationException("Deployment URL is invalid")));
+        }
+
+        if (isValid) {
+            mDeploymentDatabaseHelper.put(mDeploymentEntityMapper.unmap(deployment),
+                    new IDeploymentDatabaseHelper.IDeploymentEntityPutCallback() {
+
+                        @Override
+                        public void onDeploymentEntityPut() {
+                            deploymentCallback.onDeploymentUpdated();
+                        }
+
+                        @Override
+                        public void onError(Exception exception) {
+                            deploymentCallback.onError(new RepositoryError(exception));
+                        }
+                    });
+        }
     }
 }
