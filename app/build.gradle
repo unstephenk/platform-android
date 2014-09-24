@@ -1,15 +1,11 @@
-lpreview = hasProperty('lpreview')
-
 apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion lpreview ? "android-L" : 19
+    compileSdkVersion 19
     buildToolsVersion "20.0.0"
 
-    productFlavors { lpreview ? lpreview{} : classic{} }
-
-    defaultConfig lpreview ? {} : {
+    defaultConfig  {
         applicationId "com.ushahidi.android"
         minSdkVersion 14
         targetSdkVersion 19
