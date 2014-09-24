@@ -41,4 +41,7 @@
     <string name="menu_sign_in">Sign in</string>
     <string name="add_deployment_actionbar_title">Add Deployment</string>
     <string name="add_deployment_empty_title">Please enter a title for your deployment</string>
+
+    <!-- List Deployments -->
+    <string name="list_posts">List Posts</string>
 </resources>

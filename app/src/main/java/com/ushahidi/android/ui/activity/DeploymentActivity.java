@@ -20,6 +20,9 @@ package com.ushahidi.android.ui.activity;
 import com.ushahidi.android.R;
 import com.ushahidi.android.module.DeploymentUiModule;
 
+import android.content.Intent;
+import android.view.MenuItem;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,7 +32,7 @@ import java.util.List;
 public class DeploymentActivity extends BaseActivity {
 
     public DeploymentActivity() {
-        super(R.layout.activity_deployment_list, 0);
+        super(R.layout.activity_deployment_list, R.menu.list_deployment);
     }
 
     @Override
@@ -37,5 +40,15 @@ public class DeploymentActivity extends BaseActivity {
         List<Object> modules = new LinkedList<Object>();
         modules.add(new DeploymentUiModule());
         return modules;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.menu_add_account) {
+            final Intent intent = new Intent(this, AddDeploymentActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

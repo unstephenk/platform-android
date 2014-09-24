@@ -14,7 +14,7 @@ import java.util.List;
 public class AddDeploymentActivity extends BaseActivity {
 
     public AddDeploymentActivity() {
-        super(R.layout.activity_add_deployment, R.menu.add_deployment);
+        super(R.layout.activity_add_deployment, 0);
     }
 
     @Override

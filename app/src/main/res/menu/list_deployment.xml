@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2014 Ushahidi.
   ~
@@ -14,13 +15,18 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
-
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".MainActivity">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-            android:id="@+id/action_settings"
-            android:title="@string/action_settings"
-            android:orderInCategory="100"
-            android:showAsAction="never"/>
+            android:id="@+id/menu_add_account"
+            android:icon="@drawable/ic_action_add"
+            android:title="@string/add_deployment_actionbar_title"
+            android:orderInCategory="1"
+            android:showAsAction="always"/>
+
+    <item
+            android:id="@+id/menu_list_posts"
+            android:title="@string/list_posts"
+            android:icon="@drawable/ic_action_list"
+            android:orderInCategory="1"
+            android:showAsAction="ifRoom"/>
 </menu>
