@@ -15,24 +15,23 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-            android:id="@+id/menu_add_account"
-            android:icon="@drawable/ic_action_add"
-            android:title="@string/add_deployment_actionbar_title"
-            android:orderInCategory="1"
-            android:showAsAction="always"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="24dp">
 
-    <item
-            android:id="@+id/menu_list_posts"
-            android:title="@string/list_posts"
-            android:icon="@drawable/ic_action_list"
-            android:orderInCategory="1"
-            android:showAsAction="ifRoom"/>
-    <item
-            android:id="@+id/menu_about"
-            android:title="@string/about"
-            android:icon="@drawable/ic_action_info"
-            android:orderInCategory="1"
-            android:showAsAction="never"/>
-</menu>
+    <TextView
+            android:id="@+id/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/app_name"
+            android:textSize="@dimen/text_size_xlarge"
+            android:textIsSelectable="false"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/app_version"/>
+</LinearLayout>

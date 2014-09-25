@@ -19,6 +19,7 @@ package com.ushahidi.android.ui.activity;
 
 import com.ushahidi.android.R;
 import com.ushahidi.android.module.DeploymentUiModule;
+import com.ushahidi.android.ui.fragment.AboutDialogFragment;
 
 import android.content.Intent;
 import android.view.MenuItem;
@@ -44,11 +45,17 @@ public class DeploymentActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == R.id.menu_add_account) {
-            final Intent intent = new Intent(this, AddDeploymentActivity.class);
-            startActivity(intent);
+        switch (item.getItemId()) {
+            case R.id.menu_add_account:
+                final Intent intent = new Intent(this, AddDeploymentActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.menu_about:
+                AboutDialogFragment dialog = new AboutDialogFragment();
+                dialog.show(getFragmentManager(), "AboutDialogFragment");
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }

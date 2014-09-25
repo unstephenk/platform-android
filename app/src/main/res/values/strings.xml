@@ -44,4 +44,8 @@
 
     <!-- List Deployments -->
     <string name="list_posts">List Posts</string>
+
+    <string name="close">Close</string>
+    <string name="about">About</string>
+    <string name="version">Version</string>
 </resources>

@@ -22,14 +22,11 @@ import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.DeploymentListPresenter;
-import com.ushahidi.android.ui.activity.AddDeploymentActivity;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
 import com.ushahidi.android.ui.view.IDeploymentListView;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.ProgressBar;
 
 import java.util.List;
