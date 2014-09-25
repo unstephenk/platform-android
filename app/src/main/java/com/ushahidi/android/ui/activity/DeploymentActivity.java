@@ -21,6 +21,7 @@ import com.ushahidi.android.R;
 import com.ushahidi.android.module.DeploymentUiModule;
 import com.ushahidi.android.ui.fragment.AboutDialogFragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.MenuItem;
 
@@ -57,5 +58,9 @@ public class DeploymentActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static Intent getIntent(final Context context) {
+        return new Intent(context, DeploymentActivity.class);
     }
 }

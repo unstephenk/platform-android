@@ -32,18 +32,18 @@ import dagger.Provides;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Module(library = true)
-public class ActivityModule {
+@Module(addsTo = UshahidiModule.class, library = true)
+public final class ActivityModule {
 
-    private final Activity activity;
+    private final Activity mActivity;
 
     public ActivityModule(Activity activity) {
-        this.activity = activity;
+        mActivity = activity;
     }
 
-    @ActivityContext
     @Provides
+    @ActivityContext
     Context provideActivityContext() {
-        return activity;
+        return mActivity;
     }
 }

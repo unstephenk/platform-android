@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.exception.ErrorWrap;
 import com.ushahidi.android.core.usecase.deployment.AddDeployment;
+import com.ushahidi.android.core.usecase.deployment.UpdateDeployment;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
@@ -21,6 +22,8 @@ public class AddDeploymentPresenter implements IPresenter {
 
     private final AddDeployment mAddDeployment;
 
+    private final UpdateDeployment mUpdateDeployment;
+
     private final DeploymentModelDataMapper mDeploymentModelDataMapper;
 
     private final AddDeployment.Callback mCallback = new AddDeployment.Callback() {
@@ -28,7 +31,21 @@ public class AddDeploymentPresenter implements IPresenter {
         @Override
         public void onDeploymentAdded() {
             mIAddDeploymentView.hideLoading();
-            mIAddDeploymentView.navigateToReportListing();
+            mIAddDeploymentView.navigateOrReloadList();
+        }
+
+        @Override
+        public void onError(ErrorWrap error) {
+            showErrorMessage(error);
+        }
+    };
+
+    private final UpdateDeployment.Callback mUpdateCallback = new UpdateDeployment.Callback() {
+
+        @Override
+        public void onDeploymentUpdated() {
+            mIAddDeploymentView.hideLoading();
+            mIAddDeploymentView.navigateOrReloadList();
         }
 
         @Override
@@ -38,13 +55,16 @@ public class AddDeploymentPresenter implements IPresenter {
     };
 
     public AddDeploymentPresenter(IAddDeploymentView addDeploymentView, AddDeployment addDeployment,
+            UpdateDeployment updateDeployment,
             DeploymentModelDataMapper deploymentModelDataMapper) {
-        Preconditions.checkNotNull(addDeployment, "IAddDeploymentView cannot be null");
+        Preconditions.checkNotNull(addDeploymentView, "IAddDeploymentView cannot be null");
         Preconditions.checkNotNull(addDeployment, "AddDeployment cannot be null");
+        Preconditions.checkNotNull(updateDeployment, "UpdateDeployment cannot be null");
         Preconditions.checkNotNull(deploymentModelDataMapper,
                 "DeploymentModelDataMapper cannot be null");
         mIAddDeploymentView = addDeploymentView;
         mAddDeployment = addDeployment;
+        mUpdateDeployment = updateDeployment;
         mDeploymentModelDataMapper = deploymentModelDataMapper;
 
     }
@@ -70,5 +90,11 @@ public class AddDeploymentPresenter implements IPresenter {
         String errorMessage = ErrorMessageFactory.create(mIAddDeploymentView.getContext(),
                 errorWrap.getException());
         mIAddDeploymentView.showError(errorMessage);
+    }
+
+    public void updateDeployment(DeploymentModel deploymentModel) {
+        mIAddDeploymentView.showLoading();
+        final Deployment deployment = mDeploymentModelDataMapper.unmap(deploymentModel);
+        mUpdateDeployment.execute(deployment, mUpdateCallback);
     }
 }

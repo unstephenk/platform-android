@@ -3,14 +3,14 @@ package com.ushahidi.android.ui.fragment;
 import com.andreabaccega.widget.FormEditText;
 import com.ushahidi.android.R;
 import com.ushahidi.android.core.usecase.deployment.AddDeployment;
+import com.ushahidi.android.core.usecase.deployment.UpdateDeployment;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.AddDeploymentPresenter;
-import com.ushahidi.android.ui.activity.DeploymentActivity;
 import com.ushahidi.android.ui.view.IAddDeploymentView;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import javax.inject.Inject;
@@ -27,9 +27,10 @@ public class AddDeploymentFragment extends BaseFragment implements IAddDeploymen
     DeploymentModelDataMapper mDeploymentModelDataMapper;
 
     @Inject
-    AddDeployment mAddDeployment;
+    UpdateDeployment mUpdateDeployment;
 
-    private AddDeploymentPresenter mAddDeploymentPresenter;
+    @Inject
+    AddDeployment mAddDeployment;
 
     @InjectView(R.id.add_deployment_title)
     FormEditText title;
@@ -37,11 +38,23 @@ public class AddDeploymentFragment extends BaseFragment implements IAddDeploymen
     @InjectView(R.id.add_deployment_url)
     FormEditText url;
 
+    private ActionListener mActionListener;
+
+    private AddDeploymentPresenter mAddDeploymentPresenter;
+
     /**
      * Add Deployment  Fragment
      */
     public AddDeploymentFragment() {
         super(R.layout.fragment_add_deployment, R.menu.add_deployment);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof ActionListener) {
+            this.mActionListener = (ActionListener) activity;
+        }
     }
 
     @Override
@@ -63,7 +76,9 @@ public class AddDeploymentFragment extends BaseFragment implements IAddDeploymen
 
     @Override
     void initPresenter() {
+
         mAddDeploymentPresenter = new AddDeploymentPresenter(this, mAddDeployment,
+                mUpdateDeployment,
                 mDeploymentModelDataMapper);
     }
 
@@ -98,10 +113,10 @@ public class AddDeploymentFragment extends BaseFragment implements IAddDeploymen
     }
 
     @Override
-    public void navigateToReportListing() {
-        Intent intentToLaunch = new Intent(getContext(), DeploymentActivity.class);
-        getActivity().startActivity(intentToLaunch);
-        getActivity().finish();
+    public void navigateOrReloadList() {
+        if (mActionListener != null) {
+            mActionListener.onNavigateOrReloadList();
+        }
     }
 
     @OnClick(R.id.add_deployment_add)
@@ -118,6 +133,25 @@ public class AddDeploymentFragment extends BaseFragment implements IAddDeploymen
 
     @OnClick(R.id.add_deployment_cancel)
     public void onClickCancel() {
-        getActivity().finish();
+        if (mActionListener != null) {
+            mActionListener.onActionCancelOrClearExecuted();
+        }
+    }
+
+    /**
+     * Listener interface when a button pressed
+     */
+    public interface ActionListener {
+
+        /**
+         * Executes when a button is pressed to either navigate away from the screen or reload an
+         * existing list.
+         */
+        void onNavigateOrReloadList();
+
+        /**
+         * Executes when a button is pressed to either cancel or clear.
+         */
+        void onActionCancelOrClearExecuted();
     }
 }

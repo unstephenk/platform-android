@@ -15,35 +15,36 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.module;
+package com.ushahidi.android.ui.activity;
 
-import com.ushahidi.android.UshahidiApplication;
+import com.ushahidi.android.qualifier.ActivityContext;
 
 import android.content.Context;
+import android.content.Intent;
 
-import dagger.Module;
-import dagger.Provides;
+import javax.inject.Inject;
 
 /**
- * This module provides every application scope dependencies related with the AndroidSDK.
+ * Launches Activity. This is the main class for navigating through the app
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Module(
-
-        injects = {
-                UshahidiApplication.class
-        }, library = true)
-public final class UshahidiModule {
+public class ActivityLauncher {
 
     private final Context mContext;
 
-    public UshahidiModule(Context context) {
+    @Inject
+    public ActivityLauncher(@ActivityContext Context context) {
         mContext = context;
     }
 
-    @Provides
-    Context provideApplicationContext() {
-        return mContext;
+    public void launchListDeployment() {
+        Intent intent = DeploymentActivity.getIntent(mContext);
+        mContext.startActivity(intent);
+    }
+
+    public void launchAddDeployment() {
+        final Intent intent = AddDeploymentActivity.getIntent(mContext);
+        mContext.startActivity(intent);
     }
 }

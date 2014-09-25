@@ -45,7 +45,7 @@ public class AboutDialogFragment extends DialogFragment {
         super.onStart();
 
         // Make sure getDialog is not null
-        if(getDialog() == null) {
+        if (getDialog() == null) {
             return;
         }
         getDialog().getWindow().setWindowAnimations(R.style.DialogAnimation);

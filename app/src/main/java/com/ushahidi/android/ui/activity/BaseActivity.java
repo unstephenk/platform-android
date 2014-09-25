@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import dagger.ObjectGraph;
 
@@ -53,6 +55,9 @@ public abstract class BaseActivity extends Activity {
     protected final int mMenu;
 
     private ObjectGraph activityScopeGraph;
+
+    @Inject
+    ActivityLauncher launcher;
 
 
     public BaseActivity(int layout, int menu) {
@@ -88,7 +93,7 @@ public abstract class BaseActivity extends Activity {
 
         if (activityScopeModules != null) {
             activityScopeModules.add(new ActivityModule(this));
-            activityScopeGraph = ushahidiApplication.plus(activityScopeModules);
+            activityScopeGraph = ushahidiApplication.add(activityScopeModules);
             inject(this);
         }
     }

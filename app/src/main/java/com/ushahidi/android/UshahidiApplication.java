@@ -27,25 +27,15 @@ public class UshahidiApplication extends Application {
     }
 
     /**
-     * Inject every dependency declared in the object with the @Inject annotation if the dependency
-     * has been already declared in a module and already initialized by Dagger.
-     *
-     * @param object to inject.
-     */
-    public void inject(Object object) {
-        mObjectGraph.inject(object);
-    }
-
-    /**
-     * Extend the dependency container graph will new dependencies provided by the modules passed as
+     * Extend the dependency container graph with new dependencies provided by the modules passed as
      * arguments.
      *
      * @param modules used to populate the dependency container.
      */
-    public ObjectGraph plus(List<Object> modules) {
+    public ObjectGraph add(List<Object> modules) {
         if (modules == null) {
             throw new IllegalArgumentException(
-                    "You can't plus a null module, review your getModules() implementation");
+                    "You can't add a null module, review your getModules() implementation");
         }
         return mObjectGraph.plus(modules.toArray());
     }
@@ -54,6 +44,11 @@ public class UshahidiApplication extends Application {
         mObjectGraph = ObjectGraph.create(new UshahidiModule(this));
         mObjectGraph.inject(this);
         mObjectGraph.injectStatics();
+    }
+
+    /** Inject the supplied {@code object} using the activity-specific graph. */
+    public void inject(Object object) {
+        mObjectGraph.inject(object);
     }
 
     /**
