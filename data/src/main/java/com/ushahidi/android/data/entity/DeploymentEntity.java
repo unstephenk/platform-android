@@ -24,7 +24,7 @@ import com.ushahidi.android.data.Entity;
  */
 public class DeploymentEntity extends Entity {
 
-    private long mId;
+    private Long _id;
 
     private String mTitle;
 
@@ -37,13 +37,13 @@ public class DeploymentEntity extends Entity {
     }
 
     @Override
-    public long getId() {
-        return mId;
+    public Long getId() {
+        return _id;
     }
 
     @Override
-    public void setId(long id) {
-        mId = id;
+    public void setId(Long id) {
+        _id = id;
     }
 
     public String getTitle() {
@@ -73,7 +73,7 @@ public class DeploymentEntity extends Entity {
     @Override
     public String toString() {
         return "Deployment{" +
-                "mId=" + mId +
+                "_id=" + _id +
                 ", mTitle='" + mTitle + '\'' +
                 ", mStatus='" + mStatus + '\'' +
                 ", mUrl='" + mUrl + '\'' +

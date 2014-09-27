@@ -40,11 +40,27 @@ public class ActivityLauncher {
 
     public void launchListDeployment() {
         Intent intent = DeploymentActivity.getIntent(mContext);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }
 
+    /**
+     * Launches Add deployment activity for adding a new deployment
+     */
     public void launchAddDeployment() {
         final Intent intent = AddDeploymentActivity.getIntent(mContext);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
+    }
+
+    /**
+     * Launches update deployment activity for editing
+     *
+     * @param deploymentId The deployment ID to use to fetch the deployment for editing
+     */
+    public void launchUpdateDeployment(long deploymentId) {
+        final Intent intent = UpdateDeploymentActivity.getIntent(mContext, deploymentId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }
 }

@@ -89,8 +89,12 @@ public class DeploymentListPresenter implements IPresenter {
         getDeploymentList();
     }
 
+    public void refreshList() {
+        getDeploymentList();
+    }
+
     public void onDeploymentClicked(DeploymentModel deploymentModel) {
-        // TODO implement when a deployment is clicked
+        mIDeploymentListView.editDeployment(deploymentModel);
     }
 
     private void showViewLoading() {

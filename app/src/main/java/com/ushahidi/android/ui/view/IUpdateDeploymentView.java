@@ -15,22 +15,24 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.model;
+package com.ushahidi.android.ui.view;
+
+import com.ushahidi.android.model.DeploymentModel;
 
 /**
- * Base model class
+ * Adds a deployment to a database
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class Model {
+public interface IUpdateDeploymentView extends ILoadViewData {
 
-    protected Long _id;
+    /**
+     * Navigates or reloads deployment lists
+     */
+    void navigateOrReloadList();
 
-    public Long getId() {
-        return _id;
-    }
-
-    public void setId(long id) {
-        this._id = id;
-    }
+    /**
+     * Initializes the form with {@link com.ushahidi.android.model.DeploymentModel}
+     */
+    void initForm(DeploymentModel deploymentModel);
 }

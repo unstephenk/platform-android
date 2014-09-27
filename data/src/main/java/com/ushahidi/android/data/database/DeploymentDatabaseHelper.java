@@ -83,6 +83,7 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
             public void run() {
                 if (!isClosed()) {
                     try {
+                        Log.e("DATA","Repo "+deploymentEntity.toString());
                         cupboard().withDatabase(getWritableDatabase()).put(deploymentEntity);
                         callback.onDeploymentEntityPut();
                     } catch (Exception e) {
@@ -132,7 +133,7 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
 
     private DeploymentEntity get(long id) {
         return cupboard().withDatabase(getReadableDatabase()).query(DeploymentEntity.class)
-                .byId(Long.valueOf(id)).get();
+                .byId(id).get();
     }
 
 

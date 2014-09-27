@@ -25,8 +25,11 @@ import com.ushahidi.android.presenter.DeploymentListPresenter;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
 import com.ushahidi.android.ui.view.IDeploymentListView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import java.util.List;
@@ -55,6 +58,9 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
 
     private DeploymentListPresenter mDeploymentListPresenter;
 
+    private DeploymentListListener mDeploymentListListener;
+
+
     public ListDeploymentFragment() {
         super(DeploymentAdapter.class, R.layout.list_deployment, 0,
                 android.R.id.list);
@@ -64,6 +70,14 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mDeploymentListPresenter.init();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof DeploymentListListener) {
+            mDeploymentListListener = (DeploymentListListener) activity;
+        }
     }
 
     @Override
@@ -120,5 +134,36 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     @Override
     public void showError(String message) {
         showToast(message);
+    }
+
+    @Override
+    public void refreshList() {
+        mDeploymentListPresenter.refreshList();
+    }
+
+    @Override
+    public void editDeployment(DeploymentModel deploymentModel) {
+        mDeploymentListListener.onDeploymentClicked(deploymentModel);
+    }
+
+    private void onDeplomentClicked(DeploymentModel deploymentModel) {
+        if (mDeploymentListPresenter != null) {
+            mDeploymentListPresenter.onDeploymentClicked(deploymentModel);
+        }
+
+    }
+
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        DeploymentModel deploymentModel = mAdapter.getItem(position);
+        onDeplomentClicked(deploymentModel);
+    }
+
+    /**
+     * Listens for deployment list events
+     */
+    public interface DeploymentListListener {
+
+        void onDeploymentClicked(final DeploymentModel deploymentModel);
+
     }
 }

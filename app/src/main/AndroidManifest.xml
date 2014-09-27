@@ -18,31 +18,42 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ushahidi.android" >
+          package="com.ushahidi.android">
 
     <application
-        android:name=".UshahidiApplication"
-        android:allowBackup="true"
-        android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/Theme.Ushahidi" >
+            android:name=".UshahidiApplication"
+            android:allowBackup="true"
+            android:hardwareAccelerated="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Ushahidi">
         <activity
-            android:name=".ui.activity.DeploymentActivity"
-            android:label="@string/app_name" >
+                android:name=".ui.activity.DeploymentActivity"
+                android:configChanges="screenLayout|orientation|screenSize|keyboardHidden|touchscreen|navigation"
+                android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <activity
                 android:name=".ui.activity.AddDeploymentActivity"
-                android:label="@string/add_deployment_actionbar_title" >
+                android:configChanges="screenLayout|orientation|screenSize|keyboardHidden|touchscreen|navigation"
+                android:label="@string/add_deployment_actionbar_title">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".ui.activity.UpdateDeploymentActivity"
+                android:configChanges="screenLayout|orientation|screenSize|keyboardHidden|touchscreen|navigation"
+                android:label="@string/update_deployment">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
     </application>

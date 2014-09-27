@@ -21,6 +21,8 @@ import com.ushahidi.android.UshahidiApplication;
 import com.ushahidi.android.module.ActivityModule;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -213,4 +215,31 @@ public abstract class BaseActivity extends Activity {
         Toast.makeText(this, getText(message), Toast.LENGTH_LONG)
                 .show();
     }
+
+    /**
+     * Adds a {@link Fragment} to this activity's layout.
+     *
+     * @param containerViewId The container view where to add the fragment.
+     * @param fragment        The fragment to be added.
+     * @param tag             The tag for the fragment
+     */
+    protected void addFragment(int containerViewId, Fragment fragment, String tag) {
+        FragmentTransaction fragmentTransaction = this.getFragmentManager().beginTransaction();
+        fragmentTransaction.add(containerViewId, fragment, tag);
+        fragmentTransaction.commit();
+    }
+
+    /**
+     * Replaces an {@link Fragment} in this activity's layout.
+     *
+     * @param containerViewId The container view where to add the fragment.
+     * @param fragment        The fragment to be replaced.
+     * @param tag             The tag for the fragment
+     */
+    protected void replaceFragment(int containerViewId, Fragment fragment, String tag) {
+        FragmentTransaction fragmentTransaction = this.getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(containerViewId, fragment, tag);
+        fragmentTransaction.commit();
+    }
+
 }

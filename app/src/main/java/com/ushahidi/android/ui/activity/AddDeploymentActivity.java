@@ -6,6 +6,7 @@ import com.ushahidi.android.ui.fragment.AddDeploymentFragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,11 +17,23 @@ import java.util.List;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class AddDeploymentActivity extends BaseActivity implements
-        AddDeploymentFragment.ActionListener {
+        AddDeploymentFragment.AddDeploymentListener {
 
     public AddDeploymentActivity() {
         super(R.layout.activity_add_deployment, 0);
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        init();
+    }
+
+    private void init() {
+        addFragment(R.id.fragment_container, AddDeploymentFragment.newInstance(),
+                AddDeploymentFragment.ADD_FRAGMENT_TAG);
+    }
+
 
     public static Intent getIntent(final Context context) {
         return new Intent(context, AddDeploymentActivity.class);
@@ -34,12 +47,12 @@ public class AddDeploymentActivity extends BaseActivity implements
     }
 
     @Override
-    public void onNavigateOrReloadList() {
+    public void onAddNavigateOrReloadList() {
         launcher.launchListDeployment();
     }
 
     @Override
-    public void onActionCancelOrClearExecuted() {
+    public void onCancelAdd() {
         finish();
     }
 }

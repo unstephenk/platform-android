@@ -18,23 +18,72 @@
 package com.ushahidi.android.ui.activity;
 
 import com.ushahidi.android.R;
+import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.module.DeploymentUiModule;
 import com.ushahidi.android.ui.fragment.AboutDialogFragment;
+import com.ushahidi.android.ui.fragment.AddDeploymentFragment;
+import com.ushahidi.android.ui.fragment.ListDeploymentFragment;
+import com.ushahidi.android.ui.fragment.UpdateDeploymentFragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.MenuItem;
 
 import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * List Deployment Activity
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentActivity extends BaseActivity {
+public class DeploymentActivity extends BaseActivity
+        implements ListDeploymentFragment.DeploymentListListener,
+        UpdateDeploymentFragment.DeploymentUpdateListener,
+        AddDeploymentFragment.AddDeploymentListener {
+
+    private ListDeploymentFragment mListDeploymentFragment;
 
     public DeploymentActivity() {
         super(R.layout.activity_deployment_list, R.menu.list_deployment);
+    }
+
+    private void init() {
+
+        mListDeploymentFragment
+                = (ListDeploymentFragment) getFragmentManager()
+                .findFragmentById(R.id.fragment_list_deployments);
+
+        if (mListDeploymentFragment != null) {
+            addFragment(R.id.add_deployment_fragment_container, AddDeploymentFragment.newInstance(),
+                    AddDeploymentFragment.ADD_FRAGMENT_TAG);
+        }
+
+    }
+
+    private void replaceFragment(Long deploymentId) {
+        replaceFragment(R.id.add_deployment_fragment_container,
+                UpdateDeploymentFragment.newInstance(deploymentId),
+                UpdateDeploymentFragment.UPDATE_FRAGMENT_TAG);
+    }
+
+    private void replaceFragment() {
+        replaceFragment(R.id.add_deployment_fragment_container, AddDeploymentFragment.newInstance(),
+                AddDeploymentFragment.ADD_FRAGMENT_TAG);
+    }
+
+    private void refreshList() {
+        if (mListDeploymentFragment != null) {
+            mListDeploymentFragment.refreshList();
+            replaceFragment();
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        init();
     }
 
     @Override
@@ -48,8 +97,7 @@ public class DeploymentActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_account:
-                final Intent intent = new Intent(this, AddDeploymentActivity.class);
-                startActivity(intent);
+                launcher.launchAddDeployment();
                 return true;
             case R.id.menu_about:
                 AboutDialogFragment dialog = new AboutDialogFragment();
@@ -62,5 +110,36 @@ public class DeploymentActivity extends BaseActivity {
 
     public static Intent getIntent(final Context context) {
         return new Intent(context, DeploymentActivity.class);
+    }
+
+
+    @Override
+    public void onDeploymentClicked(DeploymentModel deploymentModel) {
+
+        if (mListDeploymentFragment != null) {
+            replaceFragment(deploymentModel.getId());
+        } else {
+            launcher.launchUpdateDeployment(deploymentModel.getId());
+        }
+    }
+
+    @Override
+    public void onUpdateNavigateOrReloadList() {
+        refreshList();
+    }
+
+    @Override
+    public void onCancelUpdate() {
+        replaceFragment();
+    }
+
+    @Override
+    public void onAddNavigateOrReloadList() {
+        refreshList();
+    }
+
+    @Override
+    public void onCancelAdd() {
+        replaceFragment();
     }
 }

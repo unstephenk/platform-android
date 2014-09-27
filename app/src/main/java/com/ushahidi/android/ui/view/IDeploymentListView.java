@@ -34,4 +34,16 @@ public interface IDeploymentListView extends ILoadViewData {
      * @param deploymentModel The collection of {@link DeploymentModel} that will be shown.
      */
     void renderDeploymentList(List<DeploymentModel> deploymentModel);
+
+    /**
+     * Edit {@link com.ushahidi.android.model.DeploymentModel}
+     *
+     * @param deploymentModel The deployment model to be edited
+     */
+    void editDeployment(DeploymentModel deploymentModel);
+
+    /**
+     * Refreshes the existing items in the list view right any visual loaders
+     */
+    void refreshList();
 }

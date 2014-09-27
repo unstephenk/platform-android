@@ -55,7 +55,7 @@ public class DeploymentModel extends Model {
     @Override
     public String toString() {
         return "Deployment{" +
-                "mId=" + mId +
+                "_id=" + _id +
                 ", mTitle='" + mTitle + '\'' +
                 ", mStatus='" + mStatus + '\'' +
                 ", mUrl='" + mUrl + '\'' +

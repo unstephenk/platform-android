@@ -25,15 +25,15 @@ import com.ushahidi.android.core.Entity;
  */
 public class User extends Entity {
 
-    private long id;
+    private Long _id;
 
     @Override
-    public long getId() {
-        return id;
+    public Long getId() {
+        return _id;
     }
 
     @Override
-    public void setId(long id) {
-        this.id = id;
+    public void setId(Long id) {
+        this._id = id;
     }
 }

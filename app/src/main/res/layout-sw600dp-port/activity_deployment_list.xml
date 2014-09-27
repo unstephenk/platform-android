@@ -42,17 +42,8 @@
             android:src="@drawable/fragment_divider_shadow"/>
 
     <FrameLayout
-            android:id="@+id/add_deployment"
+            android:id="@+id/add_deployment_fragment_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:background="#eee">
-
-        <fragment
-                android:id="@+id/fragment_add_deployment"
-                android:name="com.ushahidi.android.ui.fragment.AddDeploymentFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:layout="@layout/fragment_add_deployment"/>
-    </FrameLayout>
+            android:layout_weight="1.5"/>
 </LinearLayout>

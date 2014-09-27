@@ -46,7 +46,9 @@ public class UshahidiApplication extends Application {
         mObjectGraph.injectStatics();
     }
 
-    /** Inject the supplied {@code object} using the activity-specific graph. */
+    /**
+     * Inject the supplied {@code object} using the activity-specific graph.
+     */
     public void inject(Object object) {
         mObjectGraph.inject(object);
     }

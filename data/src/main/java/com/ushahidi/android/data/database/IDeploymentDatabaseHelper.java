@@ -35,7 +35,8 @@ public interface IDeploymentDatabaseHelper {
      * Puts a deployment entity into the database.
      *
      * @param deploymentEntity Deployment to insert into the database.
-     * @param callback         The {@link com.ushahidi.android.data.database.IDeploymentDatabaseHelper.IDeploymentEntityPutCallback} use to notify client.
+     * @param callback         The {@link com.ushahidi.android.data.database.IDeploymentDatabaseHelper.IDeploymentEntityPutCallback}
+     *                         use to notify client.
      */
     public void put(DeploymentEntity deploymentEntity,
             final IDeploymentEntityPutCallback callback);
@@ -60,7 +61,8 @@ public interface IDeploymentDatabaseHelper {
      *
      * @param deploymentEntities The list of {@link com.ushahidi.android.data.entity.DeploymentEntity}
      *                           to be added to the database.
-     * @param callback           The {@link com.ushahidi.android.data.database.IDeploymentDatabaseHelper.IDeploymentEntityPutCallback} use to notify client.
+     * @param callback           The {@link com.ushahidi.android.data.database.IDeploymentDatabaseHelper.IDeploymentEntityPutCallback}
+     *                           use to notify client.
      */
     public void put(final List<DeploymentEntity> deploymentEntities,
             final IDeploymentEntityPutCallback callback);

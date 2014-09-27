@@ -24,7 +24,7 @@ package com.ushahidi.android.core;
  */
 public abstract class Entity {
 
-    public abstract long getId();
+    public abstract Long getId();
 
-    public abstract void setId(long id);
+    public abstract void setId(Long id);
 }
