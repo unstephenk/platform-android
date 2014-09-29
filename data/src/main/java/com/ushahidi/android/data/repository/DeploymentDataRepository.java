@@ -188,4 +188,28 @@ public class DeploymentDataRepository implements IDeploymentRepository {
                     });
         }
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param deployment The ID of the deployment to be deleted.
+     * @param callback   A {@link DeploymentDeletedCallback} used for notifying clients.
+     */
+    @Override
+    public void deleteDeployment(final Deployment deployment,
+            final DeploymentDeletedCallback callback) {
+        mDeploymentDatabaseHelper.delete(mDeploymentEntityMapper.unmap(deployment),
+                new IDeploymentDatabaseHelper.IDeploymentEntityDeletedCallback() {
+                    @Override
+                    public void onDeploymentEntityDeleted() {
+                        callback.onDeploymentDeleted();
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        callback.onError(new RepositoryError(exception));
+                    }
+
+                });
+    }
 }

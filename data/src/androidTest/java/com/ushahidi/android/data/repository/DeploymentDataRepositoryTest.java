@@ -73,6 +73,9 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
     private DeploymentDataRepository.DeploymentUpdateCallback mMockDeploymentUpdateCallback;
 
     @Mock
+    private DeploymentDataRepository.DeploymentDeletedCallback mMockDeploymentDeletedCallback;
+
+    @Mock
     private UrlValidator mMockUrlValidator;
 
     private Deployment mDeployment;
@@ -227,4 +230,44 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
 
         verify(mMockDeploymentUpdateCallback, times(2)).onError(any(RepositoryError.class));
     }
+
+    @Test
+    public void shouldSuccessfullyDeleteADeployment() throws Exception {
+
+        doAnswer(new Answer() {
+
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((IDeploymentDatabaseHelper.IDeploymentEntityDeletedCallback) invocation
+                        .getArguments()[1]).onDeploymentEntityDeleted();
+                return null;
+            }
+        }).when(mMockDeploymentDatabaseHelper).delete(any(DeploymentEntity.class),
+                any(IDeploymentDatabaseHelper.IDeploymentEntityDeletedCallback.class));
+
+        given(mMockDeploymentEntityMapper.unmap(mDeployment)).willReturn(mMockDeploymentEntity);
+
+        mDeploymentDataRepository.deleteDeployment(mDeployment, mMockDeploymentDeletedCallback);
+
+        verify(mMockDeploymentEntityMapper).unmap(mDeployment);
+        verify(mMockDeploymentDeletedCallback).onDeploymentDeleted();
+    }
+
+    @Test
+    public void shouldFailToDeleteADeployment() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((IDeploymentDatabaseHelper.IDeploymentEntityDeletedCallback) invocation
+                        .getArguments()[1]).onError(any(Exception.class));
+                return null;
+            }
+        }).when(mMockDeploymentDatabaseHelper).delete(any(DeploymentEntity.class),
+                any(IDeploymentDatabaseHelper.IDeploymentEntityDeletedCallback.class));
+
+        mDeploymentDataRepository.deleteDeployment(mMockDeployment, mMockDeploymentDeletedCallback);
+
+        verify(mMockDeploymentDeletedCallback).onError(any(RepositoryError.class));
+    }
+
 }

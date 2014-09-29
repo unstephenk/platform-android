@@ -33,10 +33,12 @@ import java.util.List;
 public interface IDeploymentRepository {
 
     /**
-     * Add an {@link com.ushahidi.android.core.entity.Deployment}.
+     * Add a {@link com.ushahidi.android.core.entity.Deployment}.
      *
      * @param deployment         The Deployment to be saved.
-     * @param deploymentCallback A {@link DeploymentAddCallback} used for notifying clients.
+     * @param deploymentCallback A {@link DeploymentAddCallback} used for notifying clients about
+     *                           the status of the operation.
+     *
      * @author Ushahidi Team <team@ushahidi.com>
      */
     void addDeployment(Deployment deployment, DeploymentAddCallback deploymentCallback);
@@ -44,22 +46,43 @@ public interface IDeploymentRepository {
     /**
      * Get a list of {@link com.ushahidi.android.core.entity.Deployment}.
      *
-     * @param deploymentListCallback A {@link DeploymentListCallback} used for notifying clients.
+     * @param deploymentListCallback A {@link DeploymentListCallback} used for notifying clients about
+     *                               the status of the operation.
      */
     void getDeploymentList(DeploymentListCallback deploymentListCallback);
 
     /**
      * Get an {@link com.ushahidi.android.core.entity.Deployment} by id.
      *
-     * @param deploymentId              The user id used to retrieve user data.
+     * @param deploymentId              The deployment id used for retrieving deployment data.
      * @param deploymentDetailsCallback A {@link DeploymentDetailsCallback} used for notifying
-     *                                  clients.
+     *                                  clients about the status of the operation.
      */
     void getDeploymentById(final long deploymentId,
             DeploymentDetailsCallback deploymentDetailsCallback);
 
+    /**
+     * Update a {@link com.ushahidi.android.core.entity.Deployment}
+     *
+     * @param deployment The Deployment to be deleted
+     * @param callback   A {@link DeploymentUpdateCallback} for notifying clients about deployment
+     *                   updates status.
+     */
     void updateDeployment(Deployment deployment, DeploymentUpdateCallback callback);
 
+    /**
+     * Delete a {@link com.ushahidi.android.core.entity.Deployment}
+     *
+     * @param deployment The deployment to be deleted.
+     * @param callback   A {@link DeploymentDeletedCallback} used for notifying clients about the
+     *                   delete status.
+     */
+    void deleteDeployment(final Deployment deployment, DeploymentDeletedCallback callback);
+
+    /**
+     * Callback used for notifying the client when either a deployment has been successfully added
+     * to the database or an error occurred during the process.
+     */
     interface DeploymentAddCallback {
 
         void onDeploymentAdded();
@@ -68,8 +91,8 @@ public interface IDeploymentRepository {
     }
 
     /**
-     * Callback used to be notified when either a deployment list has been loaded or an error
-     * occurs.
+     * Callback used for notifying the client when either a deployment list has been loaded
+     * successfully or an error occurred during the process.
      */
     interface DeploymentListCallback {
 
@@ -79,7 +102,8 @@ public interface IDeploymentRepository {
     }
 
     /**
-     * Callback used to be notified when either a deployment has been loaded or an error occurs.
+     * Callback used for notifying the client when either a deployment has been loaded or an error occurred
+     * during the process.
      */
     interface DeploymentDetailsCallback {
 
@@ -89,11 +113,23 @@ public interface IDeploymentRepository {
     }
 
     /**
-     * Callback used to be notified when either a deployment has been updated or failed.
+     * Callback used for notifying the client when either a deployment has been updated or failed to be
+     * updated.
      */
     interface DeploymentUpdateCallback {
 
         void onDeploymentUpdated();
+
+        void onError(ErrorWrap error);
+    }
+
+    /**
+     * Callback used for notifying the client when either a deployment has been deleted or failed to be
+     * deleted.
+     */
+    interface DeploymentDeletedCallback {
+
+        void onDeploymentDeleted();
 
         void onError(ErrorWrap error);
     }
