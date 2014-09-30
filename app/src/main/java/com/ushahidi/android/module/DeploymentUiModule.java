@@ -21,6 +21,7 @@ import com.ushahidi.android.core.respository.IDeploymentRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.deployment.AddDeployment;
+import com.ushahidi.android.core.usecase.deployment.DeleteDeployment;
 import com.ushahidi.android.core.usecase.deployment.GetDeployment;
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.core.usecase.deployment.UpdateDeployment;
@@ -48,12 +49,14 @@ import dagger.Provides;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
+//TODO Improve this class. To many code repetitions
 @Module(library = true, complete = false, injects = {
         ListDeploymentFragment.class, DeploymentActivity.class,
         AddDeploymentFragment.class, AddDeploymentActivity.class,
         UpdateDeploymentFragment.class, UpdateDeploymentActivity.class
 })
 public final class DeploymentUiModule {
+
 
     @Provides
     ListDeployment providesListDeployment(Context context) {
@@ -133,6 +136,24 @@ public final class DeploymentUiModule {
                 .getInstance(deploymentDatabaseHelper, entityMapper, urlValidator);
 
         return new GetDeployment(deploymentRepository, threadExecutor, postExecutionThread);
+    }
+
+    @Provides
+    DeleteDeployment providesDeleteDeployment(Context context) {
+        ThreadExecutor threadExecutor = TaskExecutor.getInstance();
+
+        PostExecutionThread postExecutionThread = UiThread.getInstance();
+
+        DeploymentEntityMapper entityMapper = new DeploymentEntityMapper();
+
+        DeploymentDatabaseHelper deploymentDatabaseHelper = DeploymentDatabaseHelper
+                .getInstance(context,
+                        threadExecutor);
+        UrlValidator urlValidator = new UrlValidator();
+
+        IDeploymentRepository deploymentRepository = DeploymentDataRepository
+                .getInstance(deploymentDatabaseHelper, entityMapper, urlValidator);
+        return new DeleteDeployment(deploymentRepository, threadExecutor, postExecutionThread);
     }
 
     @Provides

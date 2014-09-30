@@ -17,7 +17,9 @@
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
 
-<resources>
+<resources
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:ignore="MissingTranslation">
 
     <string name="app_name">Ushahidi Android</string>
     <string name="hello_world">Hello world!</string>
@@ -50,4 +52,10 @@
     <string name="about">About</string>
     <string name="version">Version</string>
     <string name="update">Update</string>
+    <string name="selected">%1$d selected</string>
+    <string name="delete">Delete</string>
+    <string name="items_deleted">%1$d deleted</string>
+    <string name="confirm_action">Are you sure you want to perform this action?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

@@ -19,9 +19,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:height="@dimen/list_title_height"
-                android:padding="@dimen/list_text_padding">
+                android:padding="@dimen/list_text_padding"
+                android:background="?android:attr/activatedBackgroundIndicator">
 
-    <TextView
+<com.ushahidi.android.ui.widget.CapitalizedTextView
             android:id="@+id/deployment_title"
             style="@style/ListItemPrimaryText"
             android:layout_alignParentLeft="true"
@@ -39,7 +40,7 @@
             style="@style/ListItemRightIcon"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
-            android:clickable="true"
+            android:clickable="false"
             android:checkMark="?android:attr/listChoiceIndicatorMultiple"
             android:gravity="center_vertical|center_horizontal"
             android:textAppearance="?android:attr/textAppearanceListItem"/>

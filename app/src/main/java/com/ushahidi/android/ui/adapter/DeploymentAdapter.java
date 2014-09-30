@@ -24,6 +24,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -51,26 +52,18 @@ public class DeploymentAdapter extends BaseListAdapter<DeploymentModel> {
         // Initialize view with content
         widgets.title.setText(getItem(position).getTitle());
         widgets.url.setText(getItem(position).getUrl());
-        widgets.position = position;
-
-        /*if (getItem(position).getStatus() == 1) {
-            widgets.listCheckBox.setChecked(true);
-        } else {
-            widgets.listCheckBox.setChecked(false);
-        }*/
+        widgets.listCheckBox.setChecked(((ListView) viewGroup).isItemChecked(position));
 
         return view;
     }
 
-    public class Widgets implements View.OnClickListener {
+    public class Widgets {
 
         TextView title;
 
         TextView url;
 
         CheckedTextView listCheckBox;
-
-        int position = 0;
 
         public Widgets(View convertView) {
 
@@ -80,18 +73,7 @@ public class DeploymentAdapter extends BaseListAdapter<DeploymentModel> {
             listCheckBox = (CheckedTextView) convertView
                     .findViewById(R.id.deployment_selected);
 
-            listCheckBox.setOnClickListener(this);
-
         }
 
-        @Override
-        public void onClick(View v) {
-            if (listCheckBox.isChecked()) {
-                listCheckBox.setChecked(false);
-            } else {
-
-                listCheckBox.setChecked(true);
-            }
-        }
     }
 }

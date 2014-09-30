@@ -18,12 +18,16 @@
 package com.ushahidi.android.ui.fragment;
 
 import com.ushahidi.android.R;
+import com.ushahidi.android.core.usecase.deployment.DeleteDeployment;
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
+import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
 import com.ushahidi.android.presenter.DeploymentListPresenter;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
+import com.ushahidi.android.ui.view.IDeleteDeploymentView;
 import com.ushahidi.android.ui.view.IDeploymentListView;
+import com.ushahidi.android.ui.widget.DeploymentListView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -45,10 +49,13 @@ import butterknife.InjectView;
  */
 public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, DeploymentAdapter>
         implements
-        IDeploymentListView {
+        IDeploymentListView, IDeleteDeploymentView {
 
     @Inject
     ListDeployment mListDeployment;
+
+    @Inject
+    DeleteDeployment mDeleteDeployment;
 
     @Inject
     DeploymentModelDataMapper mDeploymentModelDataMapper;
@@ -58,8 +65,11 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
 
     private DeploymentListPresenter mDeploymentListPresenter;
 
+    private DeleteDeploymentPresenter mDeleteDeploymentPresenter;
+
     private DeploymentListListener mDeploymentListListener;
 
+    private DeploymentListView mDeploymentListView;
 
     public ListDeploymentFragment() {
         super(DeploymentAdapter.class, R.layout.list_deployment, 0,
@@ -70,6 +80,8 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mDeploymentListPresenter.init();
+        mDeploymentListView = (DeploymentListView) mListView;
+        mDeploymentListView.setDeleteDeploymentPresenter(mDeleteDeploymentPresenter);
     }
 
     @Override
@@ -95,6 +107,8 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     @Override
     void initPresenter() {
         mDeploymentListPresenter = new DeploymentListPresenter(this, mListDeployment,
+                mDeploymentModelDataMapper);
+        mDeleteDeploymentPresenter = new DeleteDeploymentPresenter(this, mDeleteDeployment,
                 mDeploymentModelDataMapper);
     }
 
@@ -129,6 +143,13 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     @Override
     public void hideRetry() {
 
+    }
+
+    @Override
+    public void onDeploymentDeleted() {
+        showToast(getString(R.string.items_deleted,
+                mDeploymentListView.getNumberOfItemsDeleted()));
+        mDeploymentListPresenter.refreshList();
     }
 
     @Override

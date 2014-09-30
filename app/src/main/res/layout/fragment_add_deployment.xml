@@ -55,6 +55,7 @@
                         <com.andreabaccega.widget.FormEditText
                                 android:id="@+id/add_deployment_title"
                                 style="@style/FormInputText"
+                                android:inputType="textCapWords"
                                 ushEditTextForm:emptyErrorString="@string/add_deployment_empty_title"/>
                     </LinearLayout>
 

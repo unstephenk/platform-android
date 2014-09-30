@@ -15,22 +15,6 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <com.ushahidi.android.ui.widget.DeploymentListView
-            android:id="@id/android:list"
-            style="@style/ListView"/>
-
-    <TextView
-            android:id="@id/android:empty"
-            style="@style/EmptyText"
-            android:visibility="gone"
-            android:text="@string/empty_list"/>
-
-    <ProgressBar
-            android:id="@+id/loading_list_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            style="@android:style/Widget.ProgressBar"/>
-</merge>
+<resources>
+    <integer name="screen_right_side">200</integer>
+</resources>
