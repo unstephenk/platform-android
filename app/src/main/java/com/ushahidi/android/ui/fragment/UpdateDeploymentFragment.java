@@ -29,6 +29,9 @@ import com.ushahidi.android.ui.view.IUpdateDeploymentView;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 
 import javax.inject.Inject;
@@ -135,6 +138,18 @@ public class UpdateDeploymentFragment extends BaseFragment implements IUpdateDep
 
     private void initUpdate() {
         button.setText(R.string.update);
+        url.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (TextUtils.isEmpty(url.getText().toString())) {
+                    url.setText("http://");
+                }
+
+                return false;
+            }
+
+        });
     }
 
     @Override

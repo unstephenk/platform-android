@@ -23,9 +23,10 @@ import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -37,7 +38,9 @@ import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ListView;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Custom ListView to handle CAB events for deployments list
@@ -60,10 +63,11 @@ public class DeploymentListView extends ListView {
 
     private DeleteDeploymentPresenter mDeleteDeploymentPresenter;
 
-    private LinkedHashSet<DeploymentModel> mDeploymentModels;
+    private Map<Integer, DeploymentModel> mDeploymentModels;
 
-    // Check if confirmation isDialog was initiated
-    private boolean isDialog = false;
+    private InteractiveToast mInteractiveToast;
+
+    private static final String BUNDLE_KEY = "selected";
 
     public DeploymentListView(Context context) {
         this(context, null, 0);
@@ -77,7 +81,7 @@ public class DeploymentListView extends ListView {
         super(context, attrs, defStyle);
         setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mActivity = (Activity) context;
-        mDeploymentModels = new LinkedHashSet<>();
+        mDeploymentModels = new LinkedHashMap();
     }
 
     @Override
@@ -102,12 +106,16 @@ public class DeploymentListView extends ListView {
         final int x = (int) ev.getX();
         final int y = (int) ev.getY();
 
-        // Get the right most part of the list view screen
+        // Get the right most part of the item in the list
+        // This will enable us to have a bigger touch area for the checkbox
         if (action == MotionEvent.ACTION_DOWN && x > getWidth() - getContext().getResources()
                 .getInteger(R.integer.screen_right_side)) {
             mSelectionMode = true;
             mStartPosition = pointToPosition(x, y);
         }
+
+        // Resume regular touch event if it's not in the selection mode.
+        // The area of the screen being touched is not where the checkbox is.
         if (!mSelectionMode) {
             return super.onTouchEvent(ev);
         }
@@ -151,13 +159,26 @@ public class DeploymentListView extends ListView {
         mDeploymentAdapter = (DeploymentAdapter) getAdapter();
 
         if (mDeploymentAdapter != null) {
-            mDeploymentModels.add(mDeploymentAdapter.getItem(position));
+            mDeploymentModels.put(position, mDeploymentAdapter.getItem(position));
         }
 
+        // Set the CAB title with the number of selected items
         mActionMode.setTitle(mActivity.getString(R.string.selected, checkedCount));
 
     }
 
+    /**
+     * Shows a toast like message giving the user a feedback of the action taken.
+     *
+     * @param interactiveToast The {@link com.ushahidi.android.ui.widget.InteractiveToast}
+     */
+    public void setInteractiveToast(InteractiveToast interactiveToast) {
+        mInteractiveToast = interactiveToast;
+    }
+
+    /**
+     * Clear all checked items in the list.
+     */
     private void clearSelectedItems() {
 
         SparseBooleanArray cItems = getCheckedItemPositions();
@@ -168,10 +189,12 @@ public class DeploymentListView extends ListView {
         }
     }
 
+    /**
+     * Clear all checked items in the list and the selected {@link com.ushahidi.android.model.DeploymentModel}
+     */
     public void clearItems() {
         clearSelectedItems();
         mDeploymentModels.clear();
-        isDialog = false;
     }
 
     class ActionBarModeCallback implements ActionMode.Callback {
@@ -185,7 +208,7 @@ public class DeploymentListView extends ListView {
 
         @Override
         public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            // Reset any previous selected number items
+            // Resets any previously selected number of items.
             mNumberOfItemsDeleted = 0;
             return true;
         }
@@ -207,9 +230,7 @@ public class DeploymentListView extends ListView {
 
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
-            if (!isDialog) {
-                clearItems();
-            }
+            clearItems();
             mActionMode = null;
         }
     }
@@ -222,43 +243,152 @@ public class DeploymentListView extends ListView {
         return mNumberOfItemsDeleted;
     }
 
-    private void performDeletion() {
+    private void performDeletion(ArrayList<DeploymentParcelable> items) {
         if (mDeleteDeploymentPresenter != null) {
-            if (!mDeploymentModels.isEmpty()) {
-                mNumberOfItemsDeleted = mDeploymentModels.size();
-                for (DeploymentModel deploymentModel : mDeploymentModels) {
-                    mDeleteDeploymentPresenter.deleteDeployment(deploymentModel);
+
+            if (!items.isEmpty()) {
+                mNumberOfItemsDeleted = items.size();
+                for (DeploymentParcelable deploymentModel : items) {
+                    mDeleteDeploymentPresenter
+                            .deleteDeployment(deploymentModel.mDeploymentModel);
                 }
-                clearItems();
+
+                items.clear();
             }
 
+            clearItems();
         }
     }
 
     /**
-     * Deletes selected deployments
+     * Deletes selected {@link com.ushahidi.android.model.DeploymentModel} from the database.
      */
     private void performDelete() {
-        isDialog = true;
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-        builder.setMessage(mActivity.getString(R.string.confirm_action))
-                .setCancelable(false)
-                .setNegativeButton(mActivity.getString(R.string.no),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                clearItems();
-                                dialog.cancel();
-                            }
-                        })
-                .setPositiveButton(mActivity.getString(R.string.yes),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // Perform deletion
-                                performDeletion();
 
+        mInteractiveToast
+                .setInteractiveToastListener(new InteractiveToast.InteractiveToastListener() {
+                    @Override
+                    public void onPressed(Parcelable token) {
+
+                        // Gets all the selected items from the bundle
+                        Bundle b = (Bundle) token;
+                        final ArrayList<DeploymentParcelable> items = b
+                                .getParcelableArrayList(BUNDLE_KEY);
+
+                        if (!items.isEmpty()) {
+                            mNumberOfItemsDeleted = items.size();
+                            for (DeploymentParcelable deploymentModel : items) {
+
+                                // Restores all the removed DeploymentModels from the list view's adapter
+                                // back and in their original position.
+                                mDeploymentAdapter.addItem(deploymentModel.mPosition,
+                                        deploymentModel.mDeploymentModel);
                             }
-                        });
-        AlertDialog alert = builder.create();
-        alert.show();
+
+                            // Clear
+                            items.clear();
+                        }
+                        // Clears all selected items
+                        clearItems();
+                    }
+                });
+
+        mInteractiveToast.setOnHideListener(new InteractiveToast.OnHideListener() {
+            @Override
+            public void onHide(Parcelable token) {
+
+                // On hide, retrieve the selected items and perform the actual deletion from the database
+                Bundle b = (Bundle) token;
+                final ArrayList<DeploymentParcelable> items = b
+                        .getParcelableArrayList(BUNDLE_KEY);
+
+                // Delete items
+                performDeletion(items);
+            }
+        });
+
+        // Pass the selected DeploymentModels as a parcelable objects to be used by
+        // the InteractiveToast callback functions
+        ArrayList<DeploymentParcelable> items = new ArrayList<>();
+
+        if (!mDeploymentModels.isEmpty()) {
+            mNumberOfItemsDeleted = mDeploymentModels.size();
+            for (Map.Entry<Integer, DeploymentModel> entry : mDeploymentModels.entrySet()) {
+
+                // Initializes the DeploymentParcelable with the DeploymentModel and it's position in the list view.
+
+                // Storing the position helps in restoring the deleted DeploymentModel to it's original
+                // position.
+                DeploymentParcelable parcelable = new DeploymentParcelable(entry.getValue(),
+                        entry.getKey());
+                items.add(parcelable);
+
+                // Removes the selected DeploymentModel from the list view's adapter.
+                mDeploymentAdapter.removeItem(entry.getValue());
+            }
+
+        }
+
+        // Stores the selected models into a bundle for later reuse.
+        Bundle b = new Bundle();
+        b.putParcelableArrayList(BUNDLE_KEY, items);
+        mInteractiveToast
+                .show(mActivity.getString(R.string.items_deleted, mDeploymentModels.size()),
+                        mActivity.getString(R.string.undo), R.drawable.ic_undo, b);
+    }
+
+    /**
+     * Facilitates in passing the {@link com.ushahidi.android.model.DeploymentModel} as a {@link
+     * android.os.Parcelable} object.
+     */
+    public static class DeploymentParcelable implements Parcelable {
+
+        private DeploymentModel mDeploymentModel;
+
+        private int mPosition;
+
+        public DeploymentParcelable(DeploymentModel deploymentModel, int position) {
+            mDeploymentModel = deploymentModel;
+            mPosition = position;
+        }
+
+        public DeploymentParcelable(Parcel parcel) {
+            mPosition = parcel.readInt();
+
+            // Makes sure the object to be retrieved is retrieved as a
+            // DeploymentModel object.
+            mDeploymentModel = (DeploymentModel) parcel
+                    .readValue(DeploymentModel.class.getClassLoader());
+        }
+
+        public DeploymentModel getDeploymentModel() {
+            return mDeploymentModel;
+        }
+
+        public int getPosition() {
+            return mPosition;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeInt(mPosition);
+            parcel.writeValue(mDeploymentModel);
+        }
+
+        public static final Parcelable.Creator<DeploymentParcelable> CREATOR
+                = new Parcelable.Creator<DeploymentParcelable>() {
+            public DeploymentParcelable createFromParcel(Parcel in) {
+                return new DeploymentParcelable(in);
+            }
+
+            public DeploymentParcelable[] newArray(int size) {
+                return new DeploymentParcelable[size];
+            }
+        };
     }
 }

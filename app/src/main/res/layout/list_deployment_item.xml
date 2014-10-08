@@ -22,7 +22,7 @@
                 android:padding="@dimen/list_text_padding"
                 android:background="?android:attr/activatedBackgroundIndicator">
 
-<com.ushahidi.android.ui.widget.CapitalizedTextView
+    <com.ushahidi.android.ui.widget.CapitalizedTextView
             android:id="@+id/deployment_title"
             style="@style/ListItemPrimaryText"
             android:layout_alignParentLeft="true"
@@ -44,5 +44,4 @@
             android:checkMark="?android:attr/listChoiceIndicatorMultiple"
             android:gravity="center_vertical|center_horizontal"
             android:textAppearance="?android:attr/textAppearanceListItem"/>
-
 </RelativeLayout>

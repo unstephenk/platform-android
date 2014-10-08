@@ -70,6 +70,7 @@
                         <com.andreabaccega.widget.FormEditText
                                 android:id="@+id/add_deployment_url"
                                 style="@style/FormUriInputText"
+                                android:hint="http://www.deployment.com"
                                 android:layout_gravity="center"
                                 ushEditTextForm:testType="webUrl"/>
                     </LinearLayout>

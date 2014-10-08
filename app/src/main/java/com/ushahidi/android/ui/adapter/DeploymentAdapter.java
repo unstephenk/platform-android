@@ -20,9 +20,13 @@ package com.ushahidi.android.ui.adapter;
 import com.ushahidi.android.R;
 import com.ushahidi.android.model.DeploymentModel;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,6 +58,7 @@ public class DeploymentAdapter extends BaseListAdapter<DeploymentModel> {
         widgets.url.setText(getItem(position).getUrl());
         widgets.listCheckBox.setChecked(((ListView) viewGroup).isItemChecked(position));
 
+        //TODO: Look into animating this view when an item is added
         return view;
     }
 
@@ -72,8 +77,8 @@ public class DeploymentAdapter extends BaseListAdapter<DeploymentModel> {
 
             listCheckBox = (CheckedTextView) convertView
                     .findViewById(R.id.deployment_selected);
-
         }
 
     }
+
 }

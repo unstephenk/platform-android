@@ -25,22 +25,29 @@ import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
 import com.ushahidi.android.presenter.DeploymentListPresenter;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
+import com.ushahidi.android.ui.listener.SwipeDismissListViewTouchListener;
 import com.ushahidi.android.ui.view.IDeleteDeploymentView;
 import com.ushahidi.android.ui.view.IDeploymentListView;
 import com.ushahidi.android.ui.widget.DeploymentListView;
+import com.ushahidi.android.ui.widget.InteractiveToast;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.InjectView;
+
+import static com.ushahidi.android.ui.widget.DeploymentListView.DeploymentParcelable;
 
 /**
  * Shows list of deployment.
@@ -63,6 +70,11 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     @InjectView(R.id.loading_list_progress)
     ProgressBar mListLoadingProgress;
 
+    @InjectView(R.id.interactive_toast)
+    LinearLayout mInteractiveToastContainer; // Layout container for InteractiveToast
+
+    private static final String INTERACTIVE_TOAST_BUNDLE_KEY = "selected_items";
+
     private DeploymentListPresenter mDeploymentListPresenter;
 
     private DeleteDeploymentPresenter mDeleteDeploymentPresenter;
@@ -70,6 +82,11 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     private DeploymentListListener mDeploymentListListener;
 
     private DeploymentListView mDeploymentListView;
+
+    private boolean isDismissToDelete = false;
+
+    private InteractiveToast mInteractiveToast;
+
 
     public ListDeploymentFragment() {
         super(DeploymentAdapter.class, R.layout.list_deployment, 0,
@@ -82,6 +99,96 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
         mDeploymentListPresenter.init();
         mDeploymentListView = (DeploymentListView) mListView;
         mDeploymentListView.setDeleteDeploymentPresenter(mDeleteDeploymentPresenter);
+        mInteractiveToast = new InteractiveToast(mInteractiveToastContainer);
+
+        SwipeDismissListViewTouchListener mListViewTouchListener =
+                new SwipeDismissListViewTouchListener(mListView,
+                        new SwipeDismissListViewTouchListener.DismissCallbacks() {
+
+                            @Override
+                            public boolean canDismiss(int position) {
+                                return true;
+                            }
+
+                            @Override
+                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                                mInteractiveToast
+                                        .setInteractiveToastListener(
+                                                new InteractiveToast.InteractiveToastListener() {
+                                                    @Override
+                                                    public void onPressed(Parcelable token) {
+
+                                                        Bundle b = (Bundle) token;
+                                                        final ArrayList<DeploymentParcelable> items
+                                                                = b
+                                                                .getParcelableArrayList(
+                                                                        INTERACTIVE_TOAST_BUNDLE_KEY);
+
+                                                        if (!items.isEmpty()) {
+
+                                                            for (DeploymentParcelable deploymentModel : items) {
+                                                                mAdapter.addItem(deploymentModel
+                                                                                .getPosition(),
+                                                                        deploymentModel
+                                                                                .getDeploymentModel());
+                                                            }
+                                                            items.clear();
+                                                        }
+
+                                                    }
+                                                });
+
+                                mInteractiveToast
+                                        .setOnHideListener(new InteractiveToast.OnHideListener() {
+                                            @Override
+                                            public void onHide(Parcelable token) {
+
+                                                Bundle b = (Bundle) token;
+                                                final ArrayList<DeploymentParcelable> items = b
+                                                        .getParcelableArrayList(
+                                                                INTERACTIVE_TOAST_BUNDLE_KEY);
+                                                if (!items.isEmpty()) {
+
+                                                    for (DeploymentParcelable deploymentModel : items) {
+                                                        mDeleteDeploymentPresenter
+                                                                .deleteDeployment(deploymentModel
+                                                                        .getDeploymentModel());
+                                                    }
+                                                    items.clear();
+                                                }
+
+                                            }
+                                        });
+                                ArrayList<DeploymentParcelable> items = new ArrayList<>();
+
+                                if (reverseSortedPositions.length > 0) {
+
+                                    for (int i : reverseSortedPositions) {
+                                        DeploymentParcelable parcelable = new DeploymentParcelable(
+                                                mAdapter.getItem(i),
+                                                i);
+                                        items.add(parcelable);
+                                        mAdapter.removeItem(mAdapter.getItem(i));
+                                    }
+
+                                }
+
+                                // Stores the selected models into a bundle for later reuse.
+                                Bundle b = new Bundle();
+                                b.putParcelableArrayList(INTERACTIVE_TOAST_BUNDLE_KEY, items);
+
+                                mInteractiveToast
+                                        .show(getString(R.string.items_deleted,
+                                                        reverseSortedPositions.length),
+                                                getString(R.string.undo),
+                                                R.drawable.ic_undo, b);
+
+                            }
+                        });
+        mDeploymentListView.setOnTouchListener(mListViewTouchListener);
+        mDeploymentListView.setOnScrollListener(mListViewTouchListener.makeScrollListener());
+        mDeploymentListView.setInteractiveToast(mInteractiveToast);
+
     }
 
     @Override
@@ -147,9 +254,11 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
 
     @Override
     public void onDeploymentDeleted() {
-        showToast(getString(R.string.items_deleted,
-                mDeploymentListView.getNumberOfItemsDeleted()));
-        mDeploymentListPresenter.refreshList();
+        if (!isDismissToDelete) {
+            showToast(getString(R.string.items_deleted,
+                    mDeploymentListView.getNumberOfItemsDeleted()));
+            mDeploymentListPresenter.refreshList();
+        }
     }
 
     @Override
@@ -187,4 +296,5 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
         void onDeploymentClicked(final DeploymentModel deploymentModel);
 
     }
+
 }

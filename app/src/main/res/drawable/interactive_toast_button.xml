@@ -15,14 +15,17 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@android:color/transparent"/>
 
-<!-- List deployments -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-    <include layout="@layout/list_items"/>
-
-    <include layout="@layout/interactive_toast"/>
-</RelativeLayout>
-
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="#1A000000"/>
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape>
+            <solid android:color="#77000000"/>
+        </shape>
+    </item>
+</selector>

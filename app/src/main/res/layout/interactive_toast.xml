@@ -16,13 +16,17 @@
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
 
-<!-- List deployments -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/interactive_toast"
+              style="@style/InteractiveToast"
+              android:layout_alignParentBottom="true">
 
-    <include layout="@layout/list_items"/>
+    <TextView
+            android:id="@+id/interactive_toast_message"
+            style="@style/InteractiveToastMessage"/>
 
-    <include layout="@layout/interactive_toast"/>
-</RelativeLayout>
+    <TextView
+            android:id="@+id/interactive_toast_button"
+            style="@style/InteractiveToastButton"/>
 
+</LinearLayout>

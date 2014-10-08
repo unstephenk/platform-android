@@ -55,7 +55,8 @@
     <string name="selected">%1$d selected</string>
     <string name="delete">Delete</string>
     <string name="items_deleted">%1$d deleted</string>
-    <string name="confirm_action">Are you sure you want to perform this action?</string>
+    <string name="swipe_deleted_items">%1$s deleted</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="undo">Undo</string>
 </resources>
