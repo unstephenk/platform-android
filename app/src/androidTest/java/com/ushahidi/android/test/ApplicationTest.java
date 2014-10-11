@@ -1,4 +1,4 @@
-package com.ushahidi.android;
+package com.ushahidi.android.test;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

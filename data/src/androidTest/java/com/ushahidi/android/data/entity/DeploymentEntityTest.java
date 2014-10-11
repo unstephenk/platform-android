@@ -22,9 +22,9 @@ import com.ushahidi.android.data.BaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.instanceOf;
 
 /**
  * Tests {@link com.ushahidi.android.data.entity.DeploymentEntity}
@@ -49,7 +49,7 @@ public class DeploymentEntityTest extends BaseTestCase {
     }
 
     @Test
-    public void shouldCreateDeploymentEntity() throws  Exception {
+    public void shouldCreateDeploymentEntity() throws Exception {
         mDeploymentEntity.setId(DUMMY_ID);
         mDeploymentEntity.setTitle(DUMMY_TITLE);
         mDeploymentEntity.setStatus(DUMMY_STATUS);
@@ -58,7 +58,7 @@ public class DeploymentEntityTest extends BaseTestCase {
         assertThat(mDeploymentEntity, is(instanceOf(DeploymentEntity.class)));
         assertThat(mDeploymentEntity.getId(), is(DUMMY_ID));
         assertThat(mDeploymentEntity.getTitle(), is(DUMMY_TITLE));
-        assertThat(mDeploymentEntity.getStatus(),is(DUMMY_STATUS));
+        assertThat(mDeploymentEntity.getStatus(), is(DUMMY_STATUS));
         assertThat(mDeploymentEntity.getUrl(), is(DUMMY_URL));
     }
 }

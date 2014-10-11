@@ -24,8 +24,7 @@ import org.robolectric.annotation.Config;
 import org.robolectric.res.Fs;
 
 /**
- * Custom Roboelectric Test Runner to make use of SDK v18 as
- * Roboelectric doesn't support SDK v18+
+ * Custom Roboelectric Test Runner to make use of SDK v18 as Roboelectric doesn't support SDK v18+
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
@@ -43,7 +42,8 @@ public class CustomRobolectricTestRunner extends RobolectricTestRunner {
         String manifestProperty = System.getProperty("android.manifest");
         if (config.manifest().equals(Config.DEFAULT) && manifestProperty != null) {
             String resProperty = System.getProperty("android.resources");
-            return new AndroidManifest(Fs.fileFromPath(manifestProperty), Fs.fileFromPath(resProperty)) {
+            return new AndroidManifest(Fs.fileFromPath(manifestProperty),
+                    Fs.fileFromPath(resProperty)) {
                 @Override
                 public int getTargetSdkVersion() {
                     return MAX_SDK_SUPPORTED_BY_ROBOLECTRIC;
