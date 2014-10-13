@@ -19,7 +19,7 @@ package com.ushahidi.android.core.exception;
 /**
  * Interface to represent a wrapper around an {@link java.lang.Exception} to manage errors.
  *
- * @author  Ushahidi Team <team@ushahidi.com>
+ * @author Ushahidi Team <team@ushahidi.com>
  */
 public interface ErrorWrap {
 

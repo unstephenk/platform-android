@@ -52,7 +52,8 @@ public class ErrorMessageFactoryTest extends AndroidTestCase {
     public void testDeploymentValidationException() {
         final String expectedMessage = getContext().getString(R.string.error_domain_not_valid);
         final String actualMessage = ErrorMessageFactory
-                .create(getContext(), new ValidationException(getContext().getString(R.string.error_domain_not_valid)));
+                .create(getContext(), new ValidationException(
+                        getContext().getString(R.string.error_domain_not_valid)));
         assertThat(actualMessage, is(equalTo(expectedMessage)));
     }
 }

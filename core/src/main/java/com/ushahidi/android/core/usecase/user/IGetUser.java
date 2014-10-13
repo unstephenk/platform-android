@@ -27,8 +27,7 @@ public interface IGetUser extends IInteractor {
      *
      * @param id       The user id to retrieve.
      * @param callback A {@link IGetUser.Callback} used for notify the client.
-     *
-     * @author  Ushahidi Team <team@ushahidi.com>
+     * @author Ushahidi Team <team@ushahidi.com>
      */
     public void execute(int id, Callback callback);
 

@@ -31,7 +31,8 @@ import android.widget.TextView;
 
 /**
  * A widget that mimics a {@link android.widget.Toast} but being able to interact with it. You can
- * implement it to take action when a view is pressed or when the view vanishes without any interaction.
+ * implement it to take action when a view is pressed or when the view vanishes without any
+ * interaction.
  *
  * Heavily based on the works of http://simonvt.github.io/MessageBar/
  *

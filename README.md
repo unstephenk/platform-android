@@ -49,11 +49,11 @@ do so follow the steps below:
 6. Choose Build > Make Project in Android Studio or run the following
     command in the project root directory:
     
-   `./gradlew clean build` Build the entire application including tests.
+   `./gradlew clean build` Assemble the output(s) of the projects and runs all checks.
    
    `./gradlew test` Execute tests that runs without any connected devices.
    
-   `./gradlew connectedAndroidTest` Execute tests that runs on connected devices.
+   `./gradlew :app:connectedAndroidTest` Execute tests that runs on connected devices. This normally run tests for the `:app` module.
    
 7. To install on your test device:
 

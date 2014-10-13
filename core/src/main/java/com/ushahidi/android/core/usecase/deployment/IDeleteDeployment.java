@@ -31,14 +31,15 @@ public interface IDeleteDeployment extends IInteractor {
     /**
      * Executes this use case.
      *
-     * @param callback   A {@link IGetDeployment.Callback} used to notify the client about the status
-     *                   of the operation.
+     * @param callback   A {@link IGetDeployment.Callback} used to notify the client about the
+     *                   status of the operation.
      * @param deployment The deployment
      */
     void execute(Deployment deployment, Callback callback);
 
     /**
-     * Notifies client when a deployment is successfully deleted or when an error occurred in the process.
+     * Notifies client when a deployment is successfully deleted or when an error occurred in the
+     * process.
      */
     interface Callback {
 

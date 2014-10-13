@@ -38,7 +38,6 @@ public interface IDeploymentRepository {
      * @param deployment         The Deployment to be saved.
      * @param deploymentCallback A {@link DeploymentAddCallback} used for notifying clients about
      *                           the status of the operation.
-     *
      * @author Ushahidi Team <team@ushahidi.com>
      */
     void addDeployment(Deployment deployment, DeploymentAddCallback deploymentCallback);
@@ -46,8 +45,8 @@ public interface IDeploymentRepository {
     /**
      * Get a list of {@link com.ushahidi.android.core.entity.Deployment}.
      *
-     * @param deploymentListCallback A {@link DeploymentListCallback} used for notifying clients about
-     *                               the status of the operation.
+     * @param deploymentListCallback A {@link DeploymentListCallback} used for notifying clients
+     *                               about the status of the operation.
      */
     void getDeploymentList(DeploymentListCallback deploymentListCallback);
 
@@ -102,8 +101,8 @@ public interface IDeploymentRepository {
     }
 
     /**
-     * Callback used for notifying the client when either a deployment has been loaded or an error occurred
-     * during the process.
+     * Callback used for notifying the client when either a deployment has been loaded or an error
+     * occurred during the process.
      */
     interface DeploymentDetailsCallback {
 
@@ -113,8 +112,8 @@ public interface IDeploymentRepository {
     }
 
     /**
-     * Callback used for notifying the client when either a deployment has been updated or failed to be
-     * updated.
+     * Callback used for notifying the client when either a deployment has been updated or failed to
+     * be updated.
      */
     interface DeploymentUpdateCallback {
 
@@ -124,8 +123,8 @@ public interface IDeploymentRepository {
     }
 
     /**
-     * Callback used for notifying the client when either a deployment has been deleted or failed to be
-     * deleted.
+     * Callback used for notifying the client when either a deployment has been deleted or failed to
+     * be deleted.
      */
     interface DeploymentDeletedCallback {
 

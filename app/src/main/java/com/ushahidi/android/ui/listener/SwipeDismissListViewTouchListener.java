@@ -37,17 +37,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A {@link View.OnTouchListener} that makes the list items in a {@link ListView}
- * dismissable. {@link ListView} is given special treatment because by default it handles touches
- * for its list items... i.e. it's in charge of drawing the pressed state (the list selector),
- * handling list item clicks, etc.
+ * A {@link View.OnTouchListener} that makes the list items in a {@link ListView} dismissable.
+ * {@link ListView} is given special treatment because by default it handles touches for its list
+ * items... i.e. it's in charge of drawing the pressed state (the list selector), handling list item
+ * clicks, etc.
  *
- * <p>After creating the listener, the caller should also call
- * {@link ListView#setOnScrollListener(AbsListView.OnScrollListener)}, passing
- * in the scroll listener returned by {@link #makeScrollListener()}. If a scroll listener is
- * already assigned, the caller should still pass scroll changes through to this listener. This will
- * ensure that this {@link SwipeDismissListViewTouchListener} is paused during list view
- * scrolling.</p>
+ * <p>After creating the listener, the caller should also call {@link
+ * ListView#setOnScrollListener(AbsListView.OnScrollListener)}, passing in the scroll listener
+ * returned by {@link #makeScrollListener()}. If a scroll listener is already assigned, the caller
+ * should still pass scroll changes through to this listener. This will ensure that this {@link
+ * SwipeDismissListViewTouchListener} is paused during list view scrolling.</p>
  *
  * <p>Example usage:</p>
  *
@@ -67,33 +66,45 @@ import java.util.List;
  * listView.setOnScrollListener(touchListener.makeScrollListener());
  * </pre>
  *
- * <p>This class Requires API level 12 or later due to use of {@link
- * ViewPropertyAnimator}.</p>
- *
+ * <p>This class Requires API level 12 or later due to use of {@link ViewPropertyAnimator}.</p>
  */
 public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
+
     // Cached ViewConfiguration and system-wide constant values
     private int mSlop;
+
     private int mMinFlingVelocity;
+
     private int mMaxFlingVelocity;
+
     private long mAnimationTime;
 
     // Fixed properties
     private ListView mListView;
+
     private DismissCallbacks mCallbacks;
+
     private int mViewWidth = 1; // 1 and not 0 to prevent dividing by zero
 
     // Transient properties
     private List<PendingDismissData> mPendingDismisses = new ArrayList<>();
 
     private int mDismissAnimationRefCount = 0;
+
     private float mDownX;
+
     private float mDownY;
+
     private boolean mSwiping;
+
     private int mSwipingSlop;
+
     private VelocityTracker mVelocityTracker;
+
     private int mDownPosition;
+
     private View mDownView;
+
     private boolean mPaused;
 
     /**
@@ -101,6 +112,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
      * about a successful dismissal of one or more list item positions.
      */
     public interface DismissCallbacks {
+
         /**
          * Called to determine whether the given position can be dismissed.
          */
@@ -145,11 +157,11 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     }
 
     /**
-     * Returns an {@link AbsListView.OnScrollListener} to be added to the {@link
-     * ListView} using {@link ListView#setOnScrollListener(AbsListView.OnScrollListener)}.
-     * If a scroll listener is already assigned, the caller should still pass scroll changes through
-     * to this listener. This will ensure that this {@link SwipeDismissListViewTouchListener} is
-     * paused during list view scrolling.</p>
+     * Returns an {@link AbsListView.OnScrollListener} to be added to the {@link ListView} using
+     * {@link ListView#setOnScrollListener(AbsListView.OnScrollListener)}. If a scroll listener is
+     * already assigned, the caller should still pass scroll changes through to this listener. This
+     * will ensure that this {@link SwipeDismissListViewTouchListener} is paused during list view
+     * scrolling.</p>
      *
      * @see SwipeDismissListViewTouchListener
      */
@@ -178,7 +190,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
         boolean mSelectionMode = false;
         // Get the right most part of the list view screen and make sure
         // swipe doesn't happen there
-        if (action == MotionEvent.ACTION_DOWN && sX > mViewWidth - mListView.getContext().getResources()
+        if (action == MotionEvent.ACTION_DOWN && sX > mViewWidth - mListView.getContext()
+                .getResources()
                 .getInteger(R.integer.screen_right_side)) {
             mSelectionMode = true;
 
@@ -339,7 +352,9 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     }
 
     class PendingDismissData implements Comparable<PendingDismissData> {
+
         public int position;
+
         public View view;
 
         public PendingDismissData(int position, View view) {
