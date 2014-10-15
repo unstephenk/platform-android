@@ -24,9 +24,8 @@ import com.ushahidi.android.exception.ErrorMessageFactory;
 
 import android.test.AndroidTestCase;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 /**
  * Tests {@link com.ushahidi.android.exception.ErrorMessageFactory}
@@ -46,7 +45,7 @@ public class ErrorMessageFactoryTest extends AndroidTestCase {
         final String actualMessage = ErrorMessageFactory
                 .create(getContext(), new DeploymentNotFoundException());
 
-        assertThat(actualMessage, is(equalTo(expectedMessage)));
+        assertThat(actualMessage).isEqualTo(expectedMessage);
     }
 
     public void testDeploymentValidationException() {
@@ -54,6 +53,6 @@ public class ErrorMessageFactoryTest extends AndroidTestCase {
         final String actualMessage = ErrorMessageFactory
                 .create(getContext(), new ValidationException(
                         getContext().getString(R.string.error_domain_not_valid)));
-        assertThat(actualMessage, is(equalTo(expectedMessage)));
+        assertThat(actualMessage).isEqualTo(expectedMessage);
     }
 }

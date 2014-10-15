@@ -22,13 +22,13 @@ import com.ushahidi.android.core.usecase.deployment.DeleteDeployment;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
+import com.ushahidi.android.test.CustomAndroidTestCase;
 import com.ushahidi.android.ui.view.IDeleteDeploymentView;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import android.content.Context;
-import android.test.AndroidTestCase;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeleteDeploymentPresenterTest extends AndroidTestCase {
+public class DeleteDeploymentPresenterTest extends CustomAndroidTestCase {
 
     private static final long DUMMY_ID = 1;
 
@@ -69,7 +69,6 @@ public class DeleteDeploymentPresenterTest extends AndroidTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-
         MockitoAnnotations.initMocks(this);
         mDeploymentModel = new DeploymentModel();
         mDeploymentModel.setId(DUMMY_ID);

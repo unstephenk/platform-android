@@ -23,13 +23,13 @@ import com.ushahidi.android.core.usecase.deployment.UpdateDeployment;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.UpdateDeploymentPresenter;
+import com.ushahidi.android.test.CustomAndroidTestCase;
 import com.ushahidi.android.ui.view.IUpdateDeploymentView;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import android.content.Context;
-import android.test.AndroidTestCase;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class UpdateDeploymentPresenterTest extends AndroidTestCase {
+public class UpdateDeploymentPresenterTest extends CustomAndroidTestCase {
 
     private static final long DUMMY_ID = 1;
 

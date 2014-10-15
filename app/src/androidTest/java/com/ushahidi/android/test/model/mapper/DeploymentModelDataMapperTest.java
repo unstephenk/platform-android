@@ -20,15 +20,12 @@ package com.ushahidi.android.test.model.mapper;
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
-
-import junit.framework.TestCase;
+import com.ushahidi.android.test.CustomAndroidTestCase;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -36,7 +33,7 @@ import static org.mockito.Mockito.mock;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentModelDataMapperTest extends TestCase {
+public class DeploymentModelDataMapperTest extends CustomAndroidTestCase {
 
     private static final long DUMMY_ID = 1;
 
@@ -51,7 +48,6 @@ public class DeploymentModelDataMapperTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-
         mDeploymentModelDataMapper = new DeploymentModelDataMapper();
     }
 
@@ -64,11 +60,11 @@ public class DeploymentModelDataMapperTest extends TestCase {
 
         DeploymentModel deploymentModel = mDeploymentModelDataMapper.map(deployment);
 
-        assertThat(deploymentModel, is(instanceOf(DeploymentModel.class)));
-        assertThat(deploymentModel.getTitle(), is(DUMMY_TITLE));
-        assertThat(deploymentModel.getUrl(), is(DUMMY_URL));
-        assertThat(deploymentModel.getId(), is(DUMMY_ID));
-        assertThat(deploymentModel.getStatus(), is(DUMMY_STATUS));
+        assertThat(deploymentModel).isInstanceOf(DeploymentModel.class);
+        assertThat(deploymentModel.getTitle()).isEqualTo(DUMMY_TITLE);
+        assertThat(deploymentModel.getUrl()).isEqualTo(DUMMY_URL);
+        assertThat(deploymentModel.getId()).isEqualTo(DUMMY_ID);
+        assertThat(deploymentModel.getStatus()).isEqualTo(DUMMY_STATUS);
     }
 
     public void testDeploymentUnMap() {
@@ -79,11 +75,11 @@ public class DeploymentModelDataMapperTest extends TestCase {
         deploymentModel.setId(DUMMY_ID);
 
         Deployment deployment = mDeploymentModelDataMapper.unmap(deploymentModel);
-        assertThat(deployment, is(instanceOf(Deployment.class)));
-        assertThat(deployment.getTitle(), is(DUMMY_TITLE));
-        assertThat(deployment.getUrl(), is(DUMMY_URL));
-        assertThat(deployment.getId(), is(DUMMY_ID));
-        assertThat(deployment.getStatus(), is(DUMMY_STATUS));
+        assertThat(deployment).isInstanceOf(Deployment.class);
+        assertThat(deployment.getTitle()).isEqualTo(DUMMY_TITLE);
+        assertThat(deployment.getUrl()).isEqualTo(DUMMY_URL);
+        assertThat(deployment.getId()).isEqualTo(DUMMY_ID);
+        assertThat(deployment.getStatus()).isEqualTo(DUMMY_STATUS);
 
     }
 
@@ -97,8 +93,8 @@ public class DeploymentModelDataMapperTest extends TestCase {
 
         List<DeploymentModel> deploymentModelList = mDeploymentModelDataMapper.map(deploymentList);
 
-        assertThat(deploymentModelList.get(0), is(instanceOf(DeploymentModel.class)));
-        assertThat(deploymentModelList.get(1), is(instanceOf(DeploymentModel.class)));
-        assertThat(deploymentModelList.size(), is(2));
+        assertThat(deploymentModelList.get(0)).isInstanceOf(DeploymentModel.class);
+        assertThat(deploymentModelList.get(1)).isInstanceOf(DeploymentModel.class);
+        assertThat(deploymentModelList.size()).isEqualTo(2);
     }
 }

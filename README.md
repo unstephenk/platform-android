@@ -53,7 +53,7 @@ do so follow the steps below:
    
    `./gradlew test` Execute tests that runs without any connected devices.
    
-   `./gradlew :app:connectedAndroidTest` Execute tests that runs on connected devices. This normally run tests for the `:app` module.
+   `./gradlew spoon` Execute tests that runs on connected devices. This requires a device to be connected.
    
 7. To install on your test device:
 

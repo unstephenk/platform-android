@@ -21,8 +21,7 @@ import com.ushahidi.android.model.DeploymentModel;
 
 import junit.framework.TestCase;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests {@link com.ushahidi.android.model.DeploymentModel}
@@ -54,9 +53,9 @@ public class DeploymentModelTest extends TestCase {
         mDeploymentModel.setUrl(DUMMY_URL);
         mDeploymentModel.setStatus(DUMMY_STATUS);
 
-        assertThat(mDeploymentModel.getTitle(), is(DUMMY_TITLE));
-        assertThat(mDeploymentModel.getUrl(), is(DUMMY_URL));
-        assertThat(mDeploymentModel.getId(), is(DUMMY_ID));
-        assertThat(mDeploymentModel.getStatus(), is(DUMMY_STATUS));
+        assertThat(mDeploymentModel.getTitle()).isEqualTo(DUMMY_TITLE);
+        assertThat(mDeploymentModel.getUrl()).isEqualTo(DUMMY_URL);
+        assertThat(mDeploymentModel.getId()).isEqualTo(DUMMY_ID);
+        assertThat(mDeploymentModel.getStatus()).isEqualTo(DUMMY_STATUS);
     }
 }

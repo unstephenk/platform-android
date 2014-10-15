@@ -20,13 +20,13 @@ package com.ushahidi.android.test.presenter;
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.DeploymentListPresenter;
+import com.ushahidi.android.test.CustomAndroidTestCase;
 import com.ushahidi.android.ui.view.IDeploymentListView;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import android.content.Context;
-import android.test.AndroidTestCase;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentListPresenterTest extends AndroidTestCase {
+public class DeploymentListPresenterTest extends CustomAndroidTestCase {
 
     private DeploymentListPresenter mDeploymentListPresenter;
 

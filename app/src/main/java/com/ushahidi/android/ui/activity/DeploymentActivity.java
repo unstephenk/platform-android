@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -43,6 +44,8 @@ public class DeploymentActivity extends BaseActivity
         UpdateDeploymentFragment.DeploymentUpdateListener,
         AddDeploymentFragment.AddDeploymentListener {
 
+    private FrameLayout addDeploymentLayout;
+
     private ListDeploymentFragment mListDeploymentFragment;
 
     public DeploymentActivity() {
@@ -51,11 +54,13 @@ public class DeploymentActivity extends BaseActivity
 
     private void init() {
 
-        mListDeploymentFragment
-                = (ListDeploymentFragment) getFragmentManager()
+        addDeploymentLayout
+                = (FrameLayout) findViewById(R.id.add_deployment_fragment_container);
+
+        mListDeploymentFragment = (ListDeploymentFragment) getFragmentManager()
                 .findFragmentById(R.id.fragment_list_deployments);
 
-        if (mListDeploymentFragment != null) {
+        if (addDeploymentLayout != null) {
             addFragment(R.id.add_deployment_fragment_container, AddDeploymentFragment.newInstance(),
                     AddDeploymentFragment.ADD_FRAGMENT_TAG);
         }
@@ -116,7 +121,7 @@ public class DeploymentActivity extends BaseActivity
     @Override
     public void onDeploymentClicked(DeploymentModel deploymentModel) {
 
-        if (mListDeploymentFragment != null) {
+        if (addDeploymentLayout != null) {
             replaceFragment(deploymentModel.getId());
         } else {
             launcher.launchUpdateDeployment(deploymentModel.getId());
