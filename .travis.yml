@@ -3,6 +3,9 @@ android:
   components:
   - build-tools-21.0.2
   - android-21
+  - extra-android-support
+  - extra-android-m2repository
+
 script: ./gradlew build
 notifications:
   hipchat:
