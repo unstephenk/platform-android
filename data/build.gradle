@@ -2,13 +2,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'robolectric'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 21
+    buildToolsVersion "21.0.2"
 
     defaultConfig {
         applicationId "com.ushahidi.android.data"
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 21
     }
 
     packagingOptions {
