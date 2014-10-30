@@ -47,6 +47,11 @@ public class AddDeploymentActivity extends BaseActivity implements
     }
 
     @Override
+    protected void initNavDrawerItems() {
+        // DO Nothing as this activity doesn't support navigation drawer
+    }
+
+    @Override
     public void onAddNavigateOrReloadList() {
         launcher.launchListDeployment();
     }

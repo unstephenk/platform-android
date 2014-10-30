@@ -42,6 +42,7 @@
         <item name="android:dropDownListViewStyle">@style/ActionbarDropdown.ListView.DropDown</item>
         <item name="android:textAppearanceLargePopupMenu">@style/TextAppearance.LargePopupMenu
         </item>
+        <item name="drawerArrowStyle">@style/Ushahidi.Widget.DrawerArrow</item>
     </style>
     <style name="Theme.Ushahidi" parent="Theme.Ushahidi.Base"/>
 

@@ -99,6 +99,11 @@ public class DeploymentActivity extends BaseActivity
     }
 
     @Override
+    protected void initNavDrawerItems() {
+        // DO Nothing as this activity doesn't support navigation drawer
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_account:

@@ -24,8 +24,10 @@ import com.ushahidi.android.module.ActivityModule;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,15 +61,46 @@ public abstract class BaseActivity extends ActionBarActivity {
      */
     protected final int mMenu;
 
+    /**
+     * Navigation Drawer resource ID
+     */
+    protected final int mDrawerLayoutId;
+
     private ObjectGraph activityScopeGraph;
 
     @Inject
     ActivityLauncher launcher;
 
+    // Navigation drawer:
+    private DrawerLayout mDrawerLayout;
 
-    public BaseActivity(int layout, int menu) {
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    /**
+     * Get a list of Dagger modules with Activity scope needed for this Activity.
+     *
+     * @return modules.
+     */
+    protected abstract List<Object> getModules();
+
+    /**
+     * Initialize nav drawer menu items.
+     */
+    protected abstract void initNavDrawerItems();
+
+    private ActionBar mActionBar = null;
+
+    // Primary toolbar and drawer toggle
+    private Toolbar mActionBarToolbar;
+
+    public BaseActivity(int layout, int menu, int drawerLayoutId) {
         mLayout = layout;
         mMenu = menu;
+        mDrawerLayoutId = drawerLayoutId;
+    }
+
+    public BaseActivity(int layout, int menu) {
+        this(layout, menu, 0);
     }
 
     /**
@@ -79,18 +112,6 @@ public abstract class BaseActivity extends ActionBarActivity {
     public void inject(Object object) {
         activityScopeGraph.inject(object);
     }
-
-    /**
-     * Get a list of Dagger modules with Activity scope needed for this Activity.
-     *
-     * @return modules.
-     */
-    protected abstract List<Object> getModules();
-
-    private ActionBar mActionBar = null;
-
-    // Primary toolbar and drawer toggle
-    private Toolbar mActionBarToolbar;
 
     /**
      * Creates a new Dagger ObjectGraph to add new dependencies using a plus operation and inject
@@ -108,6 +129,27 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
     }
 
+    protected void createNavDrawer() {
+        if (mDrawerLayoutId != 0) {
+            mDrawerLayout = (DrawerLayout) findViewById(mDrawerLayoutId);
+        }
+
+        if (mDrawerLayout == null) {
+            return;
+        }
+
+        mDrawerLayout.setStatusBarBackgroundColor(
+                getResources().getColor(R.color.theme_primary_dark));
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, mActionBarToolbar,
+                R.string.open, R.string.close
+        );
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        initNavDrawerItems();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,6 +167,15 @@ public abstract class BaseActivity extends ActionBarActivity {
             mActionBar.setHomeButtonEnabled(true);
         }
 
+        createNavDrawer();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (mDrawerToggle != null) {
+            mDrawerToggle.syncState();
+        }
     }
 
     @Override
