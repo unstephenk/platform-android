@@ -25,4 +25,3 @@
 
     <include layout="@layout/interactive_toast"/>
 </RelativeLayout>
-

@@ -46,4 +46,7 @@
     <color name="flat_button_hover_color">#33999999</color>
     <color name="flat_button_pressed_color">#66999999</color>
     <color name="flat_button_disabled">#1a999999</color>
+
+    <!-- Control colors -->
+    <color name="color_control_highlight">#3fff</color>
 </resources>

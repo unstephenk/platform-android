@@ -17,13 +17,16 @@
 
 package com.ushahidi.android.ui.activity;
 
+import com.ushahidi.android.R;
 import com.ushahidi.android.UshahidiApplication;
 import com.ushahidi.android.module.ActivityModule;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
@@ -44,7 +47,7 @@ import static android.view.View.VISIBLE;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends ActionBarActivity {
 
     /**
      * Layout resource id
@@ -84,6 +87,11 @@ public abstract class BaseActivity extends Activity {
      */
     protected abstract List<Object> getModules();
 
+    private ActionBar mActionBar = null;
+
+    // Primary toolbar and drawer toggle
+    private Toolbar mActionBarToolbar;
+
     /**
      * Creates a new Dagger ObjectGraph to add new dependencies using a plus operation and inject
      * the declared one in the activity. This new graph will be destroyed once the activity
@@ -110,13 +118,36 @@ public abstract class BaseActivity extends Activity {
             setContentView(mLayout);
         }
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        mActionBar = getSupportActionBar();
+
+        if (mActionBar != null) {
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+            mActionBar.setHomeButtonEnabled(true);
+        }
 
     }
 
+    @Override
+    public void setContentView(int layoutResID) {
+        super.setContentView(layoutResID);
+        getActionBarToolbar();
+    }
+
     protected void setActionBarTitle(String title) {
-        getActionBar().setTitle(title);
+        if (mActionBar != null) {
+            mActionBar.setTitle(title);
+        }
+
+    }
+
+    protected Toolbar getActionBarToolbar() {
+        if (mActionBarToolbar == null) {
+            mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+            if (mActionBarToolbar != null) {
+                setSupportActionBar(mActionBarToolbar);
+            }
+        }
+        return mActionBarToolbar;
     }
 
     @Override
@@ -149,7 +180,6 @@ public abstract class BaseActivity extends Activity {
             if (animate) {
                 view.startAnimation(AnimationUtils.loadAnimation(this,
                         android.R.anim.fade_in));
-
             } else {
 
                 view.clearAnimation();

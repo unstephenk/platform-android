@@ -15,11 +15,14 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-        >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".ui.DeploymentActivity">
+
+    <include layout="@layout/toolbar_actionbar"/>
 
     <fragment
             android:name="com.ushahidi.android.ui.fragment.ListDeploymentFragment"
@@ -28,4 +31,4 @@
             android:layout_height="match_parent"
             tools:layout="@layout/list_deployment"/>
 
-</RelativeLayout>
+</LinearLayout>

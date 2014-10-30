@@ -16,18 +16,34 @@
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
 <resources>
+    <style name="BaseTheme" parent="Theme.AppCompat.Light">
 
-    <style name="Theme.Ushahidi" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarWidgetTheme">@style/Theme.Ushahidi.Widget</item>
-        <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
+    </style>
+    <style name="Theme" parent="BaseTheme">
         <item name="android:editTextStyle">@style/Ushahidi.Widget.EditText</item>
-        <item name="android:actionBarStyle">@style/ActionBar.Solid</item>
+    </style>
+    <style name="Theme.Widget" parent="Theme.AppCompat" />
+
+    <style name="Theme.Ushahidi.Base" parent="Theme">
+        <item name="colorPrimary">@color/theme_primary</item>
+        <item name="colorPrimaryDark">@color/theme_primary_dark</item>
+        <item name="colorAccent">@color/theme_accent_2</item>
+        <item name="actionBarIconColor">#fff</item>
+        <item name="actionBarInsetStart">@dimen/keyline_2</item>
+        <item name="android:textColorLink">@color/theme_accent_2</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="spinnerBarInsetStart">@dimen/keyline_2_minus_16dp</item>
+        <item name="popupItemBackground">?android:selectableItemBackground</item>
+        <item name="photoItemForeground">?android:selectableItemBackground</item>
+        <item name="photoItemForegroundBorderless">?android:selectableItemBackground</item>
         <item name="android:popupMenuStyle">@style/Ushahidi.Widget.PopupMenu</item>
         <item name="android:listPopupWindowStyle">@style/Ushahidi.Widget.PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/ActionbarDropdown.ListView.DropDown</item>
         <item name="android:textAppearanceLargePopupMenu">@style/TextAppearance.LargePopupMenu
         </item>
     </style>
+    <style name="Theme.Ushahidi" parent="Theme.Ushahidi.Base"/>
 
     <style name="Theme.Ushahidi.NoActionBar" parent="android:Theme.Light.NoTitleBar.Fullscreen"/>
 

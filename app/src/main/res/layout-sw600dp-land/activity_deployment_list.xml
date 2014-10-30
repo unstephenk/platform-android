@@ -19,7 +19,15 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:orientation="vertical"
               tools:context=".ui.activity/DeploymentActivity">
+
+    <include layout="@layout/toolbar_actionbar"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
     <FrameLayout
             android:id="@+id/list_deployment"
@@ -46,5 +54,5 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"/>
-
+    </LinearLayout>
 </LinearLayout>

@@ -50,13 +50,26 @@
         <item name="android:windowActionBarOverlay">true</item>
     </style>
 
+    <style name="ActionbarDropdown.ListView.DropDown" parent="Widget.AppCompat.ListView.DropDown"/>
+
+    <style name="Ushahidi.Widget.PopupMenu" parent="Widget.AppCompat.Light.PopupMenu"/>
+
+    <style name="Ushahidi.Widget" parent="android:Theme.Holo"/>
+
+    <style name="Ushahidi.Widget.EditText" parent="android:Widget.Holo.Light.EditText"/>
+
+    <!-- Toolbar ActionBar -->
+    <style name="ActionBarThemeOverlay" parent="">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="colorControlNormal">?actionBarIconColor</item>
+        <item name="colorControlHighlight">@color/color_control_highlight</item>
+    </style>
+
     <style name="TextAppearance.ActionBar.Title"
-           parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
+           parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
-
-    <style name="ActionbarDropdown.ListView.DropDown" parent="android:Widget.Holo.Light.ListView.DropDown"/>
 
     <style name="ActionBar.Solid" parent="android:Widget.Holo.ActionBar">
         <item name="android:background">@color/theme_primary</item>
@@ -64,15 +77,17 @@
         <item name="android:titleTextStyle">@style/TextAppearance.ActionBar.Title</item>
     </style>
 
-    <style name="Ushahidi.Widget.PopupMenu" parent="android:Widget.Holo.Light.PopupMenu"/>
+    <style name="ActionBarPopupThemeOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="Ushahidi.Widget" parent="android:Theme.Holo"/>
-
-    <style name="Ushahidi.Widget.EditText" parent="android:Widget.Holo.Light.EditText"/>
-
-    <style name="TextAppearance.LargePopupMenu" parent="android:TextAppearance.Holo.Widget.PopupMenu.Large">
+    <style name="TextAppearance.LargePopupMenu" parent="TextAppearance.AppCompat.Widget.PopupMenu.Large">
         <item name="android:textColor">@color/body_text_1</item>
     </style>
+
+    <style name="HeaderBar">
+        <item name="android:background">?colorPrimary</item>
+        <item name="android:elevation">@dimen/headerbar_elevation</item>
+    </style>
+
     <!-- Empty views -->
     <style name="EmptyText">
         <item name="android:textSize">@dimen/text_size_medium</item>
@@ -109,6 +124,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:fastScrollEnabled">true</item>
+        <item name="android:clipToPadding">false</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollingCache">true</item>
         <item name="android:smoothScrollbar">true</item>

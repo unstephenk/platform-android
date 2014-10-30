@@ -15,10 +15,11 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:ushahidiApp="http://schemas.android.com/apk/res-auto">
     <item
             android:id="@+id/list_deployment_delete"
             android:icon="@drawable/ic_action_trash"
-            android:showAsAction="ifRoom"
+            ushahidiApp:showAsAction="ifRoom"
             android:title="@string/delete"/>
 </menu>
