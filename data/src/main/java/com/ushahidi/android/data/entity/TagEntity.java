@@ -15,7 +15,7 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.core.entity;
+package com.ushahidi.android.data.entity;
 
 import com.ushahidi.android.core.Entity;
 
@@ -26,7 +26,7 @@ import java.util.Date;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class Tag extends Entity {
+public class TagEntity extends Entity {
 
     private Long _id;
 
@@ -45,6 +45,10 @@ public class Tag extends Entity {
     private int mPriority;
 
     private Date mCreated;
+
+    public TagEntity() {
+        // Do nothing
+    }
 
     @Override
     public Long getId() {
@@ -150,4 +154,5 @@ public class Tag extends Entity {
             return value;
         }
     }
+
 }
