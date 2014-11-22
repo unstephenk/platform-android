@@ -20,15 +20,17 @@ package com.ushahidi.android.ui.activity;
 import com.ushahidi.android.R;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.module.DeploymentUiModule;
-import com.ushahidi.android.ui.fragment.AboutDialogFragment;
 import com.ushahidi.android.ui.fragment.AddDeploymentFragment;
 import com.ushahidi.android.ui.fragment.ListDeploymentFragment;
 import com.ushahidi.android.ui.fragment.UpdateDeploymentFragment;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
+import android.view.Menu;
 import android.widget.FrameLayout;
 
 import java.util.LinkedList;
@@ -48,6 +50,10 @@ public class DeploymentActivity extends BaseActivity
 
     private ListDeploymentFragment mListDeploymentFragment;
 
+    SearchView mSearchView = null;
+
+    String mQuery = "";
+
     public DeploymentActivity() {
         super(R.layout.activity_deployment_list, R.menu.list_deployment);
     }
@@ -65,6 +71,8 @@ public class DeploymentActivity extends BaseActivity
                     AddDeploymentFragment.ADD_FRAGMENT_TAG);
         }
 
+        // Actionbar title
+        setTitle(null);
     }
 
     private void replaceFragment(Long deploymentId) {
@@ -89,11 +97,91 @@ public class DeploymentActivity extends BaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
+        handleSearchIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleSearchIntent(intent);
+    }
+
+    private void handleSearchIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            query = query == null ? "" : query;
+            mQuery = query;
+            performQuery(query);
+            if (mSearchView != null) {
+                mSearchView.setQuery(query, false);
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        mSearchView =
+                (SearchView) menu.findItem(R.id.menu_add_search).getActionView();
+        initSearchView();
+        return true;
+    }
+
+    private void initSearchView() {
+        final SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        mSearchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        mSearchView.setIconified(false);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                mSearchView.clearFocus();
+                performQuery(s);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (TextUtils.isEmpty(s)) {
+                    mListDeploymentFragment.refreshList();
+                } else {
+                    performQuery(s);
+                }
+
+                return true;
+            }
+        });
+
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                mListDeploymentFragment.refreshList();
+                return false;
+            }
+        });
+
+        if (!TextUtils.isEmpty(mQuery)) {
+            mSearchView.setQuery(mQuery, false);
+        }
+        SearchView.SearchAutoComplete searchAutoComplete
+                = (SearchView.SearchAutoComplete) mSearchView
+                .findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchAutoComplete.setHintTextColor(getResources().getColor(android.R.color.white));
+        searchAutoComplete.setTextSize(14);
+    }
+
+    private void performQuery(String query) {
+        if (null != mListDeploymentFragment) {
+            mListDeploymentFragment.requestQuery(query);
+        }
     }
 
     @Override
     protected List<Object> getModules() {
-        List<Object> modules = new LinkedList<Object>();
+        List<Object> modules = new LinkedList<>();
         modules.add(new DeploymentUiModule());
         return modules;
     }
@@ -101,21 +189,6 @@ public class DeploymentActivity extends BaseActivity
     @Override
     protected void initNavDrawerItems() {
         // DO Nothing as this activity doesn't support navigation drawer
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_add_account:
-                launcher.launchAddDeployment();
-                return true;
-            case R.id.menu_about:
-                AboutDialogFragment dialog = new AboutDialogFragment();
-                dialog.show(getFragmentManager(), "AboutDialogFragment");
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public static Intent getIntent(final Context context) {
@@ -131,6 +204,11 @@ public class DeploymentActivity extends BaseActivity
         } else {
             launcher.launchUpdateDeployment(deploymentModel.getId());
         }
+    }
+
+    @Override
+    public void onFabClicked() {
+        launcher.launchAddDeployment();
     }
 
     @Override

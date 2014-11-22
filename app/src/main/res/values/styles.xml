@@ -103,6 +103,9 @@
         <item name="android:gravity">center_vertical|center_horizontal</item>
     </style>
 
+    <!-- Search Widget Bar -->
+    <style name="Ushahidi.SearchBar.Widget" parent="Widget.AppCompat.SearchView"/>
+
     <!-- Body content -->
     <style name="TextHeader">
         <item name="android:textSize">@dimen/text_size_large</item>
@@ -133,6 +136,8 @@
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollingCache">true</item>
         <item name="android:smoothScrollbar">true</item>
+        <item name="android:divider">@null</item>
+        <item name="android:dividerHeight">0dp</item>
     </style>
 
     <!-- List item primary_text -->
@@ -156,8 +161,6 @@
     <style name="ListItemRightIcon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center_vertical|center_horizontal</item>
-        <item name="android:padding">@dimen/list_text_padding</item>
     </style>
 
     <!-- Flat Button -->
@@ -268,4 +271,5 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">16sp</item>
     </style>
+
 </resources>

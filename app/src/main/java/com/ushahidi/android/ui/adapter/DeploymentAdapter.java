@@ -20,45 +20,122 @@ package com.ushahidi.android.ui.adapter;
 import com.ushahidi.android.R;
 import com.ushahidi.android.model.DeploymentModel;
 
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
-import android.widget.ListView;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manages list of deployments
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentAdapter extends BaseListAdapter<DeploymentModel> {
+public class DeploymentAdapter extends BaseRecyclerViewAdapter<DeploymentModel> implements
+        Filterable {
 
-    public DeploymentAdapter(Context context) {
-        super(context);
+    private SparseBooleanArray mSelectedItems;
+
+    private Filter mFilter = null;
+
+    public DeploymentAdapter() {
+        this.setRecyclerviewViewHolder(mRecyclerviewViewHolder);
+        mSelectedItems = new SparseBooleanArray();
+    }
+
+    RecyclerviewViewHolder mRecyclerviewViewHolder = new RecyclerviewViewHolder() {
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+            ((Widgets) viewHolder).title.setText(getItem(position).getTitle());
+            ((Widgets) viewHolder).url.setText(getItem(position).getUrl());
+            ((Widgets) viewHolder).listCheckBox.setChecked(mSelectedItems.get(position, false));
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            return new Widgets(LayoutInflater.from(
+                    viewGroup.getContext())
+                    .inflate(R.layout.list_deployment_item, viewGroup, false));
+        }
+
+        @Override
+        public int getItemCount() {
+            return mItems.size();
+        }
+    };
+
+    public void toggleSelection(int position) {
+        if (mSelectedItems.get(position, false)) {
+            mSelectedItems.delete(position);
+        } else {
+            mSelectedItems.put(position, true);
+        }
+        notifyItemChanged(position);
+    }
+
+    public int getSelectedItemCount() {
+        return mSelectedItems.size();
+    }
+
+    public void clearSelections() {
+        mSelectedItems.clear();
+        notifyDataSetChanged();
+    }
+
+    public List<Integer> getSelectedItems() {
+        List<Integer> items = new ArrayList<>(mSelectedItems.size());
+        for (int i = 0; i < mSelectedItems.size(); i++) {
+            items.add(mSelectedItems.keyAt(i));
+        }
+        return items;
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        Widgets widgets;
-        if (view == null) {
-            view = mInflater.inflate(R.layout.list_deployment_item, null);
-            widgets = new Widgets(view);
-            view.setTag(widgets);
-        } else {
-            widgets = (Widgets) view.getTag();
+    public Filter getFilter() {
+        if (mFilter == null) {
+            mFilter = new DeploymentFilter();
         }
-
-        // Initialize view with content
-        widgets.title.setText(getItem(position).getTitle());
-        widgets.url.setText(getItem(position).getUrl());
-        widgets.listCheckBox.setChecked(((ListView) viewGroup).isItemChecked(position));
-
-        //TODO: Look into animating this view when an item is added
-        return view;
+        return mFilter;
     }
 
-    public class Widgets {
+    private class DeploymentFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            constraint = constraint.toString().toLowerCase();
+            results.values = mItems;
+            results.count = mItems.size();
+            if (constraint != null && constraint.toString().length() > 0) {
+                ArrayList<DeploymentModel> filteredItems = new ArrayList<>();
+                //TODO: query the mItems from the database and use that for comparison
+                for (DeploymentModel deployment : mItems) {
+                    if (deployment.getTitle().toLowerCase().contains(constraint.toString())) {
+                        filteredItems.add(deployment);
+                    }
+                }
+                results.count = filteredItems.size();
+                results.values = filteredItems;
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            List<DeploymentModel> deploymentModels
+                    = (ArrayList<DeploymentModel>) filterResults.values;
+            setItems(deploymentModels);
+        }
+    }
+
+    public class Widgets extends RecyclerView.ViewHolder {
 
         TextView title;
 
@@ -67,7 +144,7 @@ public class DeploymentAdapter extends BaseListAdapter<DeploymentModel> {
         CheckedTextView listCheckBox;
 
         public Widgets(View convertView) {
-
+            super(convertView);
             title = (TextView) convertView.findViewById(R.id.deployment_title);
             url = (TextView) convertView.findViewById(R.id.deployment_description);
 

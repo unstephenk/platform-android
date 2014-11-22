@@ -298,6 +298,16 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     /**
+     * Shows a {@link android.widget.Toast} message.
+     *
+     * @param message A message resource
+     */
+    protected void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG)
+                .show();
+    }
+
+    /**
      * Adds a {@link Fragment} to this activity's layout.
      *
      * @param containerViewId The container view where to add the fragment.

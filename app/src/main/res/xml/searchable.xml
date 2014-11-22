@@ -15,13 +15,7 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:ushahidiApp="http://schemas.android.com/apk/res-auto">
-    <item
-            android:id="@+id/menu_add_search"
-            android:icon="@drawable/ic_action_search"
-            android:title="@string/search_for_deployment_actionbar_title"
-            android:orderInCategory="1"
-            ushahidiApp:actionViewClass="android.support.v7.widget.SearchView"
-            ushahidiApp:showAsAction="collapseActionView|always"/>
-</menu>
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+            android:label="@string/deployment"
+            android:hint="@string/search_hint"
+            android:voiceSearchMode="showVoiceSearchButton|launchRecognizer" />

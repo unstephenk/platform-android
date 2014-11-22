@@ -43,6 +43,8 @@
         <item name="android:textAppearanceLargePopupMenu">@style/TextAppearance.LargePopupMenu
         </item>
         <item name="drawerArrowStyle">@style/Ushahidi.Widget.DrawerArrow</item>
+        <item name="searchViewStyle">@style/Ushahidi.SearchBar.Widget</item>
+        <item name="android:windowActionModeOverlay">true</item>
     </style>
     <style name="Theme.Ushahidi" parent="Theme.Ushahidi.Base"/>
 

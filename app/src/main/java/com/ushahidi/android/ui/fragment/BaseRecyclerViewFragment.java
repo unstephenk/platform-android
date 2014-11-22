@@ -19,12 +19,13 @@ package com.ushahidi.android.ui.fragment;
 
 import com.ushahidi.android.model.Model;
 import com.ushahidi.android.ui.activity.BaseActivity;
-import com.ushahidi.android.ui.adapter.BaseListAdapter;
+import com.ushahidi.android.ui.adapter.BaseRecyclerViewAdapter;
 
 import android.app.Activity;
-import android.app.ListFragment;
-import android.content.Context;
+import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,13 +33,10 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import java.lang.reflect.InvocationTargetException;
-
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import timber.log.Timber;
 
 import static android.view.View.GONE;
@@ -49,10 +47,10 @@ import static android.view.View.VISIBLE;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class BaseListFragment<M extends Model, L extends BaseListAdapter>
-        extends ListFragment {
+public abstract class BaseRecyclerViewFragment<M extends Model, L extends BaseRecyclerViewAdapter>
+        extends Fragment {
 
-    private static String TAG = BaseListFragment.class.getSimpleName();
+    private static String TAG = BaseRecyclerViewFragment.class.getSimpleName();
 
     /**
      * Layout resource mId
@@ -65,28 +63,30 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
     protected final int mMenu;
 
     /**
-     * ListView resource mId
+     * RecyclerView resource mId
      */
-    private final int mListViewId;
+    private final int mRecyclerViewId;
 
     /**
-     * ListAdpater class
+     * RecyclerViewAdapter class
      */
-    private final Class<L> mAdapterClass;
+    private final Class<L> mRecyclerViewAdapterClass;
 
     /**
-     * ListAdapter
+     * RecyclerViewAdapter
      */
-    protected L mAdapter;
+    protected L mRecyclerViewAdapter;
 
     /**
-     * ListView
+     * RecyclerView
      */
-    protected ListView mListView;
+    @InjectView(android.R.id.list)
+    protected RecyclerView mRecyclerView;
 
-    protected BaseListFragment(Class<L> adapterClass, int layout, int menu, int listViewId) {
-        mAdapterClass = adapterClass;
-        mListViewId = listViewId;
+    protected BaseRecyclerViewFragment(Class<L> adapterClass, int layout, int menu,
+            int recyclerViewId) {
+        mRecyclerViewAdapterClass = adapterClass;
+        mRecyclerViewId = recyclerViewId;
         mMenu = menu;
         mLayout = layout;
     }
@@ -94,27 +94,22 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
     /**
      * Uses reflection to create a new instance of a class
      *
-     * @param type        The class to create an instance
-     * @param constructor The constructor of the class
-     * @param params      The parameters to pass to the constructor
+     * @param targetClass The class to create an instance
      * @return The created instance
      */
-    private static <T> T createInstance(Class type, Class constructor,
-            Object... params) {
+    private static <T> T createInstance(Class<?> targetClass) {
         try {
-            return (T) type.getConstructor(constructor).newInstance(params);
+            return (T) targetClass.newInstance();
         } catch (IllegalAccessException e) {
             Timber.e(TAG, "IllegalAccessException", e);
         } catch (IllegalStateException e) {
             Timber.e(TAG, "IllegalStateException", e);
-        } catch (InvocationTargetException e) {
-            Timber.e(TAG, "InvocationTargetException", e);
+        } catch (SecurityException e) {
+            Timber.e(TAG, "SecurityException", e);
             for (StackTraceElement exception : e.getStackTrace()) {
                 Timber.e(TAG,
                         String.format("%s", exception.toString()));
             }
-        } catch (NoSuchMethodException e) {
-            Timber.e(TAG, "NoSuchMethodException", e);
         } catch (InflateException e) {
             Timber.e(TAG, "InflateException", e);
         } catch (java.lang.InstantiationException e) {
@@ -127,12 +122,14 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
 
-        if (mListViewId != 0) {
-            mListView = getListView();
-            mAdapter = BaseListFragment.createInstance(mAdapterClass, Context.class, getActivity());
-            mListView.setFocusable(true);
-            mListView.setFocusableInTouchMode(true);
-            setListAdapter(mAdapter);
+        if (mRecyclerViewId != 0) {
+            mRecyclerViewAdapter = BaseRecyclerViewFragment
+                    .createInstance(mRecyclerViewAdapterClass);
+            mRecyclerView.setFocusable(true);
+            mRecyclerView.setFocusableInTouchMode(true);
+            mRecyclerView.setAdapter(mRecyclerViewAdapter);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
 
         initPresenter();
@@ -147,7 +144,6 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
         if (mMenu != 0) {
             inflater.inflate(mMenu, menu);
         }
@@ -163,7 +159,7 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
     @Override
     public View onCreateView(LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
-        android.view.View root = null;
+        View root = null;
         if (mLayout != 0) {
             root = inflater.inflate(mLayout, container, false);
         }
@@ -176,7 +172,7 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
         injectViews(view);
     }
 
-    protected View fadeIn(final android.view.View view, final boolean animate) {
+    protected View fadeIn(final View view, final boolean animate) {
         if (view != null) {
             if (animate) {
                 view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
@@ -192,7 +188,7 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
 
     }
 
-    protected View fadeOut(final android.view.View view, final boolean animate) {
+    protected View fadeOut(final View view, final boolean animate) {
         if (view != null) {
             if (animate) {
                 view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
@@ -238,16 +234,6 @@ public abstract class BaseListFragment<M extends Model, L extends BaseListAdapte
         ((BaseActivity) getActivity()).inject(this);
     }
 
-    protected M getSelectedItem() {
-        return (M) mListView.getSelectedItem();
-    }
-
-    public void onItemSelected(AdapterView<?> adapterView,
-            android.view.View view, int position, long id) {
-    }
-
-    public void onNothingSelected(AdapterView<?> adapterView) {
-    }
 
     /**
      * Replace every field annotated with ButterKnife annotations like @InjectView with the proper

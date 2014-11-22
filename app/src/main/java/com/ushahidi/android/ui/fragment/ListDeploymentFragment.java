@@ -17,6 +17,8 @@
 
 package com.ushahidi.android.ui.fragment;
 
+
+import com.melnykov.fab.FloatingActionButton;
 import com.ushahidi.android.R;
 import com.ushahidi.android.core.usecase.deployment.DeleteDeployment;
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
@@ -25,20 +27,25 @@ import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
 import com.ushahidi.android.presenter.DeploymentListPresenter;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
-import com.ushahidi.android.ui.listener.SwipeDismissListViewTouchListener;
+import com.ushahidi.android.ui.listener.SwipeDismissRecyclerViewTouchListener;
 import com.ushahidi.android.ui.view.IDeleteDeploymentView;
 import com.ushahidi.android.ui.view.IDeploymentListView;
-import com.ushahidi.android.ui.widget.DeploymentListView;
+import com.ushahidi.android.ui.widget.DeploymentRecyclerView;
+import com.ushahidi.android.ui.widget.DeploymentRecyclerView.DeploymentParcelable;
 import com.ushahidi.android.ui.widget.InteractiveToast;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,16 +54,15 @@ import javax.inject.Inject;
 
 import butterknife.InjectView;
 
-import static com.ushahidi.android.ui.widget.DeploymentListView.DeploymentParcelable;
-
 /**
  * Shows list of deployment.
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, DeploymentAdapter>
+public class ListDeploymentFragment
+        extends BaseRecyclerViewFragment<DeploymentModel, DeploymentAdapter>
         implements
-        IDeploymentListView, IDeleteDeploymentView {
+        IDeploymentListView, IDeleteDeploymentView, RecyclerView.OnItemTouchListener {
 
     @Inject
     ListDeployment mListDeployment;
@@ -67,11 +73,14 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     @Inject
     DeploymentModelDataMapper mDeploymentModelDataMapper;
 
-    @InjectView(R.id.loading_list_progress)
-    ProgressBar mListLoadingProgress;
-
     @InjectView(R.id.interactive_toast)
     LinearLayout mInteractiveToastContainer; // Layout container for InteractiveToast
+
+    @InjectView(R.id.fab)
+    FloatingActionButton mFab;
+
+    @InjectView(android.R.id.empty)
+    TextView mEmptyView;
 
     private static final String INTERACTIVE_TOAST_BUNDLE_KEY = "selected_items";
 
@@ -81,12 +90,15 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
 
     private DeploymentListListener mDeploymentListListener;
 
-    private DeploymentListView mDeploymentListView;
+    private DeploymentRecyclerView mDeploymentRecyclerView;
 
     private boolean isDismissToDelete = false;
 
     private InteractiveToast mInteractiveToast;
 
+    GestureDetectorCompat mGestureDetector;
+
+    private SwipeDismissRecyclerViewTouchListener mListViewTouchListener;
 
     public ListDeploymentFragment() {
         super(DeploymentAdapter.class, R.layout.list_deployment, 0,
@@ -97,13 +109,168 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mDeploymentListPresenter.init();
-        mDeploymentListView = (DeploymentListView) mListView;
-        mDeploymentListView.setDeleteDeploymentPresenter(mDeleteDeploymentPresenter);
+        mDeploymentRecyclerView = (DeploymentRecyclerView) mRecyclerView;
+        mDeploymentRecyclerView.setDeleteDeploymentPresenter(mDeleteDeploymentPresenter);
         mInteractiveToast = new InteractiveToast(mInteractiveToastContainer);
 
-        SwipeDismissListViewTouchListener mListViewTouchListener =
-                new SwipeDismissListViewTouchListener(mListView,
-                        new SwipeDismissListViewTouchListener.DismissCallbacks() {
+        swipeToDeleteUndo();
+        if (mFab != null) {
+            setViewGone(mFab,false);
+            mFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mDeploymentListListener != null) {
+                        mDeploymentListListener.onFabClicked();
+                    }
+                }
+            });
+        }
+
+        initRecyclerView();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof DeploymentListListener) {
+            mDeploymentListListener = (DeploymentListListener) activity;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mDeploymentListPresenter.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mDeploymentListPresenter.pause();
+    }
+
+    @Override
+    void initPresenter() {
+        mDeploymentListPresenter = new DeploymentListPresenter(this, mListDeployment,
+                mDeploymentModelDataMapper);
+        mDeleteDeploymentPresenter = new DeleteDeploymentPresenter(this, mDeleteDeployment,
+                mDeploymentModelDataMapper);
+    }
+
+    @Override
+    public void renderDeploymentList(List<DeploymentModel> deploymentModel) {
+        if (deploymentModel != null && mRecyclerViewAdapter != null) {
+            mRecyclerViewAdapter.setItems(deploymentModel);
+        }
+    }
+
+    private void setEmptyView() {
+        if (mRecyclerViewAdapter != null && mRecyclerViewAdapter.getItemCount() == 0) {
+            setViewGone(mEmptyView, false);
+        } else {
+            setViewGone(mEmptyView);
+        }
+    }
+
+    private void initRecyclerView() {
+        mDeploymentRecyclerView.setOnTouchListener(mListViewTouchListener);
+        mRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver(){
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                setEmptyView();
+            }
+        });
+        mDeploymentRecyclerView.addOnItemTouchListener(this);
+        mGestureDetector =
+                new GestureDetectorCompat(getActivity(), new RecyclerViewOnGestureListener());
+        mDeploymentRecyclerView.setInteractiveToast(mInteractiveToast);
+        mDeploymentRecyclerView.setAdapter(mRecyclerViewAdapter);
+        setEmptyView();
+    }
+
+    @Override
+    public Context getContext() {
+        return getActivity().getApplicationContext();
+    }
+
+    @Override
+    public void showLoading() {
+        //setViewGone(mListLoadingProgress, false);
+    }
+
+    @Override
+    public void hideLoading() {
+        //setViewGone(mListLoadingProgress);
+    }
+
+    @Override
+    public void showRetry() {
+
+    }
+
+    @Override
+    public void hideRetry() {
+
+    }
+
+    @Override
+    public void onDeploymentDeleted() {
+        if (!isDismissToDelete) {
+            showToast(getString(R.string.items_deleted,
+                    mDeploymentRecyclerView.getNumberOfItemsDeleted()));
+            mDeploymentListPresenter.refreshList();
+        }
+    }
+
+    @Override
+    public void showError(String message) {
+        showToast(message);
+    }
+
+    @Override
+    public void refreshList() {
+        mDeploymentListPresenter.refreshList();
+    }
+
+    @Override
+    public void editDeployment(DeploymentModel deploymentModel) {
+        mDeploymentListListener.onDeploymentClicked(deploymentModel);
+    }
+
+    private void onDeplomentClicked(DeploymentModel deploymentModel) {
+        if (mDeploymentListPresenter != null) {
+            mDeploymentListPresenter.onDeploymentClicked(deploymentModel);
+        }
+
+    }
+
+    public void requestQuery(final String query) {
+        Handler handler = new Handler();
+        final Runnable filterDeployments = new Runnable() {
+            public void run() {
+                try {
+                    mRecyclerViewAdapter.getFilter().filter(query);
+                } catch (Exception e) {
+                    refreshList();
+                }
+            }
+        };
+
+        handler.post(filterDeployments);
+    }
+
+    private void onItemClick(int position) {
+        if( mRecyclerViewAdapter.getItemCount() > 0 ) {
+            DeploymentModel deploymentModel = mRecyclerViewAdapter.getItem(position);
+            onDeplomentClicked(deploymentModel);
+        }
+    }
+
+    private void swipeToDeleteUndo() {
+        mListViewTouchListener =
+                new SwipeDismissRecyclerViewTouchListener(mDeploymentRecyclerView,
+                        new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
 
                             @Override
                             public boolean canDismiss(int position) {
@@ -111,7 +278,9 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
                             }
 
                             @Override
-                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                            public void onDismiss(RecyclerView listView,
+                                    int[] reverseSortedPositions) {
+                                isDismissToDelete = true;
                                 mInteractiveToast
                                         .setInteractiveToastListener(
                                                 new InteractiveToast.InteractiveToastListener() {
@@ -119,18 +288,20 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
                                                     public void onPressed(Parcelable token) {
 
                                                         Bundle b = (Bundle) token;
-                                                        final ArrayList<DeploymentParcelable> items
+                                                        final ArrayList<DeploymentRecyclerView.DeploymentParcelable>
+                                                                items
                                                                 = b
                                                                 .getParcelableArrayList(
                                                                         INTERACTIVE_TOAST_BUNDLE_KEY);
 
                                                         if (!items.isEmpty()) {
 
-                                                            for (DeploymentParcelable deploymentModel : items) {
-                                                                mAdapter.addItem(deploymentModel
-                                                                                .getPosition(),
+                                                            for (DeploymentRecyclerView.DeploymentParcelable deploymentModel : items) {
+                                                                mRecyclerViewAdapter.addItem(
                                                                         deploymentModel
-                                                                                .getDeploymentModel());
+                                                                                .getDeploymentModel(),
+                                                                        deploymentModel
+                                                                                .getPosition());
                                                             }
                                                             items.clear();
                                                         }
@@ -165,10 +336,11 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
 
                                     for (int i : reverseSortedPositions) {
                                         DeploymentParcelable parcelable = new DeploymentParcelable(
-                                                mAdapter.getItem(i),
+                                                mRecyclerViewAdapter.getItem(i),
                                                 i);
                                         items.add(parcelable);
-                                        mAdapter.removeItem(mAdapter.getItem(i));
+                                        mRecyclerViewAdapter
+                                                .removeItem(mRecyclerViewAdapter.getItem(i));
                                     }
 
                                 }
@@ -185,107 +357,28 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
 
                             }
                         });
-        mDeploymentListView.setOnTouchListener(mListViewTouchListener);
-        mDeploymentListView.setOnScrollListener(mListViewTouchListener.makeScrollListener());
-        mDeploymentListView.setInteractiveToast(mInteractiveToast);
-
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof DeploymentListListener) {
-            mDeploymentListListener = (DeploymentListListener) activity;
+    public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+        mGestureDetector.onTouchEvent(motionEvent);
+        return false;
+    }
+
+    @Override
+    public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+
+    }
+
+    private class RecyclerViewOnGestureListener extends
+            GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            View view = mDeploymentRecyclerView.findChildViewUnder(e.getX(), e.getY());
+            onItemClick(mDeploymentRecyclerView.getChildPosition(view));
+            return super.onSingleTapConfirmed(e);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mDeploymentListPresenter.resume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mDeploymentListPresenter.pause();
-    }
-
-    @Override
-    void initPresenter() {
-        mDeploymentListPresenter = new DeploymentListPresenter(this, mListDeployment,
-                mDeploymentModelDataMapper);
-        mDeleteDeploymentPresenter = new DeleteDeploymentPresenter(this, mDeleteDeployment,
-                mDeploymentModelDataMapper);
-    }
-
-    @Override
-    public void renderDeploymentList(List<DeploymentModel> deploymentModel) {
-        if (deploymentModel != null && mAdapter != null) {
-            mAdapter.setItems(deploymentModel);
-            mListView.setAdapter(mAdapter);
-        }
-    }
-
-    @Override
-    public Context getContext() {
-        return getActivity().getApplicationContext();
-    }
-
-    @Override
-    public void showLoading() {
-        setViewGone(mListLoadingProgress, false);
-    }
-
-    @Override
-    public void hideLoading() {
-        setViewGone(mListLoadingProgress);
-    }
-
-    @Override
-    public void showRetry() {
-
-    }
-
-    @Override
-    public void hideRetry() {
-
-    }
-
-    @Override
-    public void onDeploymentDeleted() {
-        if (!isDismissToDelete) {
-            showToast(getString(R.string.items_deleted,
-                    mDeploymentListView.getNumberOfItemsDeleted()));
-            mDeploymentListPresenter.refreshList();
-        }
-    }
-
-    @Override
-    public void showError(String message) {
-        showToast(message);
-    }
-
-    @Override
-    public void refreshList() {
-        mDeploymentListPresenter.refreshList();
-    }
-
-    @Override
-    public void editDeployment(DeploymentModel deploymentModel) {
-        mDeploymentListListener.onDeploymentClicked(deploymentModel);
-    }
-
-    private void onDeplomentClicked(DeploymentModel deploymentModel) {
-        if (mDeploymentListPresenter != null) {
-            mDeploymentListPresenter.onDeploymentClicked(deploymentModel);
-        }
-
-    }
-
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        DeploymentModel deploymentModel = mAdapter.getItem(position);
-        onDeplomentClicked(deploymentModel);
     }
 
     /**
@@ -294,6 +387,8 @@ public class ListDeploymentFragment extends BaseListFragment<DeploymentModel, De
     public interface DeploymentListListener {
 
         void onDeploymentClicked(final DeploymentModel deploymentModel);
+
+        void onFabClicked();
 
     }
 

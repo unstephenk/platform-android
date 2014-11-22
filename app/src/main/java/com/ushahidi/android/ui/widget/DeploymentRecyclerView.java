@@ -24,29 +24,30 @@ import com.ushahidi.android.ui.adapter.DeploymentAdapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.SoundEffectConstants;
 import android.view.View;
-import android.view.accessibility.AccessibilityEvent;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import timber.log.Timber;
 
 /**
  * Custom ListView to handle CAB events for deployments list
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentListView extends ListView {
+public class DeploymentRecyclerView extends RecyclerView {
 
     private Activity mActivity;
 
@@ -68,49 +69,34 @@ public class DeploymentListView extends ListView {
 
     private static final String BUNDLE_KEY = "selected";
 
-    public DeploymentListView(Context context) {
+    public static final int INVALID_POSITION = -1;
+
+    public DeploymentRecyclerView(Context context) {
         this(context, null, 0);
     }
 
-    public DeploymentListView(Context context, AttributeSet attrs) {
+    public DeploymentRecyclerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public DeploymentListView(Context context, AttributeSet attrs, int defStyle) {
+    public DeploymentRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mActivity = (Activity) context;
         mDeploymentModels = new LinkedHashMap();
     }
 
-    @Override
-    public boolean performItemClick(View view, int position, long id) {
-        OnItemClickListener mOnItemClickListener = getOnItemClickListener();
-
-        if (mOnItemClickListener != null) {
-            playSoundEffect(SoundEffectConstants.CLICK);
-            if (view != null) {
-                view.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
-            }
-            mOnItemClickListener.onItemClick(this, view, position, id);
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
 
-        final int action = ev.getAction();
-        final int x = (int) ev.getX();
-        final int y = (int) ev.getY();
+        final int action = ev.getActionMasked();
+        final int x = (int) ev.getRawX();
 
         // Get the right most part of the item in the list
         // This will enable us to have a bigger touch area for the checkbox
-        if (action == MotionEvent.ACTION_DOWN && x > getWidth() - getContext().getResources()
-                .getInteger(R.integer.screen_right_side)) {
+        if (action == MotionEvent.ACTION_DOWN && x < getWidth() / 7) {
             mSelectionMode = true;
-            mStartPosition = pointToPosition(x, y);
+            mStartPosition = pointToPosition(ev);
         }
 
         // Resume regular touch event if it's not in the selection mode.
@@ -122,7 +108,7 @@ public class DeploymentListView extends ListView {
             case MotionEvent.ACTION_DOWN:
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (pointToPosition(x, y) != mStartPosition) {
+                if (pointToPosition(ev) != mStartPosition) {
                     mSelectionMode = false;
                 }
                 break;
@@ -130,20 +116,47 @@ public class DeploymentListView extends ListView {
             case MotionEvent.ACTION_UP:
             default:
                 mSelectionMode = false;
-                int mItemPosition = pointToPosition(x, y);
-                if (mStartPosition != ListView.INVALID_POSITION) {
-                    setItemChecked(mItemPosition, !isItemChecked(mItemPosition));
+                int mItemPosition = pointToPosition(ev);
+                if (mStartPosition != INVALID_POSITION) {
+                    setItemChecked(mItemPosition);
                 }
         }
 
         return true;
     }
 
-    @Override
-    public void setItemChecked(int position, boolean value) {
-        super.setItemChecked(position, value);
+    private int pointToPosition(MotionEvent motionEvent) {
 
-        int checkedCount = getCheckedItemCount();
+        Rect rect = new Rect();
+        View downView = null;
+
+        int childCount = getChildCount();
+        int[] listViewCoords = new int[2];
+        getLocationOnScreen(listViewCoords);
+        int x = (int) motionEvent.getRawX() - listViewCoords[0];
+        int y = (int) motionEvent.getRawY() - listViewCoords[1];
+        View child;
+        for (int i = 0; i < childCount; i++) {
+            child = getChildAt(i);
+            child.getHitRect(rect);
+            if (rect.contains(x, y)) {
+                downView = child;
+                break;
+            }
+        }
+
+        if (downView != null) {
+            return getChildPosition(downView);
+        }
+        return INVALID_POSITION;
+    }
+
+    public void setItemChecked(int position) {
+        mDeploymentAdapter = (DeploymentAdapter) getAdapter();
+
+        mDeploymentAdapter.toggleSelection(position);
+
+        int checkedCount = mDeploymentAdapter.getSelectedItemCount();
 
         if (checkedCount == 0) {
             if (mActionMode != null) {
@@ -154,8 +167,6 @@ public class DeploymentListView extends ListView {
         if (mActionMode == null) {
             mActionMode = mActivity.startActionMode(new ActionBarModeCallback());
         }
-
-        mDeploymentAdapter = (DeploymentAdapter) getAdapter();
 
         if (mDeploymentAdapter != null) {
             mDeploymentModels.put(position, mDeploymentAdapter.getItem(position));
@@ -169,7 +180,7 @@ public class DeploymentListView extends ListView {
     /**
      * Shows a toast like message giving the user a feedback of the action taken.
      *
-     * @param interactiveToast The {@link com.ushahidi.android.ui.widget.InteractiveToast}
+     * @param interactiveToast The {@link InteractiveToast}
      */
     public void setInteractiveToast(InteractiveToast interactiveToast) {
         mInteractiveToast = interactiveToast;
@@ -180,12 +191,7 @@ public class DeploymentListView extends ListView {
      */
     private void clearSelectedItems() {
 
-        SparseBooleanArray cItems = getCheckedItemPositions();
-        for (int i = 0; i < cItems.size(); i++) {
-            if (cItems.valueAt(i)) {
-                super.setItemChecked(cItems.keyAt(i), false);
-            }
-        }
+        mDeploymentAdapter.clearSelections();
     }
 
     /**
@@ -248,6 +254,7 @@ public class DeploymentListView extends ListView {
             if (!items.isEmpty()) {
                 mNumberOfItemsDeleted = items.size();
                 for (DeploymentParcelable deploymentModel : items) {
+                    Timber.i("Deleting deployments...");
                     mDeleteDeploymentPresenter
                             .deleteDeployment(deploymentModel.mDeploymentModel);
                 }
@@ -264,7 +271,7 @@ public class DeploymentListView extends ListView {
      */
     private void performDelete() {
 
-        /*mInteractiveToast
+        mInteractiveToast
                 .setInteractiveToastListener(new InteractiveToast.InteractiveToastListener() {
                     @Override
                     public void onPressed(Parcelable token) {
@@ -280,8 +287,8 @@ public class DeploymentListView extends ListView {
 
                                 // Restores all the removed DeploymentModels from the list view's adapter
                                 // back and in their original position.
-                                mDeploymentAdapter.addItem(deploymentModel.mPosition,
-                                        deploymentModel.mDeploymentModel);
+                                mDeploymentAdapter.addItem(deploymentModel.mDeploymentModel,
+                                        deploymentModel.mPosition);
                             }
 
                             // Clear
@@ -333,7 +340,7 @@ public class DeploymentListView extends ListView {
         b.putParcelableArrayList(BUNDLE_KEY, items);
         mInteractiveToast
                 .show(mActivity.getString(R.string.items_deleted, mDeploymentModels.size()),
-                        mActivity.getString(R.string.undo), R.drawable.ic_undo, b);*/
+                        mActivity.getString(R.string.undo), R.drawable.ic_undo, b);
     }
 
     /**
@@ -379,8 +386,16 @@ public class DeploymentListView extends ListView {
             parcel.writeValue(mDeploymentModel);
         }
 
-        public static final Parcelable.Creator<DeploymentParcelable> CREATOR
-                = new Parcelable.Creator<DeploymentParcelable>() {
+        @Override
+        public String toString() {
+            return "DeploymentParcelable{" +
+                    "mDeploymentModel=" + mDeploymentModel +
+                    ", mPosition=" + mPosition +
+                    '}';
+        }
+
+        public static final Creator<DeploymentParcelable> CREATOR
+                = new Creator<DeploymentParcelable>() {
             public DeploymentParcelable createFromParcel(Parcel in) {
                 return new DeploymentParcelable(in);
             }

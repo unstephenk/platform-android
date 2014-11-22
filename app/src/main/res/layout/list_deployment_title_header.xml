@@ -16,17 +16,21 @@
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context=".ui.AddDeploymentActivity">
+              android:background="@color/theme_primary"
+              android:gravity="top"
+              android:layout_height="wrap_content">
 
-    <include layout="@layout/toolbar_actionbar"/>
-
-    <FrameLayout
-            android:id="@+id/fragment_container"
+    <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="65dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:textSize="@dimen/text_size_xlarge"
+            android:text="@string/deployment_management"
+            android:id="@+id/deployment_management_title"/>
 </LinearLayout>

@@ -19,29 +19,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:height="@dimen/list_title_height"
-                android:padding="@dimen/list_text_padding"
+                android:layout_marginTop="@dimen/list_top_bottom_padding"
                 android:background="?android:attr/activatedBackgroundIndicator">
-
-    <com.ushahidi.android.ui.widget.CapitalizedTextView
-            android:id="@+id/deployment_title"
-            style="@style/ListItemPrimaryText"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/deployment_selected"/>
-
-    <TextView
-            android:id="@+id/deployment_description"
-            style="@style/ListItemSecondayText"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/deployment_title"
-            android:layout_toLeftOf="@+id/deployment_selected"/>
 
     <CheckedTextView
             android:id="@+id/deployment_selected"
             style="@style/ListItemRightIcon"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
             android:clickable="false"
             android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-            android:gravity="center_vertical|center_horizontal"
-            android:textAppearance="?android:attr/textAppearanceListItem"/>
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:layout_margin="@dimen/list_text_padding"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            />
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:divider="?android:dividerHorizontal"
+            android:showDividers="end"
+            android:layout_alignTop="@+id/deployment_selected"
+            android:layout_toRightOf="@+id/deployment_selected"
+            android:layout_toEndOf="@+id/deployment_selected">
+
+        <com.ushahidi.android.ui.widget.CapitalizedTextView
+                android:id="@+id/deployment_title"
+                style="@style/ListItemPrimaryText"
+                android:paddingRight="@dimen/list_text_padding"/>
+
+        <TextView
+                android:id="@+id/deployment_description"
+                style="@style/ListItemSecondayText"
+                android:paddingRight="@dimen/list_text_padding"
+                android:paddingBottom="@dimen/list_text_padding"/>
+    </LinearLayout>
 </RelativeLayout>

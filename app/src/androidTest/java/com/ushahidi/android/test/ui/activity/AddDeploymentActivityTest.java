@@ -17,15 +17,14 @@
 
 package com.ushahidi.android.test.ui.activity;
 
+import com.robotium.solo.Solo;
 import com.squareup.spoon.Spoon;
 import com.ushahidi.android.R;
 import com.ushahidi.android.ui.activity.AddDeploymentActivity;
 import com.ushahidi.android.ui.fragment.AddDeploymentFragment;
 
-import android.app.Fragment;
 import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.TouchUtils;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -50,6 +49,10 @@ public class AddDeploymentActivityTest extends
 
     private Button addButton;
 
+    private Solo solo;
+
+    private AddDeploymentFragment addDeploymentFragment;
+
     public AddDeploymentActivityTest() {
         super(AddDeploymentActivity.class);
     }
@@ -59,34 +62,31 @@ public class AddDeploymentActivityTest extends
         super.setUp();
         instrumentation = getInstrumentation();
         mAddDeploymentActivity = getActivity();
+        solo = new Solo(getInstrumentation(), mAddDeploymentActivity);
 
-        deploymentTitle = (EditText) mAddDeploymentActivity.findViewById(R.id.add_deployment_title);
-        deploymentUrl = (EditText) mAddDeploymentActivity.findViewById(R.id.add_deployment_url);
-        addButton = (Button) mAddDeploymentActivity.findViewById(R.id.add_deployment_add);
+        deploymentTitle = (EditText) solo.getView(R.id.add_deployment_title);
+        deploymentUrl = (EditText) solo.getView(R.id.add_deployment_url);
+        addButton = (Button) solo.getView(R.id.add_deployment_add);
     }
 
     @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
-
+        solo.finishOpenedActivities();
     }
 
     public void testHasAddDeploymentFragment() {
         Spoon.screenshot(mAddDeploymentActivity, "initial_state");
-        Fragment addDeploymentFragment = mAddDeploymentActivity.getFragmentManager()
+        addDeploymentFragment = (AddDeploymentFragment) solo.getCurrentActivity()
+                .getFragmentManager()
                 .findFragmentByTag(AddDeploymentFragment.ADD_FRAGMENT_TAG);
+
         assertThat(addDeploymentFragment).isNotNull();
     }
 
     public void testUrlEditTextOnTouchListener() {
         Spoon.screenshot(mAddDeploymentActivity, "initial_state");
-
-        TouchUtils.tapView(AddDeploymentActivityTest.this, deploymentUrl);
-
+        solo.clickOnView(deploymentUrl);
         Spoon.screenshot(mAddDeploymentActivity, "deployment_url_clicked");
-
-        instrumentation.waitForIdleSync();
-
         assertThat(deploymentUrl).hasTextString("http://");
     }
 
@@ -94,17 +94,7 @@ public class AddDeploymentActivityTest extends
         Spoon.screenshot(mAddDeploymentActivity, "initial_state");
         assertThat(deploymentTitle).hasNoError();
         assertThat(deploymentUrl).hasNoError();
-
-        // Click the "addButton" field.
-        instrumentation.runOnMainSync(new Runnable() {
-            @Override
-            public void run() {
-                addButton.performClick();
-            }
-        });
-
-        instrumentation.waitForIdleSync();
-
+        solo.clickOnView(addButton);
         Spoon.screenshot(mAddDeploymentActivity, "addButton_Clicked");
 
         assertThat(deploymentTitle).hasError(R.string.add_deployment_empty_title);

@@ -83,7 +83,7 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
             public void run() {
                 if (!isClosed()) {
                     try {
-                        Log.e("DATA", "Repo " + deploymentEntity.toString());
+                        Log.e(TAG, "Repo " + deploymentEntity.toString());
                         cupboard().withDatabase(getWritableDatabase()).put(deploymentEntity);
                         callback.onDeploymentEntityPut();
                     } catch (Exception e) {
