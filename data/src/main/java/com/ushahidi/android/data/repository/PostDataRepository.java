@@ -22,19 +22,17 @@ import com.google.common.base.Strings;
 
 import com.ushahidi.android.core.entity.Post;
 import com.ushahidi.android.core.respository.IPostRepository;
-import com.ushahidi.android.data.database.PostDatabaseHelper;
 import com.ushahidi.android.data.database.IPostDatabaseHelper;
+import com.ushahidi.android.data.database.PostDatabaseHelper;
 import com.ushahidi.android.data.entity.PostEntity;
 import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
 import com.ushahidi.android.data.exception.RepositoryError;
 import com.ushahidi.android.data.exception.ValidationException;
-import com.ushahidi.android.validator.Validator;
 
 import java.util.List;
 
 /**
- * {@link com.ushahidi.android.core.respository.IPostRepository} for retrieving post
- * data
+ * {@link com.ushahidi.android.core.respository.IPostRepository} for retrieving post data
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
@@ -71,7 +69,8 @@ public class PostDataRepository implements IPostRepository {
      * {@inheritDoc}
      *
      * @param post         The Post to be saved.
-     * @param postCallback A {@link com.ushahidi.android.core.respository.IPostRepository.PostAddCallback} used for notifying clients.
+     * @param postCallback A {@link com.ushahidi.android.core.respository.IPostRepository.PostAddCallback}
+     *                     used for notifying clients.
      */
     @Override
     public void addPost(Post post,
@@ -87,7 +86,8 @@ public class PostDataRepository implements IPostRepository {
         if (Strings.isNullOrEmpty(post.getContent())) {
             isValid = false;
             postCallback.onError(
-                    new RepositoryError(new ValidationException("Post content cannot be empty or null")));
+                    new RepositoryError(
+                            new ValidationException("Post content cannot be empty or null")));
         }
 
         if (isValid) {
@@ -150,7 +150,8 @@ public class PostDataRepository implements IPostRepository {
      * {@inheritDoc}
      *
      * @param post         The Post to be saved.
-     * @param postCallback A {@link com.ushahidi.android.core.respository.IPostRepository.PostUpdateCallback} used for notifying clients.
+     * @param postCallback A {@link com.ushahidi.android.core.respository.IPostRepository.PostUpdateCallback}
+     *                     used for notifying clients.
      */
     @Override
     public void updatePost(Post post,
@@ -166,7 +167,8 @@ public class PostDataRepository implements IPostRepository {
         if (Strings.isNullOrEmpty(post.getContent())) {
             isValid = false;
             postCallback.onError(
-                    new RepositoryError(new ValidationException("Post content cannot be empty or null")));
+                    new RepositoryError(
+                            new ValidationException("Post content cannot be empty or null")));
         }
 
         if (isValid) {
@@ -189,8 +191,9 @@ public class PostDataRepository implements IPostRepository {
     /**
      * {@inheritDoc}
      *
-     * @param post The ID of the post to be deleted.
-     * @param callback   A {@link com.ushahidi.android.core.respository.IPostRepository.PostDeletedCallback} used for notifying clients.
+     * @param post     The ID of the post to be deleted.
+     * @param callback A {@link com.ushahidi.android.core.respository.IPostRepository.PostDeletedCallback}
+     *                 used for notifying clients.
      */
     @Override
     public void deletePost(final Post post,
