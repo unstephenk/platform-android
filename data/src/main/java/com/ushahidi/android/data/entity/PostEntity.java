@@ -15,17 +15,21 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.core.entity;
+package com.ushahidi.android.data.entity;
 
-import com.ushahidi.android.core.Entity;
+import com.ushahidi.android.core.entity.Tag;
+import com.ushahidi.android.core.entity.User;
+import com.ushahidi.android.data.Entity;
 
 import java.util.Date;
 import java.util.List;
 
 /**
+ * Post entity
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class Post extends Entity {
+public class PostEntity extends Entity {
 
     private Long _id;
 
@@ -51,8 +55,6 @@ public class Post extends Entity {
 
     private Date mUpdated;
 
-    // Store the raw JSON for this field. This is a dynamic field
-    // can't predict its keys.
     private String mValues;
 
     private List<Tag> mTags;
@@ -64,15 +66,7 @@ public class Post extends Entity {
 
     @Override
     public void setId(Long id) {
-        _id = id;
-    }
-
-    public Long get_id() {
-        return _id;
-    }
-
-    public void set_id(Long _id) {
-        this._id = _id;
+        this._id = id;
     }
 
     public long getParent() {
@@ -163,6 +157,7 @@ public class Post extends Entity {
         mUpdated = updated;
     }
 
+    // Store the JSON string directly into the db
     public String getValues() {
         return mValues;
     }
@@ -181,7 +176,7 @@ public class Post extends Entity {
 
     @Override
     public String toString() {
-        return "Post{" +
+        return "PostEntity{" +
                 "_id=" + _id +
                 ", mParent=" + mParent +
                 ", mUser=" + mUser +
