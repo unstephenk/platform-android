@@ -51,7 +51,7 @@ public class TagEntityTest extends BaseTestCase {
 
     private static final String DUMMY_TAG = "tag";
 
-    private static final String DUMMY_SLUG ="slug";
+    private static final String DUMMY_SLUG = "slug";
 
     private static final TagEntity.Type DUMMY_TYPE = TagEntity.Type.CATEGORY;
 

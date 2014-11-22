@@ -28,7 +28,7 @@ import com.ushahidi.android.data.entity.DeploymentEntity;
 import com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper;
 import com.ushahidi.android.data.exception.RepositoryError;
 import com.ushahidi.android.data.exception.ValidationException;
-import com.ushahidi.android.validator.Validator;
+import com.ushahidi.android.data.validator.Validator;
 
 import java.util.List;
 

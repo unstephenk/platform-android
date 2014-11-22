@@ -37,7 +37,7 @@ import com.ushahidi.android.ui.activity.UpdateDeploymentActivity;
 import com.ushahidi.android.ui.fragment.AddDeploymentFragment;
 import com.ushahidi.android.ui.fragment.ListDeploymentFragment;
 import com.ushahidi.android.ui.fragment.UpdateDeploymentFragment;
-import com.ushahidi.android.validator.UrlValidator;
+import com.ushahidi.android.data.validator.UrlValidator;
 
 import android.content.Context;
 

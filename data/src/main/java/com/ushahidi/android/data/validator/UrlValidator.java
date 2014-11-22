@@ -1,4 +1,4 @@
-package com.ushahidi.android.validator;
+package com.ushahidi.android.data.validator;
 
 import com.google.common.base.Strings;
 

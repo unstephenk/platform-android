@@ -44,7 +44,7 @@ public class MediaEntity extends Entity {
     public MediaEntity() {
         // Do nothing
     }
-    
+
     @Override
     public Long getId() {
         return this._id;

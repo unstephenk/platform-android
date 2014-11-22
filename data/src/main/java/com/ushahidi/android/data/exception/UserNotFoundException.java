@@ -14,29 +14,29 @@
  * along with this program in the file LICENSE-AGPL. If not, see
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
-package com.ushahidi.android.core.respository;
 
-import com.ushahidi.android.core.entity.User;
-import com.ushahidi.android.core.exception.ErrorWrap;
+package com.ushahidi.android.data.exception;
 
 /**
- * Interface that represents a Repository for getting {@link User} related data.
+ * Exception thrown when a query for a particular tag does not return any result
+ *
+ * @author Ushahidi Team <team@ushahidi.com>
  */
-public interface UserRepository {
+public class UserNotFoundException extends Exception {
 
-    /**
-     * Get an {@link User} by id.
-     *
-     * @param id           The user id used to retrieve user data.
-     * @param userCallback A {@link UserCallback} used for notifying clients.
-     * @author Ushahidi Team <team@ushahidi.com>
-     */
-    void getUser(int id, UserCallback userCallback);
+    public UserNotFoundException() {
+        super();
+    }
 
-    interface UserCallback {
+    public UserNotFoundException(final String message) {
+        super(message);
+    }
 
-        void onUserLoaded(User user);
+    public UserNotFoundException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 
-        void onError(ErrorWrap error);
+    public UserNotFoundException(final Throwable cause) {
+        super(cause);
     }
 }

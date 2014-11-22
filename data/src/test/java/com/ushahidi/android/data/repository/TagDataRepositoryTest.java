@@ -19,13 +19,13 @@ package com.ushahidi.android.data.repository;
 
 import com.ushahidi.android.core.entity.Tag;
 import com.ushahidi.android.data.BaseTestCase;
-import com.ushahidi.android.data.database.TagDatabaseHelper;
 import com.ushahidi.android.data.database.ITagDatabaseHelper;
+import com.ushahidi.android.data.database.TagDatabaseHelper;
 import com.ushahidi.android.data.entity.TagEntity;
 import com.ushahidi.android.data.entity.mapper.TagEntityMapper;
 import com.ushahidi.android.data.exception.RepositoryError;
 import com.ushahidi.android.data.exception.ValidationException;
-import com.ushahidi.android.validator.UrlValidator;
+import com.ushahidi.android.data.validator.UrlValidator;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -96,7 +96,7 @@ public class TagDataRepositoryTest extends BaseTestCase {
 
     private static final String DUMMY_TAG = "tag";
 
-    private static final String DUMMY_SLUG ="slug";
+    private static final String DUMMY_SLUG = "slug";
 
     private static final Tag.Type DUMMY_TAG_TYPE = Tag.Type.CATEGORY;
 

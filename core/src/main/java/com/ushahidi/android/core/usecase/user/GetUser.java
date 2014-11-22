@@ -17,10 +17,13 @@
 package com.ushahidi.android.core.usecase.user;
 
 import com.ushahidi.android.core.entity.User;
+import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.core.exception.ErrorWrap;
-import com.ushahidi.android.core.respository.UserRepository;
+import com.ushahidi.android.core.respository.IUserRepository;
+import com.ushahidi.android.core.respository.IUserRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
+import com.ushahidi.android.core.usecase.user.IGetUser;
 
 /**
  * This class is an implementation of {@link IGetUser} that represents a use case for retrieving
@@ -30,29 +33,31 @@ import com.ushahidi.android.core.task.ThreadExecutor;
  */
 public class GetUser implements IGetUser {
 
-    private final UserRepository mUserRepository;
-
     private final ThreadExecutor mThreadExecutor;
 
     private final PostExecutionThread mPostExecutionThread;
 
-    private final UserRepository.UserCallback mUserCallback = new UserRepository.UserCallback() {
-        @Override
-        public void onUserLoaded(User user) {
+    private final IUserRepository mUserRepository;
 
-        }
+    private final IUserRepository.UserDetailsCallback mUserDetailsCallback =
+            new IUserRepository.UserDetailsCallback() {
 
-        @Override
-        public void onError(ErrorWrap error) {
+                @Override
+                public void onUserLoaded(User user) {
+                    notifySuccess(user);
+                }
 
-        }
-    };
+                @Override
+                public void onError(ErrorWrap errorWrap) {
+                    notifyFailure(errorWrap);
+                }
+            };
 
-    private Callback mCallback;
+    private IGetUser.Callback mCallback;
 
-    private int mId;
+    private long mUserId;
 
-    public GetUser(UserRepository userRepository, ThreadExecutor threadExecutor,
+    public GetUser(IUserRepository userRepository, ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
         if (userRepository == null || threadExecutor == null || postExecutionThread == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null");
@@ -64,22 +69,13 @@ public class GetUser implements IGetUser {
     }
 
     @Override
-    public void execute(int id, Callback callback) {
-        if (id < 0) {
-            throw new IllegalArgumentException("User id cannot be less than zero");
+    public void execute(long userId, IGetUser.Callback callback) {
+        if (userId < 0 || callback == null) {
+            throw new IllegalArgumentException("Callback cannot be null!!!");
         }
-        if (callback == null) {
-            throw new IllegalArgumentException("Interactor callback cannot be null");
-        }
-
+        mUserId = userId;
         mCallback = callback;
-        mId = id;
         mThreadExecutor.execute(this);
-    }
-
-    @Override
-    public void run() {
-        mUserRepository.getUser(mId, mUserCallback);
     }
 
     private void notifySuccess(final User user) {
@@ -98,5 +94,10 @@ public class GetUser implements IGetUser {
                 mCallback.onError(errorWrap);
             }
         });
+    }
+
+    @Override
+    public void run() {
+        mUserRepository.getUserById(mUserId, mUserDetailsCallback);
     }
 }

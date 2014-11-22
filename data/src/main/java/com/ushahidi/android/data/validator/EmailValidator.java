@@ -14,30 +14,36 @@
  * along with this program in the file LICENSE-AGPL. If not, see
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
-package com.ushahidi.android.core.usecase.user;
 
-import com.ushahidi.android.core.entity.User;
-import com.ushahidi.android.core.entity.User;
-import com.ushahidi.android.core.exception.ErrorWrap;
-import com.ushahidi.android.core.usecase.IInteractor;
+package com.ushahidi.android.data.validator;
 
-public interface IGetUser extends IInteractor {
+import com.google.common.base.Strings;
 
-    /**
-     * Executes this use case.
-     *
-     * @param callback     A {@link IGetUser.Callback} used to notify the client.
-     * @param userId The user ID
-     */
-    void execute(long userId, Callback callback);
+import android.os.Build;
+import android.util.Patterns;
 
-    /**
-     * Notify client when a user is successfully loaded or an error occurred in the process
-     */
-    interface Callback {
+import java.util.regex.Pattern;
 
-        void onUserLoaded(User user);
+/**
+ * Checks for validity of an email address.
+ *
+ * @author Ushahidi Team <team@ushahidi.com>
+ */
+public class EmailValidator implements Validator {
 
-        void onError(ErrorWrap error);
+    @Override
+    public boolean isValid(CharSequence text) {
+        return validate(text.toString());
+    }
+
+    private boolean validate(String email) {
+
+        if (Strings.isNullOrEmpty(email)) {
+            return false;
+        }
+
+        final Pattern pattern = Patterns.EMAIL_ADDRESS;
+        return pattern.matcher(email).matches();
+
     }
 }

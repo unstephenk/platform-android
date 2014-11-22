@@ -1,4 +1,4 @@
-package com.ushahidi.android.validator;
+package com.ushahidi.android.data.validator;
 
 /**
  * Validators need to implement this.

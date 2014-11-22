@@ -14,18 +14,19 @@
  * along with this program in the file LICENSE-AGPL. If not, see
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
-package com.ushahidi.android.core.entity;
 
-import com.ushahidi.android.core.Entity;
+package com.ushahidi.android.data.entity;
+
+import com.ushahidi.android.data.Entity;
 
 import java.util.Date;
 
 /**
- * User entity
+ * User Entity
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class User extends Entity {
+public class UserEntity extends Entity {
 
     private Long _id;
 
@@ -137,5 +138,4 @@ public class User extends Entity {
             return value;
         }
     }
-
 }

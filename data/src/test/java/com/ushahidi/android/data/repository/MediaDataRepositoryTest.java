@@ -25,7 +25,7 @@ import com.ushahidi.android.data.entity.MediaEntity;
 import com.ushahidi.android.data.entity.mapper.MediaEntityMapper;
 import com.ushahidi.android.data.exception.RepositoryError;
 import com.ushahidi.android.data.exception.ValidationException;
-import com.ushahidi.android.validator.UrlValidator;
+import com.ushahidi.android.data.validator.UrlValidator;
 
 import org.junit.Before;
 import org.junit.Rule;
