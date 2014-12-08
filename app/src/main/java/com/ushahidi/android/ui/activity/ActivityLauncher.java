@@ -63,4 +63,13 @@ public class ActivityLauncher {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }
+
+    /**
+     * Launches Add deployment activity for adding a new deployment
+     */
+    public void launchPosts() {
+        final Intent intent = PostActivity.getIntent(mContext);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
+    }
 }

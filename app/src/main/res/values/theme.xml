@@ -16,13 +16,16 @@
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
 <resources>
+
     <style name="BaseTheme" parent="Theme.AppCompat.Light">
 
     </style>
+
     <style name="Theme" parent="BaseTheme">
         <item name="android:editTextStyle">@style/Ushahidi.Widget.EditText</item>
     </style>
-    <style name="Theme.Widget" parent="Theme.AppCompat" />
+
+    <style name="Theme.Widget" parent="Theme.AppCompat"/>
 
     <style name="Theme.Ushahidi.Base" parent="Theme">
         <item name="colorPrimary">@color/theme_primary</item>
@@ -46,6 +49,7 @@
         <item name="searchViewStyle">@style/Ushahidi.SearchBar.Widget</item>
         <item name="android:windowActionModeOverlay">true</item>
     </style>
+
     <style name="Theme.Ushahidi" parent="Theme.Ushahidi.Base"/>
 
     <style name="Theme.Ushahidi.NoActionBar" parent="android:Theme.Light.NoTitleBar.Fullscreen"/>

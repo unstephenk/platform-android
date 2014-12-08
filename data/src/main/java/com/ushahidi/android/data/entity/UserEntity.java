@@ -110,7 +110,7 @@ public class UserEntity extends Entity {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserEntity {" +
                 "_id=" + _id +
                 ", mEmail='" + mEmail + '\'' +
                 ", mRealName='" + mRealName + '\'' +

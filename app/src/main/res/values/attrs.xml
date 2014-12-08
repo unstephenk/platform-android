@@ -24,4 +24,25 @@
         <attr name="photoItemForeground" format="reference"/>
         <attr name="photoItemForegroundBorderless" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="BezelImageView">
+        <attr name="maskDrawable" format="reference"/>
+        <attr name="borderDrawable" format="reference"/>
+        <attr name="desaturateOnPress" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="MultiSwipeRefreshLayout">
+        <attr name="foreground" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ScrimInsetsView">
+        <attr name="insetForeground" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="SlidingTabLayout">
+        <attr name="selectedColor" format="color" />
+        <attr name="indicatorHeight" format="reference|dimension" />
+        <attr name="dividerColor" format="color" />
+        <attr name="android:textAppearance" />
+    </declare-styleable>
 </resources>

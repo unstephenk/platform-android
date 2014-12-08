@@ -96,4 +96,23 @@ public class TagEntityMapper {
 
         return tagList;
     }
+
+    /**
+     * Maps a list {@link Tag} into a list of {@link TagEntity}.
+     *
+     * @param tagList List to be unmapped.
+     * @return {@link Tag}
+     */
+    public List<TagEntity> unmap(List<Tag> tagList) {
+        List<TagEntity> tagEntityList = new ArrayList<>();
+        TagEntity tagEntity;
+        for (Tag tag : tagList) {
+            tagEntity = unmap(tag);
+            if (tagEntity != null) {
+                tagEntityList.add(tagEntity);
+            }
+        }
+
+        return tagEntityList;
+    }
 }

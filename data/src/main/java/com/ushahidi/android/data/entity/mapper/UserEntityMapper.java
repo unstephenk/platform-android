@@ -42,10 +42,8 @@ public class UserEntityMapper {
      * @return The {@link com.ushahidi.android.core.entity.User} entity
      */
     public User map(UserEntity userEntity) {
-        User user = null;
-
+        User user = new User();
         if (userEntity != null) {
-            user = new User();
             user.setId(userEntity.getId());
             user.setEmail(userEntity.getEmail());
             user.setRealName(userEntity.getRealName());
@@ -60,10 +58,9 @@ public class UserEntityMapper {
     }
 
     public UserEntity unmap(User user) {
-        UserEntity userEntity = null;
+        UserEntity userEntity = new UserEntity();
 
         if (user != null) {
-            userEntity = new UserEntity();
             userEntity.setId(user.getId());
             userEntity.setEmail(user.getEmail());
             userEntity.setRealName(user.getRealName());

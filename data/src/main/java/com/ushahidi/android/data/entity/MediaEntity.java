@@ -29,7 +29,7 @@ public class MediaEntity extends Entity {
 
     private Long _id;
 
-    private User mUser;
+    private UserEntity mUser;
 
     private String mCaption;
 
@@ -55,11 +55,11 @@ public class MediaEntity extends Entity {
         this._id = id;
     }
 
-    public User getUser() {
+    public UserEntity getUser() {
         return mUser;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserEntity user) {
         mUser = user;
     }
 

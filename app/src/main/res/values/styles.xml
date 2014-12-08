@@ -14,7 +14,7 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
-<resources>
+<resources >
 
     <!-- Animation -->
     <style name="WindowAnimation" parent="@android:style/Animation.Activity">
@@ -92,6 +92,16 @@
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
     </style>
+
+    <style name="Ushahidi.Widget.Spinner.Base" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:divider">@null</item>
+        <item name="android:dividerHeight">0dp</item>
+        <item name="android:overlapAnchor">true</item>
+    </style>
+
+    <style name="Ushahidi.Widget.Spinner" parent="Ushahidi.Widget.Spinner.Base"/>
 
     <!-- Empty views -->
     <style name="EmptyText">
@@ -272,4 +282,43 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <!-- Navigation Drawer -->
+    <style name="NavDrawer">
+        <item name="android:layout_width">@dimen/nav_drawer_width</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:background">?attr/colorPrimaryDark</item>
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:layout_marginTop">?attr/actionBarSize</item>
+        <item name="android:divider">@android:color/white</item>
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:drawSelectorOnTop">false</item>
+    </style>
+
+    <style name="NavDrawer.Login" parent="android:Widget">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">start|center_vertical</item>
+        <item name="android:layout_marginRight">16dp</item>
+    </style>
+
+    <style name="TabSliding">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_gravity">center|bottom</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:textAppearance">@style/TabSliding.Label</item>
+        <item name="android:fadingEdgeLength">@dimen/element_spacing_normal</item>
+    </style>
+
+    <style name="TabSliding.Label" parent="Base.TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/tab_text</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

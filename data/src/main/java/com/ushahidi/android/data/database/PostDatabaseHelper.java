@@ -42,11 +42,6 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
 
     private static String TAG = PostDatabaseHelper.class.getSimpleName();
 
-    static {
-        // Register our post entity
-        cupboard().register(PostEntity.class);
-    }
-
     private final ThreadExecutor mThreadExecutor;
 
     private PostDatabaseHelper(Context context, ThreadExecutor threadExecutor) {

@@ -18,12 +18,11 @@
 package com.ushahidi.android.ui.fragment;
 
 import com.andreabaccega.widget.FormEditText;
-import com.ushahidi.android.ui.activity.ActivityLauncher;
 import com.ushahidi.android.ui.activity.BaseActivity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,8 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
@@ -56,9 +53,6 @@ public abstract class BaseFragment extends Fragment {
      * Menu resource mId
      */
     protected final int mMenu;
-
-    @Inject
-    ActivityLauncher launcher;
 
     /**
      * BaseFragment

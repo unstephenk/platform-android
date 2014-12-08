@@ -18,29 +18,15 @@
 package com.ushahidi.android.ui.fragment;
 
 import com.ushahidi.android.model.Model;
-import com.ushahidi.android.ui.activity.BaseActivity;
 import com.ushahidi.android.ui.adapter.BaseRecyclerViewAdapter;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.InflateException;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 import timber.log.Timber;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 /**
  * Base {@link android.app.ListFragment} that every fragment list will extend from.
@@ -48,19 +34,9 @@ import static android.view.View.VISIBLE;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public abstract class BaseRecyclerViewFragment<M extends Model, L extends BaseRecyclerViewAdapter>
-        extends Fragment {
+        extends BaseFragment {
 
     private static String TAG = BaseRecyclerViewFragment.class.getSimpleName();
-
-    /**
-     * Layout resource mId
-     */
-    protected final int mLayout;
-
-    /**
-     * Menu resource mId
-     */
-    protected final int mMenu;
 
     /**
      * RecyclerView resource mId
@@ -85,10 +61,9 @@ public abstract class BaseRecyclerViewFragment<M extends Model, L extends BaseRe
 
     protected BaseRecyclerViewFragment(Class<L> adapterClass, int layout, int menu,
             int recyclerViewId) {
+        super(layout, menu);
         mRecyclerViewAdapterClass = adapterClass;
         mRecyclerViewId = recyclerViewId;
-        mMenu = menu;
-        mLayout = layout;
     }
 
     /**
@@ -132,136 +107,5 @@ public abstract class BaseRecyclerViewFragment<M extends Model, L extends BaseRe
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
 
-        initPresenter();
-
-    }
-
-    /**
-     * Initializes the {@link com.ushahidi.android.presenter.IPresenter} for this fragment in a MVP
-     * pattern used to architect the application presentation layer.
-     */
-    abstract void initPresenter();
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (mMenu != 0) {
-            inflater.inflate(mMenu, menu);
-        }
-
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        injectDependencies();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
-        View root = null;
-        if (mLayout != 0) {
-            root = inflater.inflate(mLayout, container, false);
-        }
-        return root;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        injectViews(view);
-    }
-
-    protected View fadeIn(final View view, final boolean animate) {
-        if (view != null) {
-            if (animate) {
-                view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-                        android.R.anim.fade_in));
-
-            } else {
-
-                view.clearAnimation();
-            }
-        }
-
-        return view;
-
-    }
-
-    protected View fadeOut(final View view, final boolean animate) {
-        if (view != null) {
-            if (animate) {
-                view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-                        android.R.anim.fade_out));
-            } else {
-                view.clearAnimation();
-            }
-        }
-        return view;
-
-    }
-
-    protected View setViewGone(final View view) {
-        return setViewGone(view, true);
-    }
-
-    protected View setViewGone(final View view, final boolean gone) {
-        if (view != null) {
-            if (gone) {
-                if (GONE != view.getVisibility()) {
-
-                    fadeOut(view, true);
-
-                    view.setVisibility(GONE);
-                }
-            } else {
-                if (VISIBLE != view.getVisibility()) {
-                    view.setVisibility(VISIBLE);
-
-                    fadeIn(view, true);
-
-                }
-            }
-        }
-        return view;
-    }
-
-    /**
-     * Replace every field annotated using @Inject annotation with the provided dependency specified
-     * inside a Dagger module value.
-     */
-    private void injectDependencies() {
-        ((BaseActivity) getActivity()).inject(this);
-    }
-
-
-    /**
-     * Replace every field annotated with ButterKnife annotations like @InjectView with the proper
-     * value.
-     *
-     * @param view to extract each widget injected in the fragment.
-     */
-    private void injectViews(final View view) {
-        ButterKnife.inject(this, view);
-    }
-
-    /**
-     * Shows a {@link android.widget.Toast} message.
-     *
-     * @param message A message resource
-     */
-    protected void showToast(int message) {
-        Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG)
-                .show();
-    }
-
-    /**
-     * Shows a {@link android.widget.Toast} message.
-     *
-     * @param message A message string
-     */
-    protected void showToast(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG)
-                .show();
     }
 }

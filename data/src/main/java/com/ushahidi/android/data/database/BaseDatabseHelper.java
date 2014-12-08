@@ -18,6 +18,11 @@
 package com.ushahidi.android.data.database;
 
 import com.ushahidi.android.data.BuildConfig;
+import com.ushahidi.android.data.entity.DeploymentEntity;
+import com.ushahidi.android.data.entity.MediaEntity;
+import com.ushahidi.android.data.entity.PostEntity;
+import com.ushahidi.android.data.entity.TagEntity;
+import com.ushahidi.android.data.entity.UserEntity;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -36,6 +41,16 @@ public abstract class BaseDatabseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     private static final int LAST_DATABASE_NUKE_VERSION = 0;
+
+    private static final Class[] ENTITIES = new Class[]{DeploymentEntity.class, UserEntity.class,
+            TagEntity.class, MediaEntity.class, PostEntity.class};
+
+    static {
+        // Register our entities
+        for (Class clazz : ENTITIES) {
+            cupboard().register(clazz);
+        }
+    }
 
     private static String TAG = BaseDatabseHelper.class.getSimpleName();
 

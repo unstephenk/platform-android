@@ -44,7 +44,7 @@ public class PostEntityTest extends BaseTestCase {
 
     private static final long DUMMY_ID = 1;
 
-    private static final User DUMMY_USER = mock(User.class);
+    private static final UserEntity DUMMY_USER = mock(UserEntity.class);
 
     private static final String DUMMY_CONTENT = "dummy description";
 
@@ -64,7 +64,7 @@ public class PostEntityTest extends BaseTestCase {
 
     private static final String DUMMY_TYPE = "report";
 
-    private static final List<Tag> DUMMY_TAGS = new ArrayList<>();
+    private static final List<TagEntity> DUMMY_TAGS = new ArrayList<>();
 
     private static final String DUMMY_POST_TITLE = "post title";
 

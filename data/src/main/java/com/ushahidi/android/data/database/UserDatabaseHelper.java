@@ -41,11 +41,6 @@ public class UserDatabaseHelper extends BaseDatabseHelper implements IUserDataba
 
     private static String TAG = UserDatabaseHelper.class.getSimpleName();
 
-    static {
-        // Register our deployment entity
-        cupboard().register(UserEntity.class);
-    }
-
     private final ThreadExecutor mThreadExecutor;
 
     private UserDatabaseHelper(Context context, ThreadExecutor threadExecutor) {

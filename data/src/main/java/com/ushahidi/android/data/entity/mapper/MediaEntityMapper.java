@@ -31,7 +31,10 @@ import java.util.List;
  */
 public class MediaEntityMapper {
 
+    private UserEntityMapper mUserEntityMapper;
+
     public MediaEntityMapper() {
+        mUserEntityMapper = new UserEntityMapper();
     }
 
     /**
@@ -50,7 +53,7 @@ public class MediaEntityMapper {
             media.setCaption(mediaEntity.getCaption());
             media.setCreated(mediaEntity.getCreated());
             media.setMime(mediaEntity.getMime());
-            media.setUser(mediaEntity.getUser());
+            media.setUser(mUserEntityMapper.map(mediaEntity.getUser()));
             media.setOriginalFileUrl(mediaEntity.getOriginalFileUrl());
             media.setUpdated(mediaEntity.getUpdated());
         }
@@ -68,6 +71,7 @@ public class MediaEntityMapper {
             mediaEntity.setCreated(media.getCreated());
             mediaEntity.setMime(media.getMime());
             mediaEntity.setOriginalFileUrl(media.getOriginalFileUrl());
+            mediaEntity.setUser(mUserEntityMapper.unmap(media.getUser()));
             mediaEntity.setUpdated(media.getUpdated());
         }
         return mediaEntity;

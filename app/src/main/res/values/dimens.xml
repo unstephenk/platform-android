@@ -15,7 +15,7 @@
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
 
-<resources>
+<resources >
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_padding">16dp</dimen>
     <dimen name="activity_vertical_padding">16dp</dimen>
@@ -46,12 +46,29 @@
     <dimen name="keyline_1_minus_8dp">8dp</dimen>
     <dimen name="keyline_2">72dp</dimen>
     <dimen name="keyline_2_minus_16dp">56dp</dimen>
-    <dimen name="keyline_2_session_detail">@dimen/keyline_2</dimen>
 
     <dimen name="fab_elevation">8dp</dimen>
     <dimen name="fab_press_translation_z">6dp</dimen>
     <dimen name="headerbar_elevation">4dp</dimen>
     <dimen name="card_elevation">2dp</dimen>
-
+    <dimen name="actionbar_spinner_dropdown_item_height">48dp</dimen>
     <dimen name="card_corner_radius">2dp</dimen>
+
+    <!-- nav drawer -->
+    <dimen name="nav_drawer_user_profile_image_size">40dp</dimen>
+    <dimen name="nav_drawer_user_account_height">140dp</dimen>
+    <dimen name="nav_drawer_width">260dp</dimen>
+
+    <!-- cards -->
+    <!-- Card -->
+    <dimen name="card_base_empty_height">72dp</dimen>
+
+    <dimen name="card_birth_width">350dp</dimen>
+    <dimen name="card_mayknow_margin_top">3dp</dimen>
+
+    <!-- elevation -->
+    <dimen name="card_shadow_elevation">6dp</dimen>
+    <dimen name="card_shadow_start_elevation">2dp</dimen>
+    <dimen name="card_shadow_end_elevation">4dp</dimen>
+    <dimen name="card_list_padding">8dp</dimen>
 </resources>

@@ -17,8 +17,6 @@
 
 package com.ushahidi.android.data.entity;
 
-import com.ushahidi.android.core.entity.Tag;
-import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.data.Entity;
 
 import java.util.Date;
@@ -35,7 +33,7 @@ public class PostEntity extends Entity {
 
     private long mParent;
 
-    private User mUser;
+    private UserEntity mUser;
 
     private String mType;
 
@@ -57,7 +55,7 @@ public class PostEntity extends Entity {
 
     private String mValues;
 
-    private List<Tag> mTags;
+    private transient List<TagEntity> mTags;
 
     @Override
     public Long getId() {
@@ -77,11 +75,11 @@ public class PostEntity extends Entity {
         mParent = parent;
     }
 
-    public User getUser() {
+    public UserEntity getUser() {
         return mUser;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserEntity user) {
         mUser = user;
     }
 
@@ -166,11 +164,11 @@ public class PostEntity extends Entity {
         mValues = values;
     }
 
-    public List<Tag> getTags() {
+    public List<TagEntity> getTags() {
         return mTags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(List<TagEntity> tags) {
         mTags = tags;
     }
 

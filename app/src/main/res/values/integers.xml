@@ -17,4 +17,7 @@
   -->
 <resources>
     <integer name="screen_right_side">200</integer>
+    <integer name="text_header_max_lines">3</integer>
+    <integer name="font_textStyle_medium">1</integer>
+    <!-- bold -->
 </resources>

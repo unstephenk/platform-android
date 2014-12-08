@@ -22,6 +22,8 @@ import com.ushahidi.android.core.entity.Tag;
 import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.data.BaseTestCase;
 import com.ushahidi.android.data.entity.PostEntity;
+import com.ushahidi.android.data.entity.TagEntity;
+import com.ushahidi.android.data.entity.UserEntity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -42,15 +44,11 @@ import static org.mockito.Mockito.mock;
  */
 public class PostEntityMapperTest extends BaseTestCase {
 
-    private PostEntityMapper mPostEntityMapper;
-
-    private PostEntity mPostEntity;
-
-    private Post mPost;
-
     private static final long DUMMY_ID = 1;
 
-    private static final User DUMMY_USER = mock(User.class);
+    private static final User DUMMY_USER = new User();
+
+    private static final UserEntity DUMMY_USER_ENTITY = new UserEntity();
 
     private static final String DUMMY_CONTENT = "dummy description";
 
@@ -72,18 +70,43 @@ public class PostEntityMapperTest extends BaseTestCase {
 
     private static final List<Tag> DUMMY_TAGS = new ArrayList<>();
 
+    private static final List<TagEntity> DUMMY_TAG_ENTITIES = new ArrayList<>();
+
     private static final String DUMMY_POST_TITLE = "post title";
+
+
+
+    private PostEntityMapper mPostEntityMapper;
+
+    private PostEntity mPostEntity;
+
+    private Post mPost;
 
     @Before
     public void setUp() throws Exception {
         mPostEntityMapper = new PostEntityMapper();
+        DUMMY_USER.setId(DUMMY_ID);
+        DUMMY_USER.setCreated(DUMMY_CREATED);
+        DUMMY_USER.setUpdated(DUMMY_UPDATED);
+        DUMMY_USER.setEmail(DUMMY_ARTHUR_EMAIL);
+        DUMMY_USER.setUsername("dudebro");
+        DUMMY_USER.setRealName(DUMMY_REAL_NAME);
+        DUMMY_USER.setRole(User.Role.USER);
+
+        DUMMY_USER_ENTITY.setId(DUMMY_ID);
+        DUMMY_USER_ENTITY.setRole(UserEntity.Role.USER);
+        DUMMY_USER_ENTITY.setCreated(DUMMY_CREATED);
+        DUMMY_USER_ENTITY.setUpdated(DUMMY_UPDATED);
+        DUMMY_USER_ENTITY.setEmail(DUMMY_ARTHUR_EMAIL);
+        DUMMY_USER_ENTITY.setUsername("dudebro");
+        DUMMY_USER_ENTITY.setRealName(DUMMY_REAL_NAME);
     }
 
     @Test
     public void shouldMapPostEntityToPost() throws Exception {
         mPostEntity = new PostEntity();
         mPostEntity.setId(DUMMY_ID);
-        mPostEntity.setUser(DUMMY_USER);
+        mPostEntity.setUser(DUMMY_USER_ENTITY);
         mPostEntity.setContent(DUMMY_CONTENT);
         mPostEntity.setSlug(DUMMY_SLUG);
         mPostEntity.setAuthorEmail(DUMMY_ARTHUR_EMAIL);
@@ -93,14 +116,14 @@ public class PostEntityMapperTest extends BaseTestCase {
         mPostEntity.setUpdated(DUMMY_UPDATED);
         mPostEntity.setParent(DUMMY_PARENT);
         mPostEntity.setType(DUMMY_TYPE);
-        mPostEntity.setTags(DUMMY_TAGS);
+        mPostEntity.setTags(DUMMY_TAG_ENTITIES);
         mPostEntity.setTitle(DUMMY_POST_TITLE);
 
         Post post = mPostEntityMapper.map(mPostEntity);
 
         assertThat(post, is(instanceOf(Post.class)));
         assertThat(post.getId(), is(DUMMY_ID));
-        assertThat(post.getUser(), is(DUMMY_USER));
+        assertThat(post.getUser(), is(instanceOf(User.class)));
         assertThat(post.getContent(), is(DUMMY_CONTENT));
         assertThat(post.getUpdated(), is(DUMMY_UPDATED));
         assertThat(post.getSlug(), is(DUMMY_SLUG));
@@ -132,14 +155,14 @@ public class PostEntityMapperTest extends BaseTestCase {
 
         assertThat(postEntity, is(instanceOf(PostEntity.class)));
         assertThat(postEntity.getId(), is(DUMMY_ID));
-        assertThat(postEntity.getUser(), is(DUMMY_USER));
+        assertThat(postEntity.getUser(), is(instanceOf(UserEntity.class)));
         assertThat(postEntity.getContent(), is(DUMMY_CONTENT));
         assertThat(postEntity.getUpdated(), is(DUMMY_UPDATED));
         assertThat(postEntity.getSlug(), is(DUMMY_SLUG));
         assertThat(postEntity.getAuthorEmail(), is(DUMMY_ARTHUR_EMAIL));
         assertThat(postEntity.getAuthorRealname(), is(DUMMY_REAL_NAME));
         assertThat(postEntity.getType(), is(DUMMY_TYPE));
-        assertThat(postEntity.getTags(), is(DUMMY_TAGS));
+        assertThat(postEntity.getTags(), is(DUMMY_TAG_ENTITIES));
         assertThat(postEntity.getTitle(), is(DUMMY_POST_TITLE));
     }
 }

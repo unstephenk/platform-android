@@ -41,11 +41,6 @@ public class MediaDatabaseHelper extends BaseDatabseHelper implements IMediaData
 
     private static String TAG = MediaDatabaseHelper.class.getSimpleName();
 
-    static {
-        // Register our deployment entity
-        cupboard().register(MediaEntity.class);
-    }
-
     private final ThreadExecutor mThreadExecutor;
 
     private MediaDatabaseHelper(Context context, ThreadExecutor threadExecutor) {

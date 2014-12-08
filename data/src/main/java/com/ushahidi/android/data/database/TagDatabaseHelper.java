@@ -41,11 +41,6 @@ public class TagDatabaseHelper extends BaseDatabseHelper implements ITagDatabase
 
     private static String TAG = TagDatabaseHelper.class.getSimpleName();
 
-    static {
-        // Register our deployment entity
-        cupboard().register(TagEntity.class);
-    }
-
     private final ThreadExecutor mThreadExecutor;
 
     private TagDatabaseHelper(Context context, ThreadExecutor threadExecutor) {

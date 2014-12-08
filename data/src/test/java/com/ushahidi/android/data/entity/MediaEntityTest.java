@@ -27,6 +27,7 @@ import java.util.Date;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
 
 /**
  * Tests {@link TagEntity}
@@ -49,6 +50,8 @@ public class MediaEntityTest extends BaseTestCase {
 
     private static final Date DUMMY_UPDATED = new Date(1415718034);
 
+    private static final UserEntity DUMMY_USER = mock(UserEntity.class);
+
 
     @Before
     public void setUp() throws Exception {
@@ -63,6 +66,7 @@ public class MediaEntityTest extends BaseTestCase {
         mMediaEntity.setCreated(DUMMY_CREATED);
         mMediaEntity.setUpdated(DUMMY_UPDATED);
         mMediaEntity.setMime(DUMMY_MIME);
+        mMediaEntity.setUser(DUMMY_USER);
 
         assertThat(mMediaEntity, is(instanceOf(MediaEntity.class)));
         assertThat(mMediaEntity.getId(), is(DUMMY_ID));
@@ -70,5 +74,6 @@ public class MediaEntityTest extends BaseTestCase {
         assertThat(mMediaEntity.getUpdated(), is(DUMMY_UPDATED));
         assertThat(mMediaEntity.getMime(), is(DUMMY_MIME));
         assertThat(mMediaEntity.getOriginalFileUrl(), is(DUMMY_ORIGINAL_URL));
+        assertThat(mMediaEntity.getUser(), is(DUMMY_USER));
     }
 }

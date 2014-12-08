@@ -63,7 +63,7 @@ public class DeploymentActivity extends BaseActivity
         addDeploymentLayout
                 = (FrameLayout) findViewById(R.id.add_deployment_fragment_container);
 
-        mListDeploymentFragment = (ListDeploymentFragment) getFragmentManager()
+        mListDeploymentFragment = (ListDeploymentFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_list_deployments);
 
         if (addDeploymentLayout != null) {

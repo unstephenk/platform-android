@@ -24,4 +24,8 @@
         <item name="android:statusBarColor">?colorPrimaryDark</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
+
+    <style name="Ushahidi.Widget.Spinner" parent="Ushahidi.Widget.Spinner.Base">
+        <item name="android:theme">@style/ActionBarThemeOverlay</item>
+    </style>
 </resources>

@@ -40,11 +40,6 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
 
     private static String TAG = DeploymentDatabaseHelper.class.getSimpleName();
 
-    static {
-        // Register our deployment entity
-        cupboard().register(DeploymentEntity.class);
-    }
-
     private final ThreadExecutor mThreadExecutor;
 
     private DeploymentDatabaseHelper(Context context, ThreadExecutor threadExecutor) {

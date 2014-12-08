@@ -31,7 +31,13 @@ import java.util.List;
  */
 public class PostEntityMapper {
 
+    private TagEntityMapper mTagEntityMapper;
+
+    private UserEntityMapper mUserEntityMapper;
+
     public PostEntityMapper() {
+        mTagEntityMapper = new TagEntityMapper();
+        mUserEntityMapper = new UserEntityMapper();
     }
 
     /**
@@ -54,12 +60,12 @@ public class PostEntityMapper {
             post.setUpdated(postEntity.getUpdated());
             post.setType(postEntity.getType());
             post.setSlug(postEntity.getSlug());
-            post.setTags(postEntity.getTags());
+            post.setTags(mTagEntityMapper.map(postEntity.getTags()));
             post.setAuthorEmail(postEntity.getAuthorEmail());
             post.setAuthorRealname(postEntity.getAuthorRealname());
             post.setContent(postEntity.getContent());
             post.setStatus(postEntity.getStatus());
-            post.setUser(postEntity.getUser());
+            post.setUser(mUserEntityMapper.map(postEntity.getUser()));
 
         }
 
@@ -78,12 +84,12 @@ public class PostEntityMapper {
             postEntity.setUpdated(post.getUpdated());
             postEntity.setType(post.getType());
             postEntity.setSlug(post.getSlug());
-            postEntity.setTags(post.getTags());
+            postEntity.setTags(mTagEntityMapper.unmap(post.getTags()));
             postEntity.setAuthorEmail(post.getAuthorEmail());
             postEntity.setAuthorRealname(post.getAuthorRealname());
             postEntity.setContent(post.getContent());
             postEntity.setStatus(post.getStatus());
-            postEntity.setUser(post.getUser());
+            postEntity.setUser(mUserEntityMapper.unmap(post.getUser()));
         }
         return postEntity;
     }

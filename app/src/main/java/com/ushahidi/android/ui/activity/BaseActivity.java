@@ -20,28 +20,38 @@ package com.ushahidi.android.ui.activity;
 import com.ushahidi.android.R;
 import com.ushahidi.android.UshahidiApplication;
 import com.ushahidi.android.module.ActivityModule;
+import com.ushahidi.android.ui.widget.NavDrawerItem;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import dagger.ObjectGraph;
 
 import static android.view.View.GONE;
+import static android.view.View.OnClickListener;
 import static android.view.View.VISIBLE;
 
 /**
@@ -49,7 +59,7 @@ import static android.view.View.VISIBLE;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends ActionBarActivity{
 
     /**
      * Layout resource id
@@ -66,15 +76,54 @@ public abstract class BaseActivity extends ActionBarActivity {
      */
     protected final int mDrawerLayoutId;
 
-    private ObjectGraph activityScopeGraph;
+    /**
+     * Navigation Drawer Item resource ID
+     */
+    protected final int mDrawerItemsContainerId;
+
+    // Navigation drawer view items
+    protected List<NavDrawerItem> mNavDrawerItemViews = new ArrayList<>();
 
     @Inject
     ActivityLauncher launcher;
+
+    private ObjectGraph activityScopeGraph;
 
     // Navigation drawer:
     private DrawerLayout mDrawerLayout;
 
     private ActionBarDrawerToggle mDrawerToggle;
+
+    private ActionBar mActionBar = null;
+
+    // Primary toolbar and drawer toggle
+    private Toolbar mActionBarToolbar;
+
+    // ViewGroup that habours the navigation drawer items
+    private ViewGroup mDrawerItemsContainer;
+
+    // User profile
+    protected View mLoginLayout;
+
+    protected View mUserProfileLayout;
+
+    protected TextView mUserLoginTitle;
+
+    protected TextView mFullnameTextView;
+
+    protected TextView mUsernameTextView;
+    protected ImageView mAvatarImageView;
+
+    public BaseActivity(int layout, int menu, int drawerLayoutId, int drawerItemsContainerId) {
+        mLayout = layout;
+        mMenu = menu;
+        mDrawerLayoutId = drawerLayoutId;
+        mDrawerItemsContainerId = drawerItemsContainerId;
+    }
+
+    public BaseActivity(int layout, int menu) {
+        this(layout, menu, 0, 0);
+    }
 
     /**
      * Get a list of Dagger modules with Activity scope needed for this Activity.
@@ -87,21 +136,6 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Initialize nav drawer menu items.
      */
     protected abstract void initNavDrawerItems();
-
-    private ActionBar mActionBar = null;
-
-    // Primary toolbar and drawer toggle
-    private Toolbar mActionBarToolbar;
-
-    public BaseActivity(int layout, int menu, int drawerLayoutId) {
-        mLayout = layout;
-        mMenu = menu;
-        mDrawerLayoutId = drawerLayoutId;
-    }
-
-    public BaseActivity(int layout, int menu) {
-        this(layout, menu, 0);
-    }
 
     /**
      * Method used to resolve dependencies provided by Dagger modules. Inject an object to provide
@@ -148,7 +182,38 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        initNavDrawerItems();
+        if (mActionBarToolbar != null) {
+            mActionBarToolbar.setNavigationOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDrawerLayout.openDrawer(Gravity.START);
+                }
+            });
+        }
+
+        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                onNavDrawerSlide(slideOffset);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                onNavDrawerStateChanged(true, false);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                onNavDrawerStateChanged(false, false);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                onNavDrawerStateChanged(isNavDrawerOpen(), newState != DrawerLayout.STATE_IDLE);
+            }
+        });
+
+        createNavDrawerItems();
     }
 
     @Override
@@ -166,15 +231,32 @@ public abstract class BaseActivity extends ActionBarActivity {
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setHomeButtonEnabled(true);
         }
-
-        createNavDrawer();
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        createNavDrawer();
+        setupAndShowLogin();
         if (mDrawerToggle != null) {
             mDrawerToggle.syncState();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (mDrawerToggle != null) {
+            mDrawerToggle.onConfigurationChanged(newConfig);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isNavDrawerOpen()) {
+            closeNavDrawer();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -189,6 +271,58 @@ public abstract class BaseActivity extends ActionBarActivity {
             mActionBar.setTitle(title);
         }
 
+    }
+
+    protected boolean isNavDrawerOpen() {
+        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(Gravity.START);
+    }
+
+    protected void closeNavDrawer() {
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(Gravity.START);
+        }
+    }
+
+    // Subclasses can override this for custom behavior
+    protected void onNavDrawerStateChanged(boolean isOpen, boolean isAnimating) {
+        //TODO: implement nav drawer state change
+    }
+
+    // Subclasses can override this for custom behavior upon nav drawer sliding
+    protected void onNavDrawerSlide(float offset) {
+    }
+
+    private void createNavDrawerItems() {
+        if (mDrawerItemsContainerId == 0) {
+            return;
+        }
+
+        mDrawerItemsContainer = (ViewGroup) findViewById(mDrawerItemsContainerId);
+
+        if (mDrawerItemsContainer != null) {
+            //Remove previous items
+            mDrawerItemsContainer.removeAllViews();
+            for (NavDrawerItem view : mNavDrawerItemViews) {
+                mDrawerItemsContainer.addView(view.getView());
+            }
+        }
+    }
+
+    public void setupAndShowLogin() {
+        mLoginLayout = findViewById(R.id.layout_user_login);
+        mUserProfileLayout = findViewById(R.id.layout_user_profile);
+
+        if( mLoginLayout == null ) {
+            return;
+        }
+        mLoginLayout.setVisibility(VISIBLE);
+        mUserProfileLayout.setVisibility(GONE);
+        mLoginLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showToast("Login clicked");
+            }
+        });
     }
 
     protected Toolbar getActionBarToolbar() {
@@ -315,7 +449,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param tag             The tag for the fragment
      */
     protected void addFragment(int containerViewId, Fragment fragment, String tag) {
-        FragmentTransaction fragmentTransaction = this.getFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(containerViewId, fragment, tag);
         fragmentTransaction.commit();
     }
@@ -328,7 +462,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param tag             The tag for the fragment
      */
     protected void replaceFragment(int containerViewId, Fragment fragment, String tag) {
-        FragmentTransaction fragmentTransaction = this.getFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(containerViewId, fragment, tag);
         fragmentTransaction.commit();
     }

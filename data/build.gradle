@@ -6,7 +6,6 @@ android {
     buildToolsVersion "21.0.2"
 
     defaultConfig {
-        applicationId "com.ushahidi.android.data"
         minSdkVersion 14
         targetSdkVersion 21
     }

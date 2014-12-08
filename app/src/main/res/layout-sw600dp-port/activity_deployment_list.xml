@@ -21,6 +21,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               tools:context=".ui.activity/DeploymentActivity">
+
     <include layout="@layout/toolbar_actionbar"/>
 
     <LinearLayout
