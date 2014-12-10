@@ -17,6 +17,8 @@
 
 package com.ushahidi.android.data.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import com.ushahidi.android.core.Entity;
 
 import java.util.Date;
@@ -28,22 +30,31 @@ import java.util.Date;
  */
 public class TagEntity extends Entity {
 
+    @SerializedName("id")
     private Long _id;
 
+    @SerializedName("parent")
     private Long mParentId;
 
+    @SerializedName("tag")
     private String mTag;
 
-    private String mSlug;
+    @SerializedName("color")
+    private String mColor;
 
+    @SerializedName("type")
     private Type mType;
 
+    @SerializedName("icon")
     private String mIcon;
 
+    @SerializedName("description")
     private String mDescription;
 
+    @SerializedName("priority")
     private int mPriority;
 
+    @SerializedName("created")
     private Date mCreated;
 
     public TagEntity() {
@@ -76,12 +87,12 @@ public class TagEntity extends Entity {
         mTag = tag;
     }
 
-    public String getSlug() {
-        return mSlug;
+    public String getColor() {
+        return mColor;
     }
 
-    public void setSlug(String slug) {
-        mSlug = slug;
+    public void setColor(String color) {
+        mColor = color;
     }
 
     public Type getType() {
@@ -130,7 +141,7 @@ public class TagEntity extends Entity {
                 "id=" + _id +
                 ", ParentId=" + mParentId +
                 ", Tag='" + mTag + '\'' +
-                ", Slug='" + mSlug + '\'' +
+                ", Color='" + mColor + '\'' +
                 ", Type='" + mType + '\'' +
                 ", Icon='" + mIcon + '\'' +
                 ", Description='" + mDescription + '\'' +

@@ -30,14 +30,14 @@ import java.util.List;
 public interface IPostRepository {
 
     /**
-     * Add a {@link com.ushahidi.android.core.entity.Post}.
+     * Add/Update a {@link com.ushahidi.android.core.entity.Post}.
      *
      * @param post         The Post to be saved.
      * @param postCallback A {@link PostAddCallback} used for notifying clients about
      *                           the status of the operation.
      * @author Ushahidi Team <team@ushahidi.com>
      */
-    void addPost(Post post, PostAddCallback postCallback);
+    void putPost(Post post, PostAddCallback postCallback);
 
     /**
      * Get a list of {@link com.ushahidi.android.core.entity.Post}.
@@ -48,6 +48,14 @@ public interface IPostRepository {
     void getPostList(PostListCallback postListCallback);
 
     /**
+     * Get a list of {@link com.ushahidi.android.core.entity.Post}.
+     *
+     * @param postListCallback A {@link PostListCallback} used for notifying clients
+     *                               about the status of the operation.
+     */
+    void getPostListViaApi(final PostListCallback postListCallback);
+
+    /**
      * Get an {@link com.ushahidi.android.core.entity.Post} by id.
      *
      * @param postId              The post id used for retrieving post data.
@@ -56,15 +64,6 @@ public interface IPostRepository {
      */
     void getPostById(final long postId,
             PostDetailsCallback postDetailsCallback);
-
-    /**
-     * Update a {@link com.ushahidi.android.core.entity.Post}
-     *
-     * @param post     The Post to be deleted
-     * @param callback A {@link PostUpdateCallback} for notifying clients about post updates
-     *                 status.
-     */
-    void updatePost(Post post, PostUpdateCallback callback);
 
     /**
      * Delete a {@link com.ushahidi.android.core.entity.Post}
@@ -106,17 +105,6 @@ public interface IPostRepository {
         void onPostLoaded(Post post);
 
         void onError(ErrorWrap errorWrap);
-    }
-
-    /**
-     * Callback used for notifying the client when either a post has been updated or failed to be
-     * updated.
-     */
-    interface PostUpdateCallback {
-
-        void onPostUpdated();
-
-        void onError(ErrorWrap error);
     }
 
     /**

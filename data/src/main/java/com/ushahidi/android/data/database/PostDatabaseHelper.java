@@ -146,7 +146,7 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
                     db = getWritableDatabase();
                     db.beginTransaction();
                     for (PostEntity postEntity : postEntities) {
-                        cupboard().withDatabase(db).put(postEntity);
+                        cupboard().withDatabase(db).put(postEntities);
                     }
                     db.setTransactionSuccessful();
                     callback.onPostEntityPut();

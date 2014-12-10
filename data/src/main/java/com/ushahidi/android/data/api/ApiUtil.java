@@ -15,37 +15,21 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.module;
-
-import com.ushahidi.android.UshahidiApplication;
+package com.ushahidi.android.data.api;
 
 import android.content.Context;
-
-import dagger.Module;
-import dagger.Provides;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 /**
- * This module provides every application scope dependencies related with the AndroidSDK.
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Module(
-        includes = {
-                DataModule.class
-        },
-        injects = {
-                UshahidiApplication.class
-        }, library = true)
-public final class UshahidiModule {
+public class ApiUtil {
 
-    private final Context mContext;
-
-    public UshahidiModule(Context context) {
-        mContext = context;
-    }
-
-    @Provides
-    Context provideApplicationContext() {
-        return mContext;
+    public static boolean isDeviceConnectedToInternet(Context context) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnectedOrConnecting());
     }
 }

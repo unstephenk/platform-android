@@ -52,7 +52,7 @@ public class TagEntityMapper {
             tag.setCreated(tagEntity.getCreated());
             tag.setIcon(tagEntity.getIcon());
             tag.setParentId(tagEntity.getParentId());
-            tag.setSlug(tagEntity.getSlug());
+            tag.setSlug(tagEntity.getColor());
             tag.setType(Tag.Type.valueOf(tagEntity.getType().name()));
             tag.setTag(tagEntity.getTag());
         }
@@ -72,7 +72,7 @@ public class TagEntityMapper {
             tagEntity.setCreated(tag.getCreated());
             tagEntity.setIcon(tag.getIcon());
             tagEntity.setTag(tag.getTag());
-            tagEntity.setSlug(tag.getSlug());
+            tagEntity.setColor(tag.getSlug());
             tagEntity.setType(TagEntity.Type.valueOf(tag.getType().name()));
         }
         return tagEntity;

@@ -69,7 +69,7 @@ public class TagEntityTest extends BaseTestCase {
         mTagEntity.setCreated(DUMMY_DATE);
         mTagEntity.setParentId(DUMMY_PARENT);
         mTagEntity.setType(DUMMY_TYPE);
-        mTagEntity.setSlug(DUMMY_SLUG);
+        mTagEntity.setColor(DUMMY_SLUG);
         mTagEntity.setTag(DUMMY_TAG);
 
         assertThat(mTagEntity, is(instanceOf(TagEntity.class)));
@@ -80,7 +80,7 @@ public class TagEntityTest extends BaseTestCase {
         assertThat(mTagEntity.getParentId(), is(DUMMY_PARENT));
         assertThat(mTagEntity.getPriority(), is(DUMMY_PRIORITY));
         assertThat(mTagEntity.getType(), is(DUMMY_TYPE));
-        assertThat(mTagEntity.getSlug(), is(DUMMY_SLUG));
+        assertThat(mTagEntity.getColor(), is(DUMMY_SLUG));
         assertThat(mTagEntity.getTag(), is(DUMMY_TAG));
     }
 }

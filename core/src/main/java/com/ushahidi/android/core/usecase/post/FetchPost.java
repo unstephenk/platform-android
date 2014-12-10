@@ -26,19 +26,15 @@ import com.ushahidi.android.core.task.ThreadExecutor;
 import java.util.List;
 
 /**
- * Implements {@link IListPost} that fetches posts
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class ListPost implements IListPost {
+public class FetchPost implements IFetchPost {
 
     private final IPostRepository mIPostRepository;
 
     private final ThreadExecutor mThreadExecutor;
 
     private final PostExecutionThread mPostExecutionThread;
-
-    private Callback mCallback;
 
     private final IPostRepository.PostListCallback mRepositoryCallback =
             new IPostRepository.PostListCallback() {
@@ -54,6 +50,8 @@ public class ListPost implements IListPost {
                 }
             };
 
+    private IFetchPost.Callback mCallback;
+
     /**
      * Default constructor.
      *
@@ -64,7 +62,7 @@ public class ListPost implements IListPost {
      * @param postExecutionThread {@link PostExecutionThread} used to post updates when the use case
      *                            has been executed.
      */
-    public ListPost(IPostRepository postRepository, ThreadExecutor threadExecutor,
+    public FetchPost(IPostRepository postRepository, ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
         if (postRepository == null || threadExecutor == null || postExecutionThread == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
@@ -75,7 +73,7 @@ public class ListPost implements IListPost {
     }
 
     @Override
-    public void execute(Callback callback) {
+    public void execute(IFetchPost.Callback callback) {
         if (callback == null) {
             throw new IllegalArgumentException("Callback cannot be null!!!");
         }
@@ -85,14 +83,14 @@ public class ListPost implements IListPost {
 
     @Override
     public void run() {
-        mIPostRepository.getPostList(mRepositoryCallback);
+        mIPostRepository.getPostListViaApi(mRepositoryCallback);
     }
 
     private void notifySuccess(final List<Post> postList) {
         mPostExecutionThread.post(new Runnable() {
             @Override
             public void run() {
-                mCallback.onPostListLoaded(postList);
+                mCallback.onPostFetched(postList);
             }
         });
     }
@@ -105,4 +103,5 @@ public class ListPost implements IListPost {
             }
         });
     }
+
 }

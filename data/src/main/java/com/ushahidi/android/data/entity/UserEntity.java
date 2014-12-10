@@ -17,6 +17,8 @@
 
 package com.ushahidi.android.data.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import com.ushahidi.android.data.Entity;
 
 import java.util.Date;
@@ -28,20 +30,27 @@ import java.util.Date;
  */
 public class UserEntity extends Entity {
 
+    @SerializedName("id")
     private Long _id;
 
+    @SerializedName("email")
     private String mEmail;
 
+    @SerializedName("real_name")
     private String mRealName;
 
+    @SerializedName("username")
     private String mUsername;
 
+    @SerializedName("role")
     private Role mRole;
 
     private long mDeployment;
 
+    @SerializedName("created")
     private Date mCreated;
 
+    @SerializedName("updated")
     private Date mUpdated;
 
     public Long getId() {

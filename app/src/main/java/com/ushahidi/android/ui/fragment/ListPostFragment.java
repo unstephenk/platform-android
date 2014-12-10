@@ -18,6 +18,7 @@
 package com.ushahidi.android.ui.fragment;
 
 import com.ushahidi.android.R;
+import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
 import com.ushahidi.android.model.PostModel;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
@@ -50,6 +51,9 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
     ListPost mListPost;
 
     @Inject
+    FetchPost mFetchPost;
+
+    @Inject
     PostModelDataMapper mPostModelDataMapper;
 
     @InjectView(android.R.id.empty)
@@ -68,7 +72,6 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mPostListPresenter.init();
-
         initRecyclerView();
     }
 
@@ -94,7 +97,7 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
 
     @Override
     void initPresenter() {
-        mPostListPresenter = new ListPostPresenter(this, mListPost,
+        mPostListPresenter = new ListPostPresenter(this, mListPost, mFetchPost,
                 mPostModelDataMapper);
     }
 

@@ -15,37 +15,33 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.module;
+package com.ushahidi.android.data.api;
 
-import com.ushahidi.android.UshahidiApplication;
+import com.ushahidi.android.data.entity.PostEntity;
 
-import android.content.Context;
-
-import dagger.Module;
-import dagger.Provides;
+import java.util.List;
 
 /**
- * This module provides every application scope dependencies related with the AndroidSDK.
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Module(
-        includes = {
-                DataModule.class
-        },
-        injects = {
-                UshahidiApplication.class
-        }, library = true)
-public final class UshahidiModule {
+public interface IPostApi {
 
-    private final Context mContext;
+    /**
+     * Get a list of {@link com.ushahidi.android.core.entity.Post}.
+     *
+     * @param postEntityListCallback A {@link PostEntityListCallback} used for notifying clients about the
+     *                         status of the operation.
+     */
+    void getPostEntityList(PostEntityListCallback postEntityListCallback);
 
-    public UshahidiModule(Context context) {
-        mContext = context;
-    }
+    /**
+     * Callback used for notifying the client when either a post list has been loaded successfully
+     * or an error occurred during the process.
+     */
+    interface PostEntityListCallback {
 
-    @Provides
-    Context provideApplicationContext() {
-        return mContext;
+        void onPostEntityListLoaded(List<PostEntity> postEntityList);
+
+        void onError(Exception e);
     }
 }

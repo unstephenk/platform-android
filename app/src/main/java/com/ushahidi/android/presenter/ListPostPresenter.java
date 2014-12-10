@@ -21,11 +21,14 @@ import com.google.common.base.Preconditions;
 
 import com.ushahidi.android.core.entity.Post;
 import com.ushahidi.android.core.exception.ErrorWrap;
+import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.PostModel;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
 import com.ushahidi.android.ui.view.IPostListView;
+
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -43,6 +46,8 @@ public class ListPostPresenter implements IPresenter {
 
     private final ListPost mListPost;
 
+    private final FetchPost mFetchPost;
+
     private final ListPost.Callback mListCallback = new ListPost.Callback() {
 
         @Override
@@ -59,21 +64,36 @@ public class ListPostPresenter implements IPresenter {
         }
     };
 
+    private final FetchPost.Callback mCallback = new FetchPost.Callback() {
+
+        @Override
+        public void onPostFetched(List<Post> listPost) {
+            showPostsListInView(listPost);
+            hideViewLoading();
+        }
+
+        @Override
+        public void onError(ErrorWrap error) {
+            hideViewLoading();
+            showErrorMessage(error);
+            showViewRetry();
+        }
+    };
+
     public ListPostPresenter(IPostListView postListView,
             ListPost listPost,
+            FetchPost fetchPost,
             PostModelDataMapper postModelDataMapper) {
-        Preconditions.checkNotNull(postListView, "Post list view cannot be null");
-        Preconditions.checkNotNull(listPost, "ListPost cannot be null");
-        Preconditions.checkNotNull(postModelDataMapper, "PostModelDataMapper cannot be null");
-
-        mListPost = listPost;
-        mIPostListView = postListView;
-        mPostModelDataMapper = postModelDataMapper;
+        mIPostListView = Preconditions.checkNotNull(postListView, "Post list view cannot be null");
+        mListPost = Preconditions.checkNotNull(listPost, "ListPost cannot be null");
+        mFetchPost = Preconditions.checkNotNull(fetchPost, "Fetch Post listing");
+        mPostModelDataMapper = Preconditions
+                .checkNotNull(postModelDataMapper, "PostModelDataMapper cannot be null");
     }
 
     @Override
     public void resume() {
-        // DO nothing
+        fetchPost();
     }
 
     @Override
@@ -129,5 +149,9 @@ public class ListPostPresenter implements IPresenter {
 
     private void getPostList() {
         mListPost.execute(mListCallback);
+    }
+
+    public void fetchPost() {
+        mFetchPost.execute(mCallback);
     }
 }

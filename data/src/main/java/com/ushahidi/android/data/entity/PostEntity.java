@@ -17,6 +17,8 @@
 
 package com.ushahidi.android.data.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import com.ushahidi.android.data.Entity;
 
 import java.util.Date;
@@ -29,32 +31,46 @@ import java.util.List;
  */
 public class PostEntity extends Entity {
 
+    @SerializedName("id")
     private Long _id;
 
+    @SerializedName("parent")
     private long mParent;
 
+    @SerializedName("user")
     private UserEntity mUser;
 
+    @SerializedName("type")
     private String mType;
 
+    @SerializedName("title")
     private String mTitle;
 
+    @SerializedName("slug")
     private String mSlug;
 
+    @SerializedName("content")
     private String mContent;
 
+    @SerializedName("author_email")
     private String mAuthorEmail;
 
+    @SerializedName("author_realname")
     private String mAuthorRealname;
 
+    @SerializedName("status")
     private String mStatus;
 
+    @SerializedName("created")
     private Date mCreated;
 
+    @SerializedName("updated")
     private Date mUpdated;
 
+    @SerializedName("values")
     private String mValues;
 
+    @SerializedName("tags")
     private transient List<TagEntity> mTags;
 
     @Override

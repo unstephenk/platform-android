@@ -22,13 +22,16 @@ import com.ushahidi.android.core.respository.IPostRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
+import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
+import com.ushahidi.android.data.api.service.PostService;
 import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
 import com.ushahidi.android.data.database.PostDatabaseHelper;
 import com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper;
 import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
 import com.ushahidi.android.data.repository.DeploymentDataRepository;
 import com.ushahidi.android.data.repository.PostDataRepository;
+import com.ushahidi.android.data.repository.datasource.PostDataSourceFactory;
 import com.ushahidi.android.data.task.TaskExecutor;
 import com.ushahidi.android.data.validator.UrlValidator;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
@@ -55,7 +58,7 @@ public final class PostUiModule {
 
 
     @Provides
-    ListPost providesListPost(Context context) {
+    ListPost providesListPost(Context context, PostService postService) {
 
         ThreadExecutor threadExecutor = TaskExecutor.getInstance();
         PostExecutionThread postExecutionThread = UiThread.getInstance();
@@ -65,10 +68,37 @@ public final class PostUiModule {
         PostDatabaseHelper postDatabaseHelper = PostDatabaseHelper
                 .getInstance(context,
                         threadExecutor);
+
+        PostDataSourceFactory dataSourceFactory = new PostDataSourceFactory(context,
+                postDatabaseHelper, postService);
+
         IPostRepository postRepository = PostDataRepository
-                .getInstance(postDatabaseHelper, entityMapper);
+                .getInstance(dataSourceFactory, entityMapper);
 
         return new ListPost(postRepository, threadExecutor,
+                postExecutionThread);
+
+    }
+
+    @Provides
+    FetchPost providesFetchPost(Context context, PostService postService) {
+
+        ThreadExecutor threadExecutor = TaskExecutor.getInstance();
+        PostExecutionThread postExecutionThread = UiThread.getInstance();
+
+        PostEntityMapper entityMapper = new PostEntityMapper();
+
+        PostDatabaseHelper postDatabaseHelper = PostDatabaseHelper
+                .getInstance(context,
+                        threadExecutor);
+
+        PostDataSourceFactory dataSourceFactory = new PostDataSourceFactory(context,
+                postDatabaseHelper, postService);
+
+        IPostRepository postRepository = PostDataRepository
+                .getInstance(dataSourceFactory, entityMapper);
+
+        return new FetchPost(postRepository, threadExecutor,
                 postExecutionThread);
 
     }

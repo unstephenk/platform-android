@@ -15,37 +15,31 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.module;
+package com.ushahidi.android.data.api;
 
-import com.ushahidi.android.UshahidiApplication;
+import com.ushahidi.android.data.api.qualifier.Bearer;
 
-import android.content.Context;
+import javax.inject.Inject;
 
-import dagger.Module;
-import dagger.Provides;
+import retrofit.RequestInterceptor;
 
 /**
- * This module provides every application scope dependencies related with the AndroidSDK.
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Module(
-        includes = {
-                DataModule.class
-        },
-        injects = {
-                UshahidiApplication.class
-        }, library = true)
-public final class UshahidiModule {
+public final class ApiHeader implements RequestInterceptor {
 
-    private final Context mContext;
+    private static final String AUTHORIZATION_BEARER = "Bearer";
 
-    public UshahidiModule(Context context) {
-        mContext = context;
+    private final String authorizationValue;
+
+    @Inject
+    public ApiHeader(@Bearer String bearer) {
+        authorizationValue = AUTHORIZATION_BEARER + " " + bearer;
     }
 
-    @Provides
-    Context provideApplicationContext() {
-        return mContext;
+    @Override
+    public void intercept(RequestFacade request) {
+        request.addHeader("Accept", "application/json");
+        request.addHeader("Authorization", authorizationValue);
     }
 }

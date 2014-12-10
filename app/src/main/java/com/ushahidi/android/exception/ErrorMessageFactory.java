@@ -25,6 +25,8 @@ import com.ushahidi.android.data.exception.ValidationException;
 
 import android.content.Context;
 
+import retrofit.RetrofitError;
+
 /**
  * Error message factory. Creates relevant error messages
  *
@@ -52,6 +54,8 @@ public class ErrorMessageFactory {
         } else if (exception instanceof AddDeploymentException) {
             message = context.getString(R.string.exception_message_deployment_not_added);
         } else if (exception instanceof ValidationException) {
+            message = exception.getMessage();
+        } else if (exception instanceof RetrofitError) {
             message = exception.getMessage();
         }
 

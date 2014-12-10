@@ -17,6 +17,7 @@
 
 package com.ushahidi.android.test.presenter;
 
+import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
 import com.ushahidi.android.presenter.ListPostPresenter;
@@ -54,19 +55,22 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
     @Mock
     private ListPost mMockListPost;
 
+    @Mock
+    private FetchPost mMockFetchPost;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         MockitoAnnotations.initMocks(this);
 
         mPostListPresenter = new ListPostPresenter(mMockIPostListView,
-                mMockListPost, mMockPostModelDataMapper);
+                mMockListPost, mMockFetchPost, mMockPostModelDataMapper);
     }
 
     public void testInitializingPostListPresenterWithNullValues() {
         final String expectedMessage = "Post list view cannot be null";
         try {
-            new ListPostPresenter(null, null, null);
+            new ListPostPresenter(null, null, null, null);
         } catch (NullPointerException e) {
             assertEquals(expectedMessage, e.getMessage());
         }

@@ -15,37 +15,34 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.module;
+package com.ushahidi.android.data.api.model;
 
-import com.ushahidi.android.UshahidiApplication;
+import com.google.gson.annotations.SerializedName;
 
-import android.content.Context;
+import com.ushahidi.android.data.entity.PostEntity;
 
-import dagger.Module;
-import dagger.Provides;
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * This module provides every application scope dependencies related with the AndroidSDK.
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Module(
-        includes = {
-                DataModule.class
-        },
-        injects = {
-                UshahidiApplication.class
-        }, library = true)
-public final class UshahidiModule {
+public class Posts extends Response implements Serializable {
 
-    private final Context mContext;
+    private static final long serialVersionUID = -1380430061677564230L;
 
-    public UshahidiModule(Context context) {
-        mContext = context;
+    @SerializedName("results")
+    private List<PostEntity> posts;
+
+    public List<PostEntity> getPosts() {
+        return posts;
     }
 
-    @Provides
-    Context provideApplicationContext() {
-        return mContext;
+    @Override
+    public String toString() {
+        return "Posts{" +
+                "response=" + super.toString() +
+                "posts=" + posts +
+                '}';
     }
 }

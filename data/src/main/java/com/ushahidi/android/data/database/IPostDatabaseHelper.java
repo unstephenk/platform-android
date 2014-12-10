@@ -44,7 +44,7 @@ public interface IPostDatabaseHelper {
     /**
      * Gets a post from the database using a {@link IPostEntityCallback}.
      *
-     * @param id       The user id to retrieve data.
+     * @param id       The post id to retrieve data.
      * @param callback The {@link IPostEntityCallback} to notify the client.
      */
     public void get(final long id, final IPostEntityCallback callback);
@@ -90,7 +90,7 @@ public interface IPostDatabaseHelper {
      */
     public interface IPostEntityCallback {
 
-        void onPostEntityLoaded(PostEntity userEntity);
+        void onPostEntityLoaded(PostEntity postEntity);
 
         void onError(Exception exception);
     }

@@ -78,7 +78,7 @@ public class TagEntityMapperTest extends BaseTestCase {
         mTagEntity.setCreated(DUMMY_DATE);
         mTagEntity.setParentId(DUMMY_PARENT);
         mTagEntity.setTag(DUMMY_TAG);
-        mTagEntity.setSlug(DUMMY_SLUG);
+        mTagEntity.setColor(DUMMY_SLUG);
         mTagEntity.setType(DUMMY_TAG_ENTITY_TYPE);
 
         Tag tag = mTagEntityMapper.map(mTagEntity);
@@ -117,7 +117,7 @@ public class TagEntityMapperTest extends BaseTestCase {
         assertThat(tagEntity.getCreated(), is(DUMMY_DATE));
         assertThat(tagEntity.getParentId(), is(DUMMY_PARENT));
         assertThat(tagEntity.getPriority(), is(DUMMY_PRIORITY));
-        assertThat(tagEntity.getSlug(), is(DUMMY_SLUG));
+        assertThat(tagEntity.getColor(), is(DUMMY_SLUG));
         assertThat(tagEntity.getTag(), is(DUMMY_TAG));
         assertThat(tagEntity.getType(), is(DUMMY_TAG_ENTITY_TYPE));
     }

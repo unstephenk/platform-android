@@ -17,6 +17,8 @@
 
 package com.ushahidi.android.data.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import com.ushahidi.android.core.Entity;
 import com.ushahidi.android.core.entity.User;
 
@@ -27,18 +29,25 @@ import java.util.Date;
  */
 public class MediaEntity extends Entity {
 
+    @SerializedName("id")
     private Long _id;
 
+    @SerializedName("user")
     private UserEntity mUser;
 
+    @SerializedName("caption")
     private String mCaption;
 
+    @SerializedName("mime")
     private String mMime;
 
+    @SerializedName("original_file_url")
     private String mOriginalFileUrl;
 
+    @SerializedName("created")
     private Date mCreated;
 
+    @SerializedName("updated")
     private Date mUpdated;
 
     public MediaEntity() {

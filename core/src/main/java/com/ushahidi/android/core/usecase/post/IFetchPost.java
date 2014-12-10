@@ -15,37 +15,34 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.module;
+package com.ushahidi.android.core.usecase.post;
 
-import com.ushahidi.android.UshahidiApplication;
+import com.ushahidi.android.core.entity.Post;
+import com.ushahidi.android.core.exception.ErrorWrap;
+import com.ushahidi.android.core.usecase.IInteractor;
 
-import android.content.Context;
-
-import dagger.Module;
-import dagger.Provides;
+import java.util.List;
 
 /**
- * This module provides every application scope dependencies related with the AndroidSDK.
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Module(
-        includes = {
-                DataModule.class
-        },
-        injects = {
-                UshahidiApplication.class
-        }, library = true)
-public final class UshahidiModule {
+public interface IFetchPost extends IInteractor {
 
-    private final Context mContext;
+    /**
+     * Executes this use case.
+     *
+     * @param callback A {@link IListPost.Callback} used to notify the client.
+     */
+    void execute(Callback callback);
 
-    public UshahidiModule(Context context) {
-        mContext = context;
-    }
+    /**
+     * Notify client when a list of posts are successfully loaded or an error occurred in the
+     * process.
+     */
+    interface Callback {
 
-    @Provides
-    Context provideApplicationContext() {
-        return mContext;
+        void onPostFetched(List<Post> listPost);
+
+        void onError(ErrorWrap error);
     }
 }

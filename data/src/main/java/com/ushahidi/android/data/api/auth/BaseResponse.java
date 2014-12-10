@@ -15,37 +15,16 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.module;
-
-import com.ushahidi.android.UshahidiApplication;
-
-import android.content.Context;
-
-import dagger.Module;
-import dagger.Provides;
+package com.ushahidi.android.data.api.auth;
 
 /**
- * This module provides every application scope dependencies related with the AndroidSDK.
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Module(
-        includes = {
-                DataModule.class
-        },
-        injects = {
-                UshahidiApplication.class
-        }, library = true)
-public final class UshahidiModule {
+public abstract class BaseResponse {
 
-    private final Context mContext;
+    private String error = null;
 
-    public UshahidiModule(Context context) {
-        mContext = context;
-    }
-
-    @Provides
-    Context provideApplicationContext() {
-        return mContext;
+    public String getError() {
+        return error;
     }
 }
