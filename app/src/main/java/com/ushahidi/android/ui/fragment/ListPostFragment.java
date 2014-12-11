@@ -69,13 +69,6 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mPostListPresenter.init();
-        initRecyclerView();
-    }
-
-    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (activity instanceof PostListListener) {
@@ -84,9 +77,19 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mPostListPresenter.init();
+        initRecyclerView();
+
+        // Calling this here because when called in the onResume method the activity doesn't
+        // attached in time and causing getActivity() to return a null value.
+        mPostListPresenter.resume();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        mPostListPresenter.resume();
     }
 
     @Override
