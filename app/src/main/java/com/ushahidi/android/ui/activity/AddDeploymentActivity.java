@@ -41,7 +41,7 @@ public class AddDeploymentActivity extends BaseActivity implements
 
     @Override
     protected List<Object> getModules() {
-        List<Object> modules = new LinkedList<Object>();
+        List<Object> modules = new LinkedList<>();
         modules.add(new DeploymentUiModule());
         return modules;
     }

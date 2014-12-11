@@ -320,7 +320,8 @@ public abstract class BaseActivity extends ActionBarActivity{
         mLoginLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                showToast("Login clicked");
+                launcher.launchLogin();
+                closeNavDrawer();
             }
         });
     }
@@ -339,9 +340,8 @@ public abstract class BaseActivity extends ActionBarActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         if (mMenu != 0) {
             getMenuInflater().inflate(mMenu, menu);
-            return true;
         }
-        return false;
+        return true;
     }
 
     @Override

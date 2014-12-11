@@ -74,5 +74,11 @@
     <string name="send_feedback">Send feedback</string>
     <string name="settings">Settings</string>
     <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="prompt_login">Select A Deployment To Login to</string>
     <string name="empty_post_list">No post has been added. Pull down to fetch new posts.</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="email_address">Email address</string>
+    <string name="select_deployment">Select A Deployment</string>
 </resources>

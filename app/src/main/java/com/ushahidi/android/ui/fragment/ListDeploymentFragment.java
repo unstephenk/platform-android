@@ -96,7 +96,7 @@ public class ListDeploymentFragment
 
     private InteractiveToast mInteractiveToast;
 
-    GestureDetectorCompat mGestureDetector;
+    private GestureDetectorCompat mGestureDetector;
 
     private SwipeDismissRecyclerViewTouchListener mListViewTouchListener;
 

@@ -65,11 +65,13 @@ public class ActivityLauncher {
     }
 
     /**
-     * Launches Add deployment activity for adding a new deployment
+     * Launches loging activity
      */
-    public void launchPosts() {
-        final Intent intent = PostActivity.getIntent(mContext);
+    public void launchLogin() {
+        final Intent intent = LoginActivity.getIntent(mContext);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }
+
+
 }

@@ -50,9 +50,9 @@ public class DeploymentActivity extends BaseActivity
 
     private ListDeploymentFragment mListDeploymentFragment;
 
-    SearchView mSearchView = null;
+    private SearchView mSearchView = null;
 
-    String mQuery = "";
+    private String mQuery = "";
 
     public DeploymentActivity() {
         super(R.layout.activity_deployment_list, R.menu.list_deployment);
