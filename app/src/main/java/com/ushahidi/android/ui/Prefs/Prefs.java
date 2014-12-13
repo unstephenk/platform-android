@@ -15,38 +15,36 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.module;
+package com.ushahidi.android.ui.Prefs;
 
-import com.ushahidi.android.UshahidiApplication;
+import com.ushahidi.android.data.Pref.StringPreference;
 
-import android.content.Context;
+import android.content.SharedPreferences;
 
-import dagger.Module;
-import dagger.Provides;
+import javax.inject.Inject;
 
 /**
- * This module provides every application scope dependencies related with the AndroidSDK.
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Module(
-        includes = {
-                DataModule.class,
-                ExecutorModule.class
-        },
-        injects = {
-                UshahidiApplication.class
-        }, library = true)
-public final class UshahidiModule {
+public class Prefs {
 
-    private final Context mContext;
+    private SharedPreferences mSharedPreferences;
 
-    public UshahidiModule(Context context) {
-        mContext = context;
+    @Inject
+    public Prefs(SharedPreferences sharedPreferences) {
+        mSharedPreferences = sharedPreferences;
     }
 
-    @Provides
-    Context provideApplicationContext() {
-        return mContext;
+    public StringPreference getActiveDeploymentUrl() {
+        return new StringPreference(getSharedPreferences(), "active_deployment_url", null);
     }
+
+    public StringPreference getActiveDeploymentTitle() {
+        return new StringPreference(getSharedPreferences(), "active_deployment_title", null);
+    }
+
+    public SharedPreferences getSharedPreferences() {
+        return mSharedPreferences;
+    }
+
 }

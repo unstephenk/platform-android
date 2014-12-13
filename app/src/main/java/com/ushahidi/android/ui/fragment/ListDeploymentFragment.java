@@ -26,6 +26,7 @@ import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
 import com.ushahidi.android.presenter.DeploymentListPresenter;
+import com.ushahidi.android.ui.Prefs.Prefs;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
 import com.ushahidi.android.ui.listener.SwipeDismissRecyclerViewTouchListener;
 import com.ushahidi.android.ui.view.IDeleteDeploymentView;
@@ -81,6 +82,10 @@ public class ListDeploymentFragment
 
     @InjectView(android.R.id.empty)
     TextView mEmptyView;
+
+    @Inject
+    Prefs mPrefs;
+
 
     private static final String INTERACTIVE_TOAST_BUNDLE_KEY = "selected_items";
 
@@ -321,6 +326,11 @@ public class ListDeploymentFragment
                                                 if (!items.isEmpty()) {
 
                                                     for (DeploymentParcelable deploymentModel : items) {
+                                                        if(deploymentModel.getDeploymentModel().getStatus() ==
+                                                                DeploymentModel.Status.ACTIVATED) {
+                                                            mPrefs.getActiveDeploymentUrl().delete();
+                                                            mPrefs.getActiveDeploymentTitle().delete();
+                                                        }
                                                         mDeleteDeploymentPresenter
                                                                 .deleteDeployment(deploymentModel
                                                                         .getDeploymentModel());

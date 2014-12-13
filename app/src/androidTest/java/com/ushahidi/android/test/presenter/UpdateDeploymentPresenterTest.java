@@ -48,7 +48,7 @@ public class UpdateDeploymentPresenterTest extends CustomAndroidTestCase {
 
     private static final String DUMMY_TITLE = "Dummy Deployment Title";
 
-    private static final int DUMMY_STATUS = 0;
+    private static final DeploymentModel.Status DUMMY_STATUS = DeploymentModel.Status.DEACTIVATED;
 
     private static final String DUMMY_URL = "http://deployment.com";
 

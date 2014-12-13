@@ -44,13 +44,13 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textStyle="bold"
             android:textSize="14sp"
-            android:layout_alignTop="@+id/active"
+            android:layout_alignTop="@+id/status"
             android:layout_toRightOf="@+id/icon"
             android:layout_toEndOf="@+id/icon"
             />
 
     <ImageView
-            android:id="@+id/active"
+            android:id="@+id/status"
             android:layout_height="24dp"
             android:layout_width="24dp"
             android:src="@drawable/ic_action_active_item"

@@ -17,36 +17,36 @@
 
 package com.ushahidi.android.module;
 
-import com.ushahidi.android.UshahidiApplication;
+import com.ushahidi.android.core.task.PostExecutionThread;
+import com.ushahidi.android.core.task.ThreadExecutor;
+import com.ushahidi.android.data.task.TaskExecutor;
+import com.ushahidi.android.ui.UiThread;
 
-import android.content.Context;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 
 /**
- * This module provides every application scope dependencies related with the AndroidSDK.
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 @Module(
-        includes = {
-                DataModule.class,
-                ExecutorModule.class
-        },
-        injects = {
-                UshahidiApplication.class
-        }, library = true)
-public final class UshahidiModule {
+        complete = false,
+        library = true
+)
+public class ExecutorModule {
 
-    private final Context mContext;
-
-    public UshahidiModule(Context context) {
-        mContext = context;
+    @Provides
+    @Singleton
+    ThreadExecutor providesThreadExecutor() {
+        return TaskExecutor.getInstance();
     }
 
     @Provides
-    Context provideApplicationContext() {
-        return mContext;
+    @Singleton
+    PostExecutionThread providesPostExecutionThread() {
+        return UiThread.getInstance();
     }
+
+
 }

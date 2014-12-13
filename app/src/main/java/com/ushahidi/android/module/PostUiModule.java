@@ -21,6 +21,7 @@ import com.ushahidi.android.core.respository.IDeploymentRepository;
 import com.ushahidi.android.core.respository.IPostRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
+import com.ushahidi.android.core.usecase.deployment.ActivateDeployment;
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
@@ -39,8 +40,12 @@ import com.ushahidi.android.model.mapper.PostModelDataMapper;
 import com.ushahidi.android.ui.UiThread;
 import com.ushahidi.android.ui.activity.PostActivity;
 import com.ushahidi.android.ui.fragment.ListPostFragment;
+import com.ushahidi.android.ui.view.ActivateDeploymentView;
+import com.ushahidi.android.ui.view.IActivateDeploymentView;
 
 import android.content.Context;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -55,7 +60,6 @@ import dagger.Provides;
         ListPostFragment.class, PostActivity.class
 })
 public final class PostUiModule {
-
 
     @Provides
     ListPost providesListPost(Context context, PostService postService) {
@@ -124,13 +128,46 @@ public final class PostUiModule {
     }
 
     @Provides
+    IDeploymentRepository providesIDeploymentRepository(Context context, ThreadExecutor threadExecutor ) {
+        UrlValidator urlValidator = new UrlValidator();
+        DeploymentEntityMapper entityMapper = new DeploymentEntityMapper();
+
+        DeploymentDatabaseHelper deploymentDatabaseHelper = DeploymentDatabaseHelper
+                .getInstance(context,
+                        threadExecutor);
+
+        return DeploymentDataRepository
+                .getInstance(deploymentDatabaseHelper, entityMapper, urlValidator);
+    }
+
+    @Provides
+    @Singleton
+    PostEntityMapper providesPostEntityMapper(){
+        return new PostEntityMapper();
+    }
+
+    @Provides
+    @Singleton
     PostModelDataMapper providesPostModelDataMapper() {
         return new PostModelDataMapper();
     }
 
     @Provides
+    @Singleton
     DeploymentModelDataMapper providesDeploymentModelDataMapper() {
         return new DeploymentModelDataMapper();
+    }
+
+    @Provides
+    IActivateDeploymentView providesActivateDeployment(Context context) {
+        return new ActivateDeploymentView(context);
+    }
+
+    @Provides
+    @Singleton
+    ActivateDeployment providesActivateDeployment(IDeploymentRepository deploymentRepository,
+            ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+        return new ActivateDeployment(deploymentRepository, threadExecutor, postExecutionThread);
     }
 
 }

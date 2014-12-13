@@ -39,7 +39,7 @@ public class DeploymentEntityTest extends BaseTestCase {
 
     private static final String DUMMY_TITLE = "Dummy Deployment Title";
 
-    private static final int DUMMY_STATUS = 0;
+    private static final DeploymentEntity.Status DUMMY_STATUS = DeploymentEntity.Status.DEACTIVATED;
 
     private static final String DUMMY_URL = "http://deployment.com";
 

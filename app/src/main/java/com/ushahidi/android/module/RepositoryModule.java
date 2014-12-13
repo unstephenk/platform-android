@@ -17,36 +17,15 @@
 
 package com.ushahidi.android.module;
 
-import com.ushahidi.android.UshahidiApplication;
-
-import android.content.Context;
-
 import dagger.Module;
-import dagger.Provides;
 
 /**
- * This module provides every application scope dependencies related with the AndroidSDK.
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 @Module(
-        includes = {
-                DataModule.class,
-                ExecutorModule.class
-        },
-        injects = {
-                UshahidiApplication.class
-        }, library = true)
-public final class UshahidiModule {
+        complete = false,
+        library = true
+)
+public class RepositoryModule {
 
-    private final Context mContext;
-
-    public UshahidiModule(Context context) {
-        mContext = context;
-    }
-
-    @Provides
-    Context provideApplicationContext() {
-        return mContext;
-    }
 }

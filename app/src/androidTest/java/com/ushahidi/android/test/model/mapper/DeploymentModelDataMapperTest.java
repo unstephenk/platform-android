@@ -39,7 +39,9 @@ public class DeploymentModelDataMapperTest extends CustomAndroidTestCase {
 
     private static final String DUMMY_TITLE = "Dummy Deployment Title";
 
-    private static final int DUMMY_STATUS = 0;
+    private static final DeploymentModel.Status DUMMY_STATUS = DeploymentModel.Status.DEACTIVATED;
+
+    private static final Deployment.Status DEPLOYMENT_DUMMY_STATUS = Deployment.Status.DEACTIVATED;
 
     private static final String DUMMY_URL = "http://deployment.com";
 
@@ -53,7 +55,7 @@ public class DeploymentModelDataMapperTest extends CustomAndroidTestCase {
 
     public void testDeploymentMap() {
         Deployment deployment = new Deployment();
-        deployment.setStatus(DUMMY_STATUS);
+        deployment.setStatus(DEPLOYMENT_DUMMY_STATUS);
         deployment.setTitle(DUMMY_TITLE);
         deployment.setUrl(DUMMY_URL);
         deployment.setId(DUMMY_ID);
@@ -79,17 +81,25 @@ public class DeploymentModelDataMapperTest extends CustomAndroidTestCase {
         assertThat(deployment.getTitle()).isEqualTo(DUMMY_TITLE);
         assertThat(deployment.getUrl()).isEqualTo(DUMMY_URL);
         assertThat(deployment.getId()).isEqualTo(DUMMY_ID);
-        assertThat(deployment.getStatus()).isEqualTo(DUMMY_STATUS);
+        assertThat(deployment.getStatus()).isEqualTo(DEPLOYMENT_DUMMY_STATUS);
 
     }
 
     public void testDeploymentListMap() {
-        Deployment mockDeploymentOne = mock(Deployment.class);
-        Deployment mockDeploymentTwo = mock(Deployment.class);
+        Deployment deploymentOne =  new Deployment();
+        deploymentOne.setStatus(DEPLOYMENT_DUMMY_STATUS);
+        deploymentOne.setTitle(DUMMY_TITLE);
+        deploymentOne.setUrl(DUMMY_URL);
+        deploymentOne.setId(DUMMY_ID);
+        Deployment deploymentTwo = new Deployment();
+        deploymentTwo.setStatus(DEPLOYMENT_DUMMY_STATUS);
+        deploymentTwo.setTitle(DUMMY_TITLE);
+        deploymentTwo.setUrl(DUMMY_URL);
+        deploymentTwo.setId(DUMMY_ID);
 
         List<Deployment> deploymentList = new ArrayList<>();
-        deploymentList.add(mockDeploymentOne);
-        deploymentList.add(mockDeploymentTwo);
+        deploymentList.add(deploymentOne);
+        deploymentList.add(deploymentTwo);
 
         List<DeploymentModel> deploymentModelList = mDeploymentModelDataMapper.map(deploymentList);
 

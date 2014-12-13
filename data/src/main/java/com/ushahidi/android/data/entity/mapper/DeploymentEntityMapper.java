@@ -48,7 +48,7 @@ public class DeploymentEntityMapper {
         if (deploymentEntity != null) {
             deployment = new Deployment();
             deployment.setId(deploymentEntity.getId());
-            deployment.setStatus(deploymentEntity.getStatus());
+            deployment.setStatus(Deployment.Status.valueOf(deploymentEntity.getStatus().name()));
             deployment.setTitle(deploymentEntity.getTitle());
             deployment.setUrl(deploymentEntity.getUrl());
         }
@@ -63,7 +63,8 @@ public class DeploymentEntityMapper {
             deploymentEntity = new DeploymentEntity();
             deploymentEntity.setId(deployment.getId());
             deploymentEntity.setTitle(deployment.getTitle());
-            deploymentEntity.setStatus(deployment.getStatus());
+            deploymentEntity.setStatus(DeploymentEntity.Status.valueOf(
+                    deployment.getStatus().name()));
             deploymentEntity.setUrl(deployment.getUrl());
         }
         return deploymentEntity;

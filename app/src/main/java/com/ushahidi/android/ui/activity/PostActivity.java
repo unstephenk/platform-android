@@ -22,7 +22,9 @@ import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.module.PostUiModule;
+import com.ushahidi.android.presenter.ActivateDeploymentPresenter;
 import com.ushahidi.android.presenter.DeploymentNavPresenter;
+import com.ushahidi.android.ui.Prefs.Prefs;
 import com.ushahidi.android.ui.fragment.ListPostFragment;
 import com.ushahidi.android.ui.view.IDeploymentNavView;
 import com.ushahidi.android.ui.widget.NavDrawerItem;
@@ -58,6 +60,12 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     @Inject
     DeploymentModelDataMapper mDeploymentModelDataMapper;
 
+    @Inject
+    ActivateDeploymentPresenter mActivateDeploymentPresenter;
+
+    @Inject
+    Prefs mPrefs;
+
     private DeploymentNavPresenter mDeploymentNavPresenter;
 
     private SlidingTabLayout mSlidingTabStrip;
@@ -74,15 +82,12 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
         super(R.layout.activity_post, R.menu.post, R.id.drawer_layout, R.id.navdrawer_items_list);
     }
 
-    public static Intent getIntent(final Context context) {
-        return new Intent(context, PostActivity.class);
-    }
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //TODO Move these into dagger module so they get injected
         mDeploymentNavPresenter = new DeploymentNavPresenter(this, mListDeployment,
                 mDeploymentModelDataMapper);
-
         mTabTitle = new ArrayList<>();
         mTabTitle.add(getString(R.string.list));
         mTabTitle.add(getString(R.string.map));
@@ -118,7 +123,6 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     @Override
     public void onResume() {
         super.onResume();
-        mNavDrawerItemViews.clear();
         mDeploymentNavPresenter.resume();
         mSlidingTabStrip.getBackground().setAlpha(255);
     }
@@ -144,22 +148,20 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
     @Override
     protected void initNavDrawerItems() {
+
         mNavDrawerItemViews
-                .add(setNavDrawerItem(R.string.manage_deployments, R.drawable.ic_action_map, 3,
+                .add(setNavDrawerItem(R.string.manage_deployments, R.drawable.ic_action_map, 1,
                         DeploymentActivity.getIntent(this)));
 
         mNavDrawerItemViews
-                .add(setNavDrawerItem(R.string.settings, R.drawable.ic_action_settings, 4));
+                .add(setNavDrawerItem(R.string.settings, R.drawable.ic_action_settings, 2));
 
-        mNavDrawerItemViews.add(setNavDrawerItem(R.string.about, R.drawable.ic_action_info, 6));
+        mNavDrawerItemViews.add(setNavDrawerItem(R.string.about, R.drawable.ic_action_info, 3));
 
         mNavDrawerItemViews
-                .add(setNavDrawerItem(R.string.send_feedback, R.drawable.ic_action_help, 7));
-
-        // Select activity
-        mNavDrawerItemViews.get(0).setSelected(true);
-
+                .add(setNavDrawerItem(R.string.send_feedback, R.drawable.ic_action_help, 4));
         setFragments();
+        setTitle();
 
     }
 
@@ -192,21 +194,6 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     }
 
     private NavDrawerItem setNavDrawerItem(int titleResId, int iconId, int position,
-            Fragment fragment, String tag) {
-        return setNavDrawerItem(getResources().getString(titleResId), iconId, position, fragment,
-                tag);
-    }
-
-    private NavDrawerItem setNavDrawerItem(String title, int iconId, int position,
-            Fragment fragment, String tag) {
-
-        NavDrawerItem navDrawerItem = new NavDrawerItem(this, title,
-                iconId, position, fragment, R.id.swipe_refresh_layout, tag);
-        navDrawerItem.setOnClickListener(this);
-        return navDrawerItem;
-    }
-
-    private NavDrawerItem setNavDrawerItem(int titleResId, int iconId, int position,
             Intent intent) {
         return setNavDrawerItem(getResources().getString(titleResId), iconId, position, intent);
     }
@@ -220,7 +207,6 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
     @Override
     public void onNavDrawerItemClick(NavDrawerItem navDrawerItem) {
-
         final int position = navDrawerItem.getPosition();
         for (NavDrawerItem item : mNavDrawerItemViews) {
             if (position != item.getPosition()) {
@@ -233,17 +219,44 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
     @Override
     public void onNavDeploymentItemClick(NavDrawerItem navDrawerItem) {
-        //TODO: Implement the action to be taken when Deployment navDrawerItem is clicked
+        List<DeploymentModel> deploymentModels = mDeploymentNavPresenter.getDeployments();
+        mActivateDeploymentPresenter.getActivateDeploymentView().setDeploymentNavPresenter(
+                mDeploymentNavPresenter);
+
+        final int position = navDrawerItem.getPosition();
+        // Save into a shared preferences
+
+            mPrefs.getActiveDeploymentUrl().set(deploymentModels.get(position).getUrl());
+            mPrefs.getActiveDeploymentTitle().set(deploymentModels.get(position).getTitle());
+            setTitle();
+
+        mActivateDeploymentPresenter
+                .activateDeployment(deploymentModels, navDrawerItem.getPosition());
     }
 
     @Override
     public void renderDeploymentList(List<DeploymentModel> listDeploymentModel) {
+        mNavDrawerItemViews.clear();
         for (int i = 0; i < listDeploymentModel.size(); i++) {
             NavDrawerItem navDrawerItem = setNavDrawerItem(listDeploymentModel.get(i).getTitle(),
                     R.drawable.ic_action_globe, i, null);
-            navDrawerItem.setActive(listDeploymentModel.get(i).getStatus());
+            navDrawerItem.setNavDrawerItemId(listDeploymentModel.get(i).getId());
+            navDrawerItem.setStatus(listDeploymentModel.get(i).getStatus());
             navDrawerItem.setOnDeploymentClickListener(this);
+            if (listDeploymentModel.get(i).getStatus() == DeploymentModel.Status.ACTIVATED) {
+                navDrawerItem.setSelected(true);
+            } else {
+                navDrawerItem.setSelected(false);
+            }
+            navDrawerItem.markStatus();
             mNavDrawerItemViews.add(navDrawerItem);
+        }
+    }
+
+    public void setTitle() {
+        final String title = mPrefs.getActiveDeploymentTitle().get();
+        if(title !=null) {
+            setActionBarTitle(title);
         }
     }
 

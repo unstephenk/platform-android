@@ -29,9 +29,13 @@ public class Deployment extends Entity {
 
     private String mTitle;
 
-    private int mStatus;
+    private Status mStatus;
 
     private String mUrl;
+
+    public Deployment() {
+        mStatus = Status.DEACTIVATED;
+    }
 
     @Override
     public Long getId() {
@@ -51,11 +55,11 @@ public class Deployment extends Entity {
         mTitle = title;
     }
 
-    public int getStatus() {
+    public Status getStatus() {
         return mStatus;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         mStatus = status;
     }
 
@@ -75,5 +79,9 @@ public class Deployment extends Entity {
                 ", mStatus='" + mStatus + '\'' +
                 ", mUrl='" + mUrl + '\'' +
                 '}';
+    }
+
+    public enum Status {
+        ACTIVATED, DEACTIVATED;
     }
 }

@@ -17,6 +17,7 @@
 
 package com.ushahidi.android.model;
 
+
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
@@ -24,9 +25,13 @@ public class DeploymentModel extends Model {
 
     private String mTitle;
 
-    private int mStatus;
+    private Status mStatus;
 
     private String mUrl;
+
+    public DeploymentModel() {
+        mStatus = Status.DEACTIVATED;
+    }
 
     public String getTitle() {
         return mTitle;
@@ -36,11 +41,11 @@ public class DeploymentModel extends Model {
         mTitle = title;
     }
 
-    public int getStatus() {
+    public Status getStatus() {
         return mStatus;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         mStatus = status;
     }
 
@@ -60,5 +65,9 @@ public class DeploymentModel extends Model {
                 ", mStatus='" + mStatus + '\'' +
                 ", mUrl='" + mUrl + '\'' +
                 '}';
+    }
+
+    public enum Status {
+        ACTIVATED, DEACTIVATED;
     }
 }

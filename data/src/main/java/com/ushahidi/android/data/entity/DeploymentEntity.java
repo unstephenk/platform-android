@@ -28,12 +28,12 @@ public class DeploymentEntity extends Entity {
 
     private String mTitle;
 
-    private int mStatus;
+    private Status mStatus;
 
     private String mUrl;
 
     public DeploymentEntity() {
-
+        mStatus = Status.DEACTIVATED;
     }
 
     @Override
@@ -54,11 +54,11 @@ public class DeploymentEntity extends Entity {
         mTitle = title;
     }
 
-    public int getStatus() {
+    public Status getStatus() {
         return mStatus;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         mStatus = status;
     }
 
@@ -78,5 +78,9 @@ public class DeploymentEntity extends Entity {
                 ", mStatus='" + mStatus + '\'' +
                 ", mUrl='" + mUrl + '\'' +
                 '}';
+    }
+
+    public enum Status {
+        ACTIVATED, DEACTIVATED;
     }
 }

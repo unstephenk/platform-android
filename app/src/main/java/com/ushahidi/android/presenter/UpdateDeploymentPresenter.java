@@ -70,16 +70,6 @@ public class UpdateDeploymentPresenter implements IPresenter {
         }
     };
 
-    public void init(long deploymentId) {
-        mGetDeployment.execute(deploymentId, mGetDeploymentCallback);
-    }
-
-    private void initForm(Deployment deployment) {
-        final DeploymentModel deploymentModel = mDeploymentModelDataMapper.map(deployment);
-        mIUpdateDeploymentView.initForm(deploymentModel);
-    }
-
-
     public UpdateDeploymentPresenter(IUpdateDeploymentView updateDeploymentView,
             UpdateDeployment updateDeployment,
             GetDeployment getDeployment,
@@ -94,6 +84,15 @@ public class UpdateDeploymentPresenter implements IPresenter {
         mUpdateDeployment = updateDeployment;
         mDeploymentModelDataMapper = deploymentModelDataMapper;
 
+    }
+
+    public void init(long deploymentId) {
+        mGetDeployment.execute(deploymentId, mGetDeploymentCallback);
+    }
+
+    private void initForm(Deployment deployment) {
+        final DeploymentModel deploymentModel = mDeploymentModelDataMapper.map(deployment);
+        mIUpdateDeploymentView.initForm(deploymentModel);
     }
 
     @Override

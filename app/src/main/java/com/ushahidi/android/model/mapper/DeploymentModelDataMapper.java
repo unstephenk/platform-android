@@ -44,7 +44,7 @@ public class DeploymentModelDataMapper {
 
         DeploymentModel deploymentModel = new DeploymentModel();
         deploymentModel.setId(deployment.getId());
-        deploymentModel.setStatus(deployment.getStatus());
+        deploymentModel.setStatus(DeploymentModel.Status.valueOf(deployment.getStatus().name()));
         deploymentModel.setTitle(deployment.getTitle());
         deploymentModel.setUrl(deployment.getUrl());
         return deploymentModel;
@@ -65,7 +65,7 @@ public class DeploymentModelDataMapper {
 
         Deployment deployment = new Deployment();
         deployment.setTitle(deploymentModel.getTitle());
-        deployment.setStatus(deploymentModel.getStatus());
+        deployment.setStatus(Deployment.Status.valueOf(deploymentModel.getStatus().name()));
         deployment.setUrl(deploymentModel.getUrl());
         deployment.setId(deploymentModel.getId());
 
@@ -88,5 +88,23 @@ public class DeploymentModelDataMapper {
         }
 
         return deploymentModels;
+    }
+
+    /**
+     * Maps a list {@link DeploymentModel} into a list of {@link Deployment}.
+     *
+     * @param deploymentModels List to be unmapped.
+     * @return {@link DeploymentModel}
+     */
+    public List<Deployment> unmap(List<DeploymentModel> deploymentModels) {
+        List<Deployment> deploymentModelList = new ArrayList<>();
+
+        if (deploymentModels != null && !deploymentModels.isEmpty()) {
+            for (DeploymentModel deploymentModel : deploymentModels) {
+                deploymentModelList.add(unmap(deploymentModel));
+            }
+        }
+
+        return deploymentModelList;
     }
 }

@@ -41,15 +41,15 @@ public class DeploymentEntityMapperTest extends BaseTestCase {
 
     private static final String DUMMY_TITLE = "Dummy Deployment Title";
 
-    private static final int DUMMY_STATUS = 0;
-
     private static final String DUMMY_URL = "http://deployment.com";
 
     private static final long DEPLOYMENT_DUMMY_ID = 1;
 
     private static final String DEPLOYMENT_DUMMY_TITLE = "Dummy Deployment Title";
 
-    private static final int DEPLOYMENT_DUMMY_STATUS = 1;
+    private static final DeploymentEntity.Status DEPLOYMENT_ENTITY_DUMMY_STATUS = DeploymentEntity.Status.ACTIVATED;
+
+    private static final Deployment.Status DEPLOYMENT_DUMMY_STATUS = Deployment.Status.ACTIVATED;
 
     private static final String DEPLOYMENT_DUMMY_URL = "http://deployment.com";
 
@@ -69,7 +69,7 @@ public class DeploymentEntityMapperTest extends BaseTestCase {
         mDeploymentEntity = new DeploymentEntity();
         mDeploymentEntity.setId(DUMMY_ID);
         mDeploymentEntity.setTitle(DUMMY_TITLE);
-        mDeploymentEntity.setStatus(DUMMY_STATUS);
+        mDeploymentEntity.setStatus(DEPLOYMENT_ENTITY_DUMMY_STATUS);
         mDeploymentEntity.setUrl(DUMMY_URL);
 
         Deployment deployment = mDeploymentEntityMapper.map(mDeploymentEntity);
@@ -77,7 +77,7 @@ public class DeploymentEntityMapperTest extends BaseTestCase {
         assertThat(deployment, is(instanceOf(Deployment.class)));
         assertThat(deployment.getId(), is(DUMMY_ID));
         assertThat(deployment.getTitle(), is(DUMMY_TITLE));
-        assertThat(deployment.getStatus(), is(DUMMY_STATUS));
+        assertThat(deployment.getStatus(), is(DEPLOYMENT_DUMMY_STATUS));
         assertThat(deployment.getUrl(), is(DUMMY_URL));
     }
 
@@ -92,7 +92,7 @@ public class DeploymentEntityMapperTest extends BaseTestCase {
         DeploymentEntity deploymentEntity = mDeploymentEntityMapper.unmap(mDeployment);
 
         assertThat(deploymentEntity, is(instanceOf(DeploymentEntity.class)));
-        assertThat(deploymentEntity.getStatus(), is(DEPLOYMENT_DUMMY_STATUS));
+        assertThat(deploymentEntity.getStatus(), is(DEPLOYMENT_ENTITY_DUMMY_STATUS));
         assertThat(deploymentEntity.getTitle(), is(DEPLOYMENT_DUMMY_TITLE));
         assertThat(deploymentEntity.getUrl(), is(DEPLOYMENT_DUMMY_URL));
     }

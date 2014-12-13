@@ -46,7 +46,6 @@ public class DeploymentNavPresenter implements IPresenter {
         @Override
         public void onDeploymentListLoaded(List<Deployment> listDeployment) {
             showDeploymentsListInView(listDeployment);
-
         }
 
         @Override
@@ -54,6 +53,8 @@ public class DeploymentNavPresenter implements IPresenter {
             showErrorMessage(error);
         }
     };
+
+    private List<DeploymentModel> mDeployments;
 
     public DeploymentNavPresenter(IDeploymentNavView deploymentNavView,
             ListDeployment listDeployment,
@@ -78,12 +79,21 @@ public class DeploymentNavPresenter implements IPresenter {
         final List<DeploymentModel> deploymentModelsList =
                 mDeploymentModelDataMapper.map(listDeployments);
         mDeploymentNavView.renderDeploymentList(deploymentModelsList);
+        setDeployments(deploymentModelsList);
         mDeploymentNavView.createNav();
     }
 
     private void getDeploymentList() {
         mListDeployment.execute(mListCallback);
 
+    }
+
+    private void setDeployments(List<DeploymentModel> deploymentList) {
+        mDeployments = deploymentList;
+    }
+
+    public List<DeploymentModel> getDeployments() {
+        return mDeployments;
     }
 
     @Override

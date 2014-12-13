@@ -15,38 +15,30 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.module;
+package com.ushahidi.android.ui.view;
 
-import com.ushahidi.android.UshahidiApplication;
+import com.ushahidi.android.presenter.DeploymentNavPresenter;
 
 import android.content.Context;
 
-import dagger.Module;
-import dagger.Provides;
-
 /**
- * This module provides every application scope dependencies related with the AndroidSDK.
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Module(
-        includes = {
-                DataModule.class,
-                ExecutorModule.class
-        },
-        injects = {
-                UshahidiApplication.class
-        }, library = true)
-public final class UshahidiModule {
+public interface IActivateDeploymentView {
 
-    private final Context mContext;
+    /**
+     * Shows an error message
+     *
+     * @param message A string resource representing an error.
+     */
+    public void showError(String message);
 
-    public UshahidiModule(Context context) {
-        mContext = context;
-    }
+    public void setDeploymentNavPresenter(DeploymentNavPresenter deploymentNavPresenter);
 
-    @Provides
-    Context provideApplicationContext() {
-        return mContext;
-    }
+    public void markStatus();
+
+    /**
+     * Gets a {@link android.content.Context}.
+     */
+    public Context getContext();
 }

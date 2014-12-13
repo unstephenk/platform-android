@@ -18,8 +18,8 @@
 package com.ushahidi.android.ui.widget;
 
 import com.ushahidi.android.R;
+import com.ushahidi.android.model.DeploymentModel;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -29,15 +29,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import static com.ushahidi.android.model.DeploymentModel.Status;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class NavDrawerItem implements View.OnTouchListener {
 
-    private static final int INVALID_ACTIVE_STATE = -1;
+    private static final Long INVALID_DEPLOYMENT_ID = -1l;
 
-    private int mActive = INVALID_ACTIVE_STATE;
+    private Long mNavDrawerItemId = INVALID_DEPLOYMENT_ID;
+
+    private Status mStatus = Status.DEACTIVATED;
 
     private int mPosition;
 
@@ -112,8 +117,8 @@ public class NavDrawerItem implements View.OnTouchListener {
 
         mView = LayoutInflater.from(context).inflate(inflateLayout, null, false);
         mText = (TextView) mView.findViewById(R.id.title);
-        mActiveIcon = (ImageView) mView.findViewById(R.id.active);
-        mActiveIcon.setVisibility(isActive() ? View.VISIBLE : View.INVISIBLE);
+        mActiveIcon = (ImageView) mView.findViewById(R.id.status);
+
 
         if (iconId > 0) {
             // Set Icon and Text
@@ -225,15 +230,28 @@ public class NavDrawerItem implements View.OnTouchListener {
     }
 
     public boolean isActive() {
-        return mActive != INVALID_ACTIVE_STATE && mActive == 1;
+        return ((mStatus == Status.ACTIVATED) && (isDeployment()));
     }
 
-    public void setActive(int active) {
-        mActive = active;
+    public void setStatus(DeploymentModel.Status status) {
+        mStatus = status;
+        markStatus();
+    }
+
+    public void markStatus() {
+        mActiveIcon.setVisibility(isActive() ? View.VISIBLE : View.GONE);
     }
 
     public boolean isDeployment() {
-        return mActive != INVALID_ACTIVE_STATE;
+        return getNavDrawerItemId() != INVALID_DEPLOYMENT_ID;
+    }
+
+    public Long getNavDrawerItemId() {
+        return mNavDrawerItemId;
+    }
+
+    public void setNavDrawerItemId(Long navDrawerItemId) {
+        mNavDrawerItemId = navDrawerItemId;
     }
 
     public interface NavDrawerItemListener {

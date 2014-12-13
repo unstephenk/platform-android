@@ -84,7 +84,7 @@ public class DeploymentDataRepositoryTest extends BaseTestCase {
 
     private static final String DUMMY_TITLE = "Dummy Deployment Title";
 
-    private static final int DUMMY_STATUS = 0;
+    private static final Deployment.Status DUMMY_STATUS = Deployment.Status.ACTIVATED;
 
     private static final String DUMMY_URL = "http://www.deployment.com";
 

@@ -28,8 +28,6 @@ import com.ushahidi.android.model.PostModel;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
 import com.ushahidi.android.ui.view.IPostListView;
 
-import android.widget.Toast;
-
 import java.util.List;
 
 /**
