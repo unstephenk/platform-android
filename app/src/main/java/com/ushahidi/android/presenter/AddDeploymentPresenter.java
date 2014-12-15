@@ -8,7 +8,9 @@ import com.ushahidi.android.core.usecase.deployment.AddDeployment;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
-import com.ushahidi.android.ui.view.IAddDeploymentView;
+import com.ushahidi.android.ui.view.IView;
+
+import javax.inject.Inject;
 
 /**
  * Facilitates interactions between between add deployment view and deployment models
@@ -16,8 +18,6 @@ import com.ushahidi.android.ui.view.IAddDeploymentView;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class AddDeploymentPresenter implements IPresenter {
-
-    private final IAddDeploymentView mIAddDeploymentView;
 
     private final AddDeployment mAddDeployment;
 
@@ -27,8 +27,7 @@ public class AddDeploymentPresenter implements IPresenter {
 
         @Override
         public void onDeploymentAdded() {
-            mIAddDeploymentView.hideLoading();
-            mIAddDeploymentView.navigateOrReloadList();
+            mView.navigateOrReloadList();
         }
 
         @Override
@@ -37,16 +36,21 @@ public class AddDeploymentPresenter implements IPresenter {
         }
     };
 
-    public AddDeploymentPresenter(IAddDeploymentView addDeploymentView, AddDeployment addDeployment,
-            DeploymentModelDataMapper deploymentModelDataMapper) {
-        Preconditions.checkNotNull(addDeploymentView, "IAddDeploymentView cannot be null");
-        Preconditions.checkNotNull(addDeployment, "AddDeployment cannot be null");
-        Preconditions.checkNotNull(deploymentModelDataMapper,
-                "DeploymentModelDataMapper cannot be null");
-        mIAddDeploymentView = addDeploymentView;
-        mAddDeployment = addDeployment;
-        mDeploymentModelDataMapper = deploymentModelDataMapper;
+    private View mView;
 
+    @Inject
+    public AddDeploymentPresenter(AddDeployment addDeployment,
+            DeploymentModelDataMapper deploymentModelDataMapper) {
+        mAddDeployment = Preconditions.checkNotNull(addDeployment, "AddDeployment cannot be null");
+        mDeploymentModelDataMapper = Preconditions.checkNotNull(deploymentModelDataMapper,
+                "DeploymentModelDataMapper cannot be null");
+    }
+
+    public void setView(View view) {
+        if (view == null) {
+            throw new IllegalArgumentException("View cannot be null.");
+        }
+        mView = view;
     }
 
     @Override
@@ -60,15 +64,27 @@ public class AddDeploymentPresenter implements IPresenter {
     }
 
     public void addDeployment(DeploymentModel deploymentModel) {
-        mIAddDeploymentView.showLoading();
         final Deployment deployment =
                 mDeploymentModelDataMapper.unmap(deploymentModel);
         mAddDeployment.execute(deployment, mCallback);
     }
 
     private void showErrorMessage(ErrorWrap errorWrap) {
-        String errorMessage = ErrorMessageFactory.create(mIAddDeploymentView.getContext(),
+        String errorMessage = ErrorMessageFactory.create(mView.getContext(),
                 errorWrap.getException());
-        mIAddDeploymentView.showError(errorMessage);
+        mView.showError(errorMessage);
+    }
+
+    /**
+     * Interface for adding a deployment to the database
+     *
+     * @author Ushahidi Team <team@ushahidi.com>
+     */
+    public interface View extends IView {
+
+        /**
+         * Reloads the list or navigates to a different screen depending on the device
+         */
+        public void navigateOrReloadList();
     }
 }

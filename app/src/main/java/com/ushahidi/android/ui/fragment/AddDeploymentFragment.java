@@ -2,11 +2,8 @@ package com.ushahidi.android.ui.fragment;
 
 import com.andreabaccega.widget.FormEditText;
 import com.ushahidi.android.R;
-import com.ushahidi.android.core.usecase.deployment.AddDeployment;
 import com.ushahidi.android.model.DeploymentModel;
-import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.AddDeploymentPresenter;
-import com.ushahidi.android.ui.view.IAddDeploymentView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,13 +20,10 @@ import butterknife.OnClick;
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class AddDeploymentFragment extends BaseFragment implements IAddDeploymentView {
+public class AddDeploymentFragment extends BaseFragment implements AddDeploymentPresenter.View {
 
     @Inject
-    DeploymentModelDataMapper mDeploymentModelDataMapper;
-
-    @Inject
-    AddDeployment mAddDeployment;
+    AddDeploymentPresenter mAddDeploymentPresenter;
 
     @InjectView(R.id.add_deployment_title)
     FormEditText title;
@@ -40,9 +34,6 @@ public class AddDeploymentFragment extends BaseFragment implements IAddDeploymen
     public static final String ADD_FRAGMENT_TAG = "add_fragment";
 
     private AddDeploymentListener mActionListener;
-
-    private AddDeploymentPresenter mAddDeploymentPresenter;
-
 
     /**
      * Add Deployment  Fragment
@@ -95,36 +86,13 @@ public class AddDeploymentFragment extends BaseFragment implements IAddDeploymen
 
     @Override
     void initPresenter() {
-
-        mAddDeploymentPresenter = new AddDeploymentPresenter(this, mAddDeployment,
-
-                mDeploymentModelDataMapper);
+        mAddDeploymentPresenter.setView(this);
     }
 
 
     @Override
     public Context getContext() {
         return getActivity().getApplicationContext();
-    }
-
-    @Override
-    public void showLoading() {
-
-    }
-
-    @Override
-    public void hideLoading() {
-
-    }
-
-    @Override
-    public void showRetry() {
-
-    }
-
-    @Override
-    public void hideRetry() {
-
     }
 
     @Override

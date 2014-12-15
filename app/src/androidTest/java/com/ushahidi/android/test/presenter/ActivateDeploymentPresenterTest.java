@@ -23,7 +23,6 @@ import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.ActivateDeploymentPresenter;
 import com.ushahidi.android.test.CustomAndroidTestCase;
-import com.ushahidi.android.ui.view.IActivateDeploymentView;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -54,7 +53,7 @@ public class ActivateDeploymentPresenterTest extends CustomAndroidTestCase {
     private ActivateDeployment mMockActivateDeployment;
 
     @Mock
-    private IActivateDeploymentView mMockActivateDeploymentView;
+    private ActivateDeploymentPresenter.View mMockView;
 
     @Mock
     private List<DeploymentModel> mMockDeploymentModelList;
@@ -68,14 +67,15 @@ public class ActivateDeploymentPresenterTest extends CustomAndroidTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         MockitoAnnotations.initMocks(this);
-        mActivateDeploymentPresenter = new ActivateDeploymentPresenter(mMockActivateDeploymentView,
+        mActivateDeploymentPresenter = new ActivateDeploymentPresenter(
                 mMockActivateDeployment, mMockDeploymentModelDataMapper);
+        mActivateDeploymentPresenter.setView(mMockView);
     }
 
     public void testInitializingActivateDeploymentPresenterWithNullValues() {
-        final String expectedMessage = "ActivateDeploymentView Cannot be null";
+        final String expectedMessage = "Activate deployment usecase cannot be null";
         try {
-            new ActivateDeploymentPresenter(null, null, null);
+            new ActivateDeploymentPresenter(null, null);
         } catch (NullPointerException e) {
             assertEquals(expectedMessage, e.getMessage());
         }
@@ -87,7 +87,7 @@ public class ActivateDeploymentPresenterTest extends CustomAndroidTestCase {
                 .execute(anyListOf(Deployment.class), anyInt(),
                         any(ActivateDeployment.Callback.class));
 
-        given(mMockActivateDeploymentView.getContext()).willReturn(mMockContext);
+        given(mMockView.getContext()).willReturn(mMockContext);
 
         mActivateDeploymentPresenter.activateDeployment(mMockDeploymentModelList, anyInt());
         verify(mMockDeploymentModelDataMapper).unmap(anyListOf(DeploymentModel.class));

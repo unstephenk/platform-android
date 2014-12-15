@@ -25,21 +25,14 @@ import com.ushahidi.android.core.usecase.deployment.DeleteDeployment;
 import com.ushahidi.android.core.usecase.deployment.GetDeployment;
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.core.usecase.deployment.UpdateDeployment;
-import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
-import com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper;
-import com.ushahidi.android.data.repository.DeploymentDataRepository;
-import com.ushahidi.android.data.task.TaskExecutor;
-import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
-import com.ushahidi.android.ui.UiThread;
 import com.ushahidi.android.ui.activity.AddDeploymentActivity;
 import com.ushahidi.android.ui.activity.DeploymentActivity;
 import com.ushahidi.android.ui.activity.UpdateDeploymentActivity;
 import com.ushahidi.android.ui.fragment.AddDeploymentFragment;
 import com.ushahidi.android.ui.fragment.ListDeploymentFragment;
 import com.ushahidi.android.ui.fragment.UpdateDeploymentFragment;
-import com.ushahidi.android.data.validator.UrlValidator;
 
-import android.content.Context;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -49,7 +42,6 @@ import dagger.Provides;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-//TODO Improve this class. To many code repetitions
 @Module(library = true, complete = false, injects = {
         ListDeploymentFragment.class, DeploymentActivity.class,
         AddDeploymentFragment.class, AddDeploymentActivity.class,
@@ -57,108 +49,38 @@ import dagger.Provides;
 })
 public final class DeploymentUiModule {
 
-
     @Provides
-    ListDeployment providesListDeployment(Context context) {
-
-        ThreadExecutor threadExecutor = TaskExecutor.getInstance();
-        PostExecutionThread postExecutionThread = UiThread.getInstance();
-
-        DeploymentEntityMapper entityMapper = new DeploymentEntityMapper();
-
-        DeploymentDatabaseHelper deploymentDatabaseHelper = DeploymentDatabaseHelper
-                .getInstance(context,
-                        threadExecutor);
-        UrlValidator urlValidator = new UrlValidator();
-        IDeploymentRepository deploymentRepository = DeploymentDataRepository
-                .getInstance(deploymentDatabaseHelper, entityMapper, urlValidator);
-
+    ListDeployment providesListDeployment(IDeploymentRepository deploymentRepository,
+            ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         return new ListDeployment(deploymentRepository, threadExecutor,
                 postExecutionThread);
 
     }
 
     @Provides
-    AddDeployment providesAddDeployment(Context context) {
-
-        ThreadExecutor threadExecutor = TaskExecutor.getInstance();
-
-        PostExecutionThread postExecutionThread = UiThread.getInstance();
-
-        DeploymentEntityMapper entityMapper = new DeploymentEntityMapper();
-
-        DeploymentDatabaseHelper deploymentDatabaseHelper = DeploymentDatabaseHelper
-                .getInstance(context,
-                        threadExecutor);
-        UrlValidator urlValidator = new UrlValidator();
-
-        IDeploymentRepository deploymentRepository = DeploymentDataRepository
-                .getInstance(deploymentDatabaseHelper, entityMapper, urlValidator);
-
-        return new AddDeployment(deploymentRepository, threadExecutor, postExecutionThread);
-    }
-
-    @Provides
-    UpdateDeployment providesUpdateDeployment(Context context) {
-
-        ThreadExecutor threadExecutor = TaskExecutor.getInstance();
-
-        PostExecutionThread postExecutionThread = UiThread.getInstance();
-
-        DeploymentEntityMapper entityMapper = new DeploymentEntityMapper();
-
-        DeploymentDatabaseHelper deploymentDatabaseHelper = DeploymentDatabaseHelper
-                .getInstance(context,
-                        threadExecutor);
-        UrlValidator urlValidator = new UrlValidator();
-
-        IDeploymentRepository deploymentRepository = DeploymentDataRepository
-                .getInstance(deploymentDatabaseHelper, entityMapper, urlValidator);
-
-        return new UpdateDeployment(deploymentRepository, threadExecutor, postExecutionThread);
-    }
-
-    @Provides
-    GetDeployment providesGetDeployment(Context context) {
-
-        ThreadExecutor threadExecutor = TaskExecutor.getInstance();
-
-        PostExecutionThread postExecutionThread = UiThread.getInstance();
-
-        DeploymentEntityMapper entityMapper = new DeploymentEntityMapper();
-
-        DeploymentDatabaseHelper deploymentDatabaseHelper = DeploymentDatabaseHelper
-                .getInstance(context,
-                        threadExecutor);
-        UrlValidator urlValidator = new UrlValidator();
-
-        IDeploymentRepository deploymentRepository = DeploymentDataRepository
-                .getInstance(deploymentDatabaseHelper, entityMapper, urlValidator);
-
+    GetDeployment providesGetDeployment(IDeploymentRepository deploymentRepository,
+            ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         return new GetDeployment(deploymentRepository, threadExecutor, postExecutionThread);
     }
 
     @Provides
-    DeleteDeployment providesDeleteDeployment(Context context) {
-        ThreadExecutor threadExecutor = TaskExecutor.getInstance();
-
-        PostExecutionThread postExecutionThread = UiThread.getInstance();
-
-        DeploymentEntityMapper entityMapper = new DeploymentEntityMapper();
-
-        DeploymentDatabaseHelper deploymentDatabaseHelper = DeploymentDatabaseHelper
-                .getInstance(context,
-                        threadExecutor);
-        UrlValidator urlValidator = new UrlValidator();
-
-        IDeploymentRepository deploymentRepository = DeploymentDataRepository
-                .getInstance(deploymentDatabaseHelper, entityMapper, urlValidator);
+    DeleteDeployment providesDeleteDeployment(IDeploymentRepository deploymentRepository,
+            ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         return new DeleteDeployment(deploymentRepository, threadExecutor, postExecutionThread);
     }
 
     @Provides
-    DeploymentModelDataMapper providesDeploymentModelDataMapper() {
-        return new DeploymentModelDataMapper();
+    @Singleton
+    AddDeployment providesAddDeployment(IDeploymentRepository deploymentRepository,
+            ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+        return new AddDeployment(deploymentRepository, threadExecutor, postExecutionThread);
+    }
+
+    @Provides
+    @Singleton
+    UpdateDeployment providesUpdateDeployment(IDeploymentRepository deploymentRepository,
+            ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+        return new UpdateDeployment(deploymentRepository, threadExecutor, postExecutionThread);
     }
 
 }

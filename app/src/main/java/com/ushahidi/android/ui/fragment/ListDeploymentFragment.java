@@ -20,17 +20,12 @@ package com.ushahidi.android.ui.fragment;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.ushahidi.android.R;
-import com.ushahidi.android.core.usecase.deployment.DeleteDeployment;
-import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.model.DeploymentModel;
-import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
-import com.ushahidi.android.presenter.DeploymentListPresenter;
-import com.ushahidi.android.ui.Prefs.Prefs;
+import com.ushahidi.android.presenter.ListDeploymentPresenter;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
 import com.ushahidi.android.ui.listener.SwipeDismissRecyclerViewTouchListener;
-import com.ushahidi.android.ui.view.IDeleteDeploymentView;
-import com.ushahidi.android.ui.view.IDeploymentListView;
+import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.widget.DeploymentRecyclerView;
 import com.ushahidi.android.ui.widget.DeploymentRecyclerView.DeploymentParcelable;
 import com.ushahidi.android.ui.widget.InteractiveToast;
@@ -63,16 +58,16 @@ import butterknife.InjectView;
 public class ListDeploymentFragment
         extends BaseRecyclerViewFragment<DeploymentModel, DeploymentAdapter>
         implements
-        IDeploymentListView, IDeleteDeploymentView, RecyclerView.OnItemTouchListener {
+        ListDeploymentPresenter.View, DeleteDeploymentPresenter.View,
+        RecyclerView.OnItemTouchListener {
+
+    private static final String INTERACTIVE_TOAST_BUNDLE_KEY = "selected_items";
 
     @Inject
-    ListDeployment mListDeployment;
+    ListDeploymentPresenter mDeploymentListPresenter;
 
     @Inject
-    DeleteDeployment mDeleteDeployment;
-
-    @Inject
-    DeploymentModelDataMapper mDeploymentModelDataMapper;
+    DeleteDeploymentPresenter mDeleteDeploymentPresenter;
 
     @InjectView(R.id.interactive_toast)
     LinearLayout mInteractiveToastContainer; // Layout container for InteractiveToast
@@ -85,13 +80,6 @@ public class ListDeploymentFragment
 
     @Inject
     Prefs mPrefs;
-
-
-    private static final String INTERACTIVE_TOAST_BUNDLE_KEY = "selected_items";
-
-    private DeploymentListPresenter mDeploymentListPresenter;
-
-    private DeleteDeploymentPresenter mDeleteDeploymentPresenter;
 
     private DeploymentListListener mDeploymentListListener;
 
@@ -156,10 +144,9 @@ public class ListDeploymentFragment
 
     @Override
     void initPresenter() {
-        mDeploymentListPresenter = new DeploymentListPresenter(this, mListDeployment,
-                mDeploymentModelDataMapper);
-        mDeleteDeploymentPresenter = new DeleteDeploymentPresenter(this, mDeleteDeployment,
-                mDeploymentModelDataMapper);
+        mDeploymentListPresenter.setView(this);
+        mDeploymentListPresenter.setView(this);
+        mDeleteDeploymentPresenter.setView(this);
     }
 
     @Override
@@ -380,17 +367,6 @@ public class ListDeploymentFragment
 
     }
 
-    private class RecyclerViewOnGestureListener extends
-            GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            View view = mDeploymentRecyclerView.findChildViewUnder(e.getX(), e.getY());
-            onItemClick(mDeploymentRecyclerView.getChildPosition(view));
-            return super.onSingleTapConfirmed(e);
-        }
-    }
-
     /**
      * Listens for deployment list events
      */
@@ -400,6 +376,17 @@ public class ListDeploymentFragment
 
         void onFabClicked();
 
+    }
+
+    private class RecyclerViewOnGestureListener extends
+            GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            View view = mDeploymentRecyclerView.findChildViewUnder(e.getX(), e.getY());
+            onItemClick(mDeploymentRecyclerView.getChildPosition(view));
+            return super.onSingleTapConfirmed(e);
+        }
     }
 
 }

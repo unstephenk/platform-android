@@ -22,6 +22,7 @@ import com.ushahidi.android.UshahidiApplication;
 import com.ushahidi.android.module.ActivityModule;
 import com.ushahidi.android.ui.widget.NavDrawerItem;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;

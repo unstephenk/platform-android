@@ -23,7 +23,6 @@ import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
 import com.ushahidi.android.test.CustomAndroidTestCase;
-import com.ushahidi.android.ui.view.IDeleteDeploymentView;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -56,7 +55,7 @@ public class DeleteDeploymentPresenterTest extends CustomAndroidTestCase {
     private Context mMockContext;
 
     @Mock
-    private IDeleteDeploymentView mMockIDeleteDeploymentView;
+    private DeleteDeploymentPresenter.View mMockView;
 
     @Mock
     private DeploymentModelDataMapper mMockDeploymentModelDataMapper;
@@ -76,14 +75,15 @@ public class DeleteDeploymentPresenterTest extends CustomAndroidTestCase {
         mDeploymentModel.setUrl(DUMMY_URL);
         mDeploymentModel.setStatus(DUMMY_STATUS);
 
-        mDeleteDeploymentPresenter = new DeleteDeploymentPresenter(mMockIDeleteDeploymentView,
+        mDeleteDeploymentPresenter = new DeleteDeploymentPresenter(
                 mMockDeleteDeployment, mMockDeploymentModelDataMapper);
+        mDeleteDeploymentPresenter.setView(mMockView);
     }
 
     public void testInitializingDeleteDeploymentPresenterWithNullValues() {
-        final String expectedMessage = "IDeleteDeploymentView cannot be null";
+        final String expectedMessage = "DeleteDeployment cannot be null";
         try {
-            new DeleteDeploymentPresenter(null, null, null);
+            new DeleteDeploymentPresenter(null, null);
         } catch (NullPointerException e) {
             assertEquals(expectedMessage, e.getMessage());
         }
@@ -94,7 +94,7 @@ public class DeleteDeploymentPresenterTest extends CustomAndroidTestCase {
         doNothing().when(mMockDeleteDeployment)
                 .execute(any(Deployment.class), any(DeleteDeployment.Callback.class));
 
-        given(mMockIDeleteDeploymentView.getContext()).willReturn(mMockContext);
+        given(mMockView.getContext()).willReturn(mMockContext);
 
         mDeleteDeploymentPresenter.deleteDeployment(mDeploymentModel);
 

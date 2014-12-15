@@ -25,14 +25,16 @@ import com.ushahidi.android.core.usecase.deployment.DeleteDeployment;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
-import com.ushahidi.android.ui.view.IDeleteDeploymentView;
+import com.ushahidi.android.ui.view.IView;
+
+import javax.inject.Inject;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class DeleteDeploymentPresenter implements IPresenter {
 
-    private final IDeleteDeploymentView mIDeleteDeploymentView;
+    private View mView;
 
     private final DeploymentModelDataMapper mDeploymentModelDataMapper;
 
@@ -42,7 +44,7 @@ public class DeleteDeploymentPresenter implements IPresenter {
 
         @Override
         public void onDeploymentDeleted() {
-            mIDeleteDeploymentView.onDeploymentDeleted();
+            mView.onDeploymentDeleted();
         }
 
         @Override
@@ -51,19 +53,21 @@ public class DeleteDeploymentPresenter implements IPresenter {
         }
     };
 
-    public DeleteDeploymentPresenter(IDeleteDeploymentView deleteDeploymentView,
-            DeleteDeployment deleteDeployment,
+    @Inject
+    public DeleteDeploymentPresenter(DeleteDeployment deleteDeployment,
             DeploymentModelDataMapper deploymentModelDataMapper) {
 
-        Preconditions.checkNotNull(deleteDeploymentView, "IDeleteDeploymentView cannot be null");
-        Preconditions.checkNotNull(deleteDeployment, "DeleteDeployment cannot be null");
-        Preconditions.checkNotNull(deploymentModelDataMapper,
+        mDeleteDeployment = Preconditions.checkNotNull(deleteDeployment, "DeleteDeployment cannot be null");
+        mDeploymentModelDataMapper = Preconditions.checkNotNull(deploymentModelDataMapper,
                 "DeploymentModelDataMapper cannot be null");
 
-        mIDeleteDeploymentView = deleteDeploymentView;
-        mDeleteDeployment = deleteDeployment;
-        mDeploymentModelDataMapper = deploymentModelDataMapper;
+    }
 
+    public void setView(View view) {
+        if (view == null) {
+            throw new IllegalArgumentException("View cannot be null.");
+        }
+        mView = view;
     }
 
 
@@ -84,8 +88,24 @@ public class DeleteDeploymentPresenter implements IPresenter {
     }
 
     private void showErrorMessage(ErrorWrap errorWrap) {
-        String errorMessage = ErrorMessageFactory.create(mIDeleteDeploymentView.getContext(),
+        String errorMessage = ErrorMessageFactory.create(mView.getContext(),
                 errorWrap.getException());
-        mIDeleteDeploymentView.showError(errorMessage);
+        mView.showError(errorMessage);
+    }
+
+    /**
+     * @author Ushahidi Team <team@ushahidi.com>
+     */
+    public interface View extends IView {
+
+        void onDeploymentDeleted();
+
+        /**
+         * Shows an error message
+         *
+         * @param message A string resource representing an error.
+         */
+        void showError(String message);
+
     }
 }

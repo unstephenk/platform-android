@@ -26,9 +26,11 @@ import com.ushahidi.android.core.usecase.post.ListPost;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.PostModel;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
-import com.ushahidi.android.ui.view.IPostListView;
+import com.ushahidi.android.ui.view.ILoadViewData;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * {@link com.ushahidi.android.presenter.IPresenter} facilitates interactions between post list view
@@ -37,8 +39,6 @@ import java.util.List;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class ListPostPresenter implements IPresenter {
-
-    private final IPostListView mIPostListView;
 
     private final PostModelDataMapper mPostModelDataMapper;
 
@@ -78,15 +78,23 @@ public class ListPostPresenter implements IPresenter {
         }
     };
 
-    public ListPostPresenter(IPostListView postListView,
-            ListPost listPost,
+    private View mView;
+
+    @Inject
+    public ListPostPresenter(ListPost listPost,
             FetchPost fetchPost,
             PostModelDataMapper postModelDataMapper) {
-        mIPostListView = Preconditions.checkNotNull(postListView, "Post list view cannot be null");
         mListPost = Preconditions.checkNotNull(listPost, "ListPost cannot be null");
         mFetchPost = Preconditions.checkNotNull(fetchPost, "Fetch Post listing");
         mPostModelDataMapper = Preconditions
                 .checkNotNull(postModelDataMapper, "PostModelDataMapper cannot be null");
+    }
+
+    public void setView(View view) {
+        if (view == null) {
+            throw new IllegalArgumentException("View cannot be null.");
+        }
+        mView = view;
     }
 
     @Override
@@ -114,35 +122,35 @@ public class ListPostPresenter implements IPresenter {
     }
 
     public void onPostClicked(PostModel postModel) {
-        mIPostListView.viewPost(postModel);
+        mView.viewPost(postModel);
     }
 
     private void showViewLoading() {
-        mIPostListView.showLoading();
+        mView.showLoading();
     }
 
     private void hideViewLoading() {
-        mIPostListView.hideLoading();
+        mView.hideLoading();
     }
 
     private void showViewRetry() {
-        mIPostListView.showRetry();
+        mView.showRetry();
     }
 
     private void hideViewRetry() {
-        mIPostListView.hideRetry();
+        mView.hideRetry();
     }
 
     private void showErrorMessage(ErrorWrap errorWrap) {
-        String errorMessage = ErrorMessageFactory.create(mIPostListView.getContext(),
+        String errorMessage = ErrorMessageFactory.create(mView.getContext(),
                 errorWrap.getException());
-        mIPostListView.showError(errorMessage);
+        mView.showError(errorMessage);
     }
 
     private void showPostsListInView(List<Post> listPosts) {
         final List<PostModel> postModelsList =
                 mPostModelDataMapper.map(listPosts);
-        mIPostListView.renderPostList(postModelsList);
+        mView.renderPostList(postModelsList);
     }
 
     private void getPostList() {
@@ -151,5 +159,28 @@ public class ListPostPresenter implements IPresenter {
 
     public void fetchPost() {
         mFetchPost.execute(mCallback);
+    }
+
+    public interface View extends ILoadViewData {
+
+        /**
+         * Render a post list in the UI.
+         *
+         * @param postModel The collection of {@link com.ushahidi.android.model.PostModel} that will
+         *                  be shown.
+         */
+        void renderPostList(List<PostModel> postModel);
+
+        /**
+         * View {@link com.ushahidi.android.model.PostModel} details
+         *
+         * @param postModel The post model to view
+         */
+        void viewPost(PostModel postModel);
+
+        /**
+         * Refreshes the existing items in the list view without any visual loaders
+         */
+        void refreshList();
     }
 }

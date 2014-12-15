@@ -18,15 +18,12 @@
 package com.ushahidi.android.ui.activity;
 
 import com.ushahidi.android.R;
-import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.model.DeploymentModel;
-import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.module.PostUiModule;
 import com.ushahidi.android.presenter.ActivateDeploymentPresenter;
 import com.ushahidi.android.presenter.DeploymentNavPresenter;
-import com.ushahidi.android.ui.Prefs.Prefs;
+import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.fragment.ListPostFragment;
-import com.ushahidi.android.ui.view.IDeploymentNavView;
 import com.ushahidi.android.ui.widget.NavDrawerItem;
 import com.ushahidi.android.ui.widget.SlidingTabLayout;
 
@@ -50,15 +47,9 @@ import javax.inject.Inject;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawerItemListener,
-        NavDrawerItem.NavDeploymentItemListener, IDeploymentNavView {
+        NavDrawerItem.NavDeploymentItemListener, DeploymentNavPresenter.View, ActivateDeploymentPresenter.View {
 
     private static final String SELECTED_TAB = "selected_tab";
-
-    @Inject
-    ListDeployment mListDeployment;
-
-    @Inject
-    DeploymentModelDataMapper mDeploymentModelDataMapper;
 
     @Inject
     ActivateDeploymentPresenter mActivateDeploymentPresenter;
@@ -66,7 +57,8 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     @Inject
     Prefs mPrefs;
 
-    private DeploymentNavPresenter mDeploymentNavPresenter;
+    @Inject
+    DeploymentNavPresenter mDeploymentNavPresenter;
 
     private SlidingTabLayout mSlidingTabStrip;
 
@@ -85,9 +77,9 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //TODO Move these into dagger module so they get injected
-        mDeploymentNavPresenter = new DeploymentNavPresenter(this, mListDeployment,
-                mDeploymentModelDataMapper);
+        mDeploymentNavPresenter.setView(this);
+        mActivateDeploymentPresenter.setView(this);
+
         mTabTitle = new ArrayList<>();
         mTabTitle.add(getString(R.string.list));
         mTabTitle.add(getString(R.string.map));
@@ -220,8 +212,6 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     @Override
     public void onNavDeploymentItemClick(NavDrawerItem navDrawerItem) {
         List<DeploymentModel> deploymentModels = mDeploymentNavPresenter.getDeployments();
-        mActivateDeploymentPresenter.getActivateDeploymentView().setDeploymentNavPresenter(
-                mDeploymentNavPresenter);
 
         final int position = navDrawerItem.getPosition();
         // Save into a shared preferences
@@ -274,6 +264,11 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     public void createNav() {
         initNavDrawerItems();
         createNavDrawer();
+    }
+
+    @Override
+    public void markStatus() {
+        mDeploymentNavPresenter.resume();
     }
 
     private static enum PostTab {

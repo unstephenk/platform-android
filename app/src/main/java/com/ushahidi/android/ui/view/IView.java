@@ -17,14 +17,12 @@
 
 package com.ushahidi.android.ui.view;
 
-import com.ushahidi.android.presenter.DeploymentNavPresenter;
-
 import android.content.Context;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public interface IActivateDeploymentView {
+public interface IView {
 
     /**
      * Shows an error message
@@ -32,10 +30,6 @@ public interface IActivateDeploymentView {
      * @param message A string resource representing an error.
      */
     public void showError(String message);
-
-    public void setDeploymentNavPresenter(DeploymentNavPresenter deploymentNavPresenter);
-
-    public void markStatus();
 
     /**
      * Gets a {@link android.content.Context}.

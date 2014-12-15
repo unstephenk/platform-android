@@ -25,25 +25,8 @@ import com.ushahidi.android.core.usecase.deployment.ActivateDeployment;
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
-import com.ushahidi.android.data.api.service.PostService;
-import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
-import com.ushahidi.android.data.database.PostDatabaseHelper;
-import com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper;
-import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
-import com.ushahidi.android.data.repository.DeploymentDataRepository;
-import com.ushahidi.android.data.repository.PostDataRepository;
-import com.ushahidi.android.data.repository.datasource.PostDataSourceFactory;
-import com.ushahidi.android.data.task.TaskExecutor;
-import com.ushahidi.android.data.validator.UrlValidator;
-import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
-import com.ushahidi.android.model.mapper.PostModelDataMapper;
-import com.ushahidi.android.ui.UiThread;
 import com.ushahidi.android.ui.activity.PostActivity;
 import com.ushahidi.android.ui.fragment.ListPostFragment;
-import com.ushahidi.android.ui.view.ActivateDeploymentView;
-import com.ushahidi.android.ui.view.IActivateDeploymentView;
-
-import android.content.Context;
 
 import javax.inject.Singleton;
 
@@ -55,112 +38,33 @@ import dagger.Provides;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-//TODO Improve this class. To many code repetitions
 @Module(library = true, complete = false, injects = {
         ListPostFragment.class, PostActivity.class
 })
 public final class PostUiModule {
 
     @Provides
-    ListPost providesListPost(Context context, PostService postService) {
-
-        ThreadExecutor threadExecutor = TaskExecutor.getInstance();
-        PostExecutionThread postExecutionThread = UiThread.getInstance();
-
-        PostEntityMapper entityMapper = new PostEntityMapper();
-
-        PostDatabaseHelper postDatabaseHelper = PostDatabaseHelper
-                .getInstance(context,
-                        threadExecutor);
-
-        PostDataSourceFactory dataSourceFactory = new PostDataSourceFactory(context,
-                postDatabaseHelper, postService);
-
-        IPostRepository postRepository = PostDataRepository
-                .getInstance(dataSourceFactory, entityMapper);
-
+    ListPost providesListPost(IPostRepository postRepository, ThreadExecutor threadExecutor,
+            PostExecutionThread postExecutionThread) {
         return new ListPost(postRepository, threadExecutor,
                 postExecutionThread);
 
     }
 
     @Provides
-    FetchPost providesFetchPost(Context context, PostService postService) {
-
-        ThreadExecutor threadExecutor = TaskExecutor.getInstance();
-        PostExecutionThread postExecutionThread = UiThread.getInstance();
-
-        PostEntityMapper entityMapper = new PostEntityMapper();
-
-        PostDatabaseHelper postDatabaseHelper = PostDatabaseHelper
-                .getInstance(context,
-                        threadExecutor);
-
-        PostDataSourceFactory dataSourceFactory = new PostDataSourceFactory(context,
-                postDatabaseHelper, postService);
-
-        IPostRepository postRepository = PostDataRepository
-                .getInstance(dataSourceFactory, entityMapper);
-
+    FetchPost providesFetchPost(IPostRepository postRepository, ThreadExecutor threadExecutor,
+            PostExecutionThread postExecutionThread) {
         return new FetchPost(postRepository, threadExecutor,
                 postExecutionThread);
 
     }
 
     @Provides
-    ListDeployment providesListDeployment(Context context) {
-
-        ThreadExecutor threadExecutor = TaskExecutor.getInstance();
-        PostExecutionThread postExecutionThread = UiThread.getInstance();
-
-        DeploymentEntityMapper entityMapper = new DeploymentEntityMapper();
-
-        DeploymentDatabaseHelper deploymentDatabaseHelper = DeploymentDatabaseHelper
-                .getInstance(context,
-                        threadExecutor);
-        UrlValidator urlValidator = new UrlValidator();
-        IDeploymentRepository deploymentRepository = DeploymentDataRepository
-                .getInstance(deploymentDatabaseHelper, entityMapper, urlValidator);
-
+    ListDeployment providesListDeployment(IDeploymentRepository deploymentRepository,
+            ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         return new ListDeployment(deploymentRepository, threadExecutor,
                 postExecutionThread);
 
-    }
-
-    @Provides
-    IDeploymentRepository providesIDeploymentRepository(Context context, ThreadExecutor threadExecutor ) {
-        UrlValidator urlValidator = new UrlValidator();
-        DeploymentEntityMapper entityMapper = new DeploymentEntityMapper();
-
-        DeploymentDatabaseHelper deploymentDatabaseHelper = DeploymentDatabaseHelper
-                .getInstance(context,
-                        threadExecutor);
-
-        return DeploymentDataRepository
-                .getInstance(deploymentDatabaseHelper, entityMapper, urlValidator);
-    }
-
-    @Provides
-    @Singleton
-    PostEntityMapper providesPostEntityMapper(){
-        return new PostEntityMapper();
-    }
-
-    @Provides
-    @Singleton
-    PostModelDataMapper providesPostModelDataMapper() {
-        return new PostModelDataMapper();
-    }
-
-    @Provides
-    @Singleton
-    DeploymentModelDataMapper providesDeploymentModelDataMapper() {
-        return new DeploymentModelDataMapper();
-    }
-
-    @Provides
-    IActivateDeploymentView providesActivateDeployment(Context context) {
-        return new ActivateDeploymentView(context);
     }
 
     @Provides

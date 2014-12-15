@@ -19,12 +19,8 @@ package com.ushahidi.android.ui.fragment;
 
 import com.andreabaccega.widget.FormEditText;
 import com.ushahidi.android.R;
-import com.ushahidi.android.core.usecase.deployment.GetDeployment;
-import com.ushahidi.android.core.usecase.deployment.UpdateDeployment;
 import com.ushahidi.android.model.DeploymentModel;
-import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.UpdateDeploymentPresenter;
-import com.ushahidi.android.ui.view.IUpdateDeploymentView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -42,16 +38,16 @@ import butterknife.OnClick;
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class UpdateDeploymentFragment extends BaseFragment implements IUpdateDeploymentView {
+public class UpdateDeploymentFragment extends BaseFragment
+        implements UpdateDeploymentPresenter.View {
+
+    public static final String UPDATE_FRAGMENT_TAG = "update_fragment";
+
+    private static final String ARGUMENT_KEY_DEPLOYMENT_ID
+            = "com.ushahidi.android.ARGUMENT_DEPLOYMENT_ID";
 
     @Inject
-    DeploymentModelDataMapper mDeploymentModelDataMapper;
-
-    @Inject
-    UpdateDeployment mUpdateDeployment;
-
-    @Inject
-    GetDeployment mGetDeployment;
+    UpdateDeploymentPresenter mUpdateDeploymentPresenter;
 
     @InjectView(R.id.add_deployment_title)
     FormEditText title;
@@ -62,14 +58,7 @@ public class UpdateDeploymentFragment extends BaseFragment implements IUpdateDep
     @InjectView(R.id.add_deployment_add)
     Button button;
 
-    public static final String UPDATE_FRAGMENT_TAG = "update_fragment";
-
     private DeploymentUpdateListener mActionListener;
-
-    private UpdateDeploymentPresenter mUpdateDeploymentPresenter;
-
-    private static final String ARGUMENT_KEY_DEPLOYMENT_ID
-            = "com.ushahidi.android.ARGUMENT_DEPLOYMENT_ID";
 
     private Long mDeploymentId;
 
@@ -104,13 +93,6 @@ public class UpdateDeploymentFragment extends BaseFragment implements IUpdateDep
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mUpdateDeploymentPresenter.init(mDeploymentId);
-        initUpdate();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mUpdateDeploymentPresenter.resume();
@@ -124,11 +106,9 @@ public class UpdateDeploymentFragment extends BaseFragment implements IUpdateDep
 
     @Override
     void initPresenter() {
-
-        mUpdateDeploymentPresenter = new UpdateDeploymentPresenter(this,
-                mUpdateDeployment,
-                mGetDeployment,
-                mDeploymentModelDataMapper);
+        mUpdateDeploymentPresenter.setView(this);
+        mUpdateDeploymentPresenter.init(mDeploymentId);
+        initUpdate();
     }
 
     private void init() {
@@ -155,26 +135,6 @@ public class UpdateDeploymentFragment extends BaseFragment implements IUpdateDep
     @Override
     public Context getContext() {
         return getActivity().getApplicationContext();
-    }
-
-    @Override
-    public void showLoading() {
-
-    }
-
-    @Override
-    public void hideLoading() {
-
-    }
-
-    @Override
-    public void showRetry() {
-
-    }
-
-    @Override
-    public void hideRetry() {
-
     }
 
     @Override

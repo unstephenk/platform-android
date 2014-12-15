@@ -19,9 +19,8 @@ package com.ushahidi.android.test.presenter;
 
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
-import com.ushahidi.android.presenter.DeploymentListPresenter;
+import com.ushahidi.android.presenter.ListDeploymentPresenter;
 import com.ushahidi.android.test.CustomAndroidTestCase;
-import com.ushahidi.android.ui.view.IDeploymentListView;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -40,13 +39,13 @@ import static org.mockito.Mockito.verify;
  */
 public class DeploymentListPresenterTest extends CustomAndroidTestCase {
 
-    private DeploymentListPresenter mDeploymentListPresenter;
+    private ListDeploymentPresenter mDeploymentListPresenter;
 
     @Mock
     private Context mMockContext;
 
     @Mock
-    private IDeploymentListView mMockIDeploymentListView;
+    private ListDeploymentPresenter.View mMockView;
 
     @Mock
     private DeploymentModelDataMapper mMockDeploymentModelDataMapper;
@@ -59,14 +58,15 @@ public class DeploymentListPresenterTest extends CustomAndroidTestCase {
         super.setUp();
         MockitoAnnotations.initMocks(this);
 
-        mDeploymentListPresenter = new DeploymentListPresenter(mMockIDeploymentListView,
+        mDeploymentListPresenter = new ListDeploymentPresenter(
                 mMockListDeployment, mMockDeploymentModelDataMapper);
+        mDeploymentListPresenter.setView(mMockView);
     }
 
     public void testInitializingDeploymentListPresenterWithNullValues() {
         final String expectedMessage = "Constructor parameters cannot be null!!!";
         try {
-            new DeploymentListPresenter(null, null, null);
+            new ListDeploymentPresenter(null, null);
         } catch (IllegalArgumentException e) {
             assertEquals(expectedMessage, e.getMessage());
         }
@@ -77,12 +77,12 @@ public class DeploymentListPresenterTest extends CustomAndroidTestCase {
         doNothing().when(mMockListDeployment)
                 .execute(any(ListDeployment.Callback.class));
 
-        given(mMockIDeploymentListView.getContext()).willReturn(mMockContext);
+        given(mMockView.getContext()).willReturn(mMockContext);
 
         mDeploymentListPresenter.init();
 
-        verify(mMockIDeploymentListView).hideRetry();
-        verify(mMockIDeploymentListView).showLoading();
+        verify(mMockView).hideRetry();
+        verify(mMockView).showLoading();
         verify(mMockListDeployment).execute(any(ListDeployment.Callback.class));
     }
 }

@@ -15,24 +15,36 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.ui.view;
+package com.ushahidi.android.ui.prefs;
 
-import com.ushahidi.android.model.DeploymentModel;
+import com.ushahidi.android.data.Pref.StringPreference;
+
+import android.content.SharedPreferences;
+
+import javax.inject.Inject;
 
 /**
- * Adds a deployment to a database
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public interface IUpdateDeploymentView extends ILoadViewData {
+public class Prefs {
 
-    /**
-     * Navigates or reloads deployment lists
-     */
-    void navigateOrReloadList();
+    private SharedPreferences mSharedPreferences;
 
-    /**
-     * Initializes the form with {@link com.ushahidi.android.model.DeploymentModel}
-     */
-    void initForm(DeploymentModel deploymentModel);
+    @Inject
+    public Prefs(SharedPreferences sharedPreferences) {
+        mSharedPreferences = sharedPreferences;
+    }
+
+    public StringPreference getActiveDeploymentUrl() {
+        return new StringPreference(getSharedPreferences(), "active_deployment_url", null);
+    }
+
+    public StringPreference getActiveDeploymentTitle() {
+        return new StringPreference(getSharedPreferences(), "active_deployment_title", null);
+    }
+
+    public SharedPreferences getSharedPreferences() {
+        return mSharedPreferences;
+    }
+
 }

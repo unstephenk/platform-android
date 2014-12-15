@@ -22,7 +22,6 @@ import com.ushahidi.android.core.usecase.post.ListPost;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
 import com.ushahidi.android.presenter.ListPostPresenter;
 import com.ushahidi.android.test.CustomAndroidTestCase;
-import com.ushahidi.android.ui.view.IPostListView;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -47,7 +46,7 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
     private Context mMockContext;
 
     @Mock
-    private IPostListView mMockIPostListView;
+    private ListPostPresenter.View mMockView;
 
     @Mock
     private PostModelDataMapper mMockPostModelDataMapper;
@@ -63,14 +62,15 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
         super.setUp();
         MockitoAnnotations.initMocks(this);
 
-        mPostListPresenter = new ListPostPresenter(mMockIPostListView,
+        mPostListPresenter = new ListPostPresenter(
                 mMockListPost, mMockFetchPost, mMockPostModelDataMapper);
+        mPostListPresenter.setView(mMockView);
     }
 
     public void testInitializingPostListPresenterWithNullValues() {
-        final String expectedMessage = "Post list view cannot be null";
+        final String expectedMessage = "ListPost cannot be null";
         try {
-            new ListPostPresenter(null, null, null, null);
+            new ListPostPresenter(null, null, null);
         } catch (NullPointerException e) {
             assertEquals(expectedMessage, e.getMessage());
         }
@@ -81,12 +81,12 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
         doNothing().when(mMockListPost)
                 .execute(any(ListPost.Callback.class));
 
-        given(mMockIPostListView.getContext()).willReturn(mMockContext);
+        given(mMockView.getContext()).willReturn(mMockContext);
 
         mPostListPresenter.init();
 
-        verify(mMockIPostListView).hideRetry();
-        verify(mMockIPostListView).showLoading();
+        verify(mMockView).hideRetry();
+        verify(mMockView).showLoading();
         verify(mMockListPost).execute(any(ListPost.Callback.class));
     }
 }

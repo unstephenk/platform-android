@@ -23,7 +23,6 @@ import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.AddDeploymentPresenter;
 import com.ushahidi.android.test.CustomAndroidTestCase;
-import com.ushahidi.android.ui.view.IAddDeploymentView;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -59,7 +58,7 @@ public class AddDeploymentPresenterTest extends CustomAndroidTestCase {
     private DeploymentModelDataMapper mMockDeploymentModelDataMapper;
 
     @Mock
-    private IAddDeploymentView mMockIAddDeploymentView;
+    private AddDeploymentPresenter.View mView;
 
     @Mock
     private AddDeployment mMockAddDeployment;
@@ -68,9 +67,10 @@ public class AddDeploymentPresenterTest extends CustomAndroidTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         MockitoAnnotations.initMocks(this);
-        mAddDeploymentPresenter = new AddDeploymentPresenter(mMockIAddDeploymentView,
+        mAddDeploymentPresenter = new AddDeploymentPresenter(
                 mMockAddDeployment,
                 mMockDeploymentModelDataMapper);
+        mAddDeploymentPresenter.setView(mView);
         mDeploymentModel = new DeploymentModel();
         mDeploymentModel.setTitle(DUMMY_TITLE);
         mDeploymentModel.setUrl(DUMMY_URL);
@@ -78,9 +78,9 @@ public class AddDeploymentPresenterTest extends CustomAndroidTestCase {
     }
 
     public void testInitializingAddDeploymentPresenterWithNullValues() {
-        final String expectedMessage = "IAddDeploymentView cannot be null";
+        final String expectedMessage = "AddDeployment cannot be null";
         try {
-            new AddDeploymentPresenter(null, null, null);
+            new AddDeploymentPresenter(null, null);
         } catch (NullPointerException e) {
             assertEquals(expectedMessage, e.getMessage());
         }
@@ -91,11 +91,10 @@ public class AddDeploymentPresenterTest extends CustomAndroidTestCase {
         doNothing().when(mMockAddDeployment)
                 .execute(any(Deployment.class), any(AddDeployment.Callback.class));
 
-        given(mMockIAddDeploymentView.getContext()).willReturn(mMockContext);
+        given(mView.getContext()).willReturn(mMockContext);
 
         mAddDeploymentPresenter.addDeployment(mDeploymentModel);
 
-        verify(mMockIAddDeploymentView).showLoading();
         verify(mMockDeploymentModelDataMapper).unmap(mDeploymentModel);
         verify(mMockAddDeployment)
                 .execute(any(Deployment.class), any(AddDeployment.Callback.class));

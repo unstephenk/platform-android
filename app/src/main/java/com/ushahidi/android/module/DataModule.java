@@ -19,6 +19,22 @@ package com.ushahidi.android.module;
 
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
+import com.ushahidi.android.core.respository.IDeploymentRepository;
+import com.ushahidi.android.core.respository.IPostRepository;
+import com.ushahidi.android.core.task.ThreadExecutor;
+import com.ushahidi.android.data.api.service.PostService;
+import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
+import com.ushahidi.android.data.database.PostDatabaseHelper;
+import com.ushahidi.android.data.entity.PostEntity;
+import com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper;
+import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
+import com.ushahidi.android.data.repository.DeploymentDataRepository;
+import com.ushahidi.android.data.repository.PostDataRepository;
+import com.ushahidi.android.data.repository.datasource.PostDataSource;
+import com.ushahidi.android.data.repository.datasource.PostDataSourceFactory;
+import com.ushahidi.android.data.validator.UrlValidator;
+import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
+import com.ushahidi.android.model.mapper.PostModelDataMapper;
 
 import android.app.Application;
 import android.content.Context;
@@ -50,7 +66,7 @@ public class DataModule {
     static OkHttpClient createOkHttpClient(Context app) {
         OkHttpClient client = new OkHttpClient();
         try {
-            File cacheDir = new File(app.getApplicationContext().getCacheDir(), "http");
+            File cacheDir = new File(app.getApplicationContext().getCacheDir(), "ushahidi-android-http-cache");
             Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
             client.setCache(cache);
         } catch (IOException e) {
@@ -63,7 +79,7 @@ public class DataModule {
     @Provides
     @Singleton
     SharedPreferences provideSharedPreferences(Context app) {
-        return app.getApplicationContext().getSharedPreferences("ushahidi-android", MODE_PRIVATE);
+        return app.getApplicationContext().getSharedPreferences("ushahidi-android-shared-prefs", MODE_PRIVATE);
     }
 
     @Provides
@@ -71,4 +87,66 @@ public class DataModule {
     OkHttpClient provideOkHttpClient(Context app) {
         return createOkHttpClient(app.getApplicationContext());
     }
+
+    @Provides
+    @Singleton
+    UrlValidator providesUrlValidator() {
+        return new UrlValidator();
+    }
+
+    @Provides
+    @Singleton
+    DeploymentEntityMapper providesDeploymentEntityMapper() {
+        return new DeploymentEntityMapper();
+    }
+
+    @Provides
+    @Singleton
+    DeploymentModelDataMapper providesDeploymentModelDataMapper() {
+        return new DeploymentModelDataMapper();
+    }
+
+    @Provides
+    @Singleton
+    DeploymentDatabaseHelper providesDeploymentDatabaseHelper(Context context,
+            ThreadExecutor threadExecutor) {
+        return DeploymentDatabaseHelper.getInstance(context, threadExecutor);
+    }
+
+    @Provides
+    @Singleton
+    PostDatabaseHelper providesPostDatabaseHelper(Context context, ThreadExecutor threadExecutor) {
+        return PostDatabaseHelper.getInstance(context,threadExecutor);
+    }
+
+    @Provides
+    IDeploymentRepository providesDeploymentRepository(
+            DeploymentDatabaseHelper deploymentDatabaseHelper, DeploymentEntityMapper entityMapper,
+            UrlValidator urlValidator) {
+        return DeploymentDataRepository
+                .getInstance(deploymentDatabaseHelper, entityMapper, urlValidator);
+    }
+
+    @Provides
+    @Singleton
+    PostEntityMapper providesPostEntityMapper(){
+        return new PostEntityMapper();
+    }
+
+    @Provides
+    @Singleton
+    PostModelDataMapper providesPostModelDataMapper() {
+        return new PostModelDataMapper();
+    }
+
+    @Provides
+    PostDataSourceFactory providesPostDataSourceFactory(Context context,PostDatabaseHelper postDatabaseHelper, PostService postService){
+        return new PostDataSourceFactory(context,postDatabaseHelper,postService);
+    }
+
+    @Provides
+    IPostRepository providesDeploymentRepository(PostDataSourceFactory postDataSourceFactory, PostEntityMapper entityMapper) {
+        return PostDataRepository.getInstance(postDataSourceFactory, entityMapper);
+    }
+
 }

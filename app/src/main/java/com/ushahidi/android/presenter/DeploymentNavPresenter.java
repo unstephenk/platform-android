@@ -23,9 +23,11 @@ import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
-import com.ushahidi.android.ui.view.IDeploymentNavView;
+import com.ushahidi.android.ui.view.IView;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * {@link com.ushahidi.android.presenter.IPresenter} facilitates interactions between deployment
@@ -35,7 +37,7 @@ import java.util.List;
  */
 public class DeploymentNavPresenter implements IPresenter {
 
-    private final IDeploymentNavView mDeploymentNavView;
+    private View mView;
 
     private final DeploymentModelDataMapper mDeploymentModelDataMapper;
 
@@ -56,31 +58,38 @@ public class DeploymentNavPresenter implements IPresenter {
 
     private List<DeploymentModel> mDeployments;
 
-    public DeploymentNavPresenter(IDeploymentNavView deploymentNavView,
+    @Inject
+    public DeploymentNavPresenter(
             ListDeployment listDeployment,
             DeploymentModelDataMapper deploymentModelDataMapper) {
-        if (deploymentNavView == null || listDeployment == null
+        if (listDeployment == null
                 || deploymentModelDataMapper == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
         }
 
         mListDeployment = listDeployment;
-        mDeploymentNavView = deploymentNavView;
         mDeploymentModelDataMapper = deploymentModelDataMapper;
     }
 
+    public void setView(View view) {
+        if (view == null) {
+            throw new IllegalArgumentException("View cannot be null.");
+        }
+        mView = view;
+    }
+
     private void showErrorMessage(ErrorWrap errorWrap) {
-        String errorMessage = ErrorMessageFactory.create(mDeploymentNavView.getContext(),
+        String errorMessage = ErrorMessageFactory.create(mView.getContext(),
                 errorWrap.getException());
-        mDeploymentNavView.showError(errorMessage);
+        mView.showError(errorMessage);
     }
 
     private void showDeploymentsListInView(List<Deployment> listDeployments) {
         final List<DeploymentModel> deploymentModelsList =
                 mDeploymentModelDataMapper.map(listDeployments);
-        mDeploymentNavView.renderDeploymentList(deploymentModelsList);
+        mView.renderDeploymentList(deploymentModelsList);
         setDeployments(deploymentModelsList);
-        mDeploymentNavView.createNav();
+        mView.createNav();
     }
 
     private void getDeploymentList() {
@@ -103,6 +112,26 @@ public class DeploymentNavPresenter implements IPresenter {
 
     @Override
     public void pause() {
+
+    }
+
+    public interface View extends IView {
+
+        /**
+         * Render a deployment list in the UI.
+         *
+         * @param deploymentModel The collection of {@link com.ushahidi.android.model.DeploymentModel} that will be shown.
+         */
+        public void renderDeploymentList(List<DeploymentModel> deploymentModel);
+
+        /**
+         * Shows an error message
+         *
+         * @param message A string resource representing an error.
+         */
+        public void showError(String message);
+
+        public void createNav();
 
     }
 }

@@ -24,12 +24,7 @@ import android.content.Context;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public interface ILoadViewData {
-
-    /**
-     * Gets a {@link android.content.Context}.
-     */
-    public Context getContext();
+public interface ILoadViewData extends IView {
 
     /**
      * Shows a view with a progress bar indicating a loading process.

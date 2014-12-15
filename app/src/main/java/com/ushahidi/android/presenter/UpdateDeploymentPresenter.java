@@ -26,7 +26,9 @@ import com.ushahidi.android.core.usecase.deployment.UpdateDeployment;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
-import com.ushahidi.android.ui.view.IUpdateDeploymentView;
+import com.ushahidi.android.ui.view.IView;
+
+import javax.inject.Inject;
 
 /**
  * Facilitates interactions between between add deployment view and deployment models
@@ -34,8 +36,6 @@ import com.ushahidi.android.ui.view.IUpdateDeploymentView;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class UpdateDeploymentPresenter implements IPresenter {
-
-    private final IUpdateDeploymentView mIUpdateDeploymentView;
 
     private final UpdateDeployment mUpdateDeployment;
 
@@ -47,8 +47,7 @@ public class UpdateDeploymentPresenter implements IPresenter {
 
         @Override
         public void onDeploymentUpdated() {
-            mIUpdateDeploymentView.hideLoading();
-            mIUpdateDeploymentView.navigateOrReloadList();
+            mView.navigateOrReloadList();
         }
 
         @Override
@@ -70,20 +69,25 @@ public class UpdateDeploymentPresenter implements IPresenter {
         }
     };
 
-    public UpdateDeploymentPresenter(IUpdateDeploymentView updateDeploymentView,
+    private View mView;
+
+    @Inject
+    public UpdateDeploymentPresenter(
             UpdateDeployment updateDeployment,
             GetDeployment getDeployment,
             DeploymentModelDataMapper deploymentModelDataMapper) {
-        Preconditions.checkNotNull(updateDeploymentView, "IUpdateDeploymentView cannot be null");
-        Preconditions.checkNotNull(getDeployment, "GetDeployment cannot be null");
-        Preconditions.checkNotNull(updateDeployment, "UpdateDeployment cannot be null");
-        Preconditions.checkNotNull(deploymentModelDataMapper,
+        mGetDeployment = Preconditions.checkNotNull(getDeployment, "GetDeployment cannot be null");
+        mUpdateDeployment = Preconditions
+                .checkNotNull(updateDeployment, "UpdateDeployment cannot be null");
+        mDeploymentModelDataMapper = Preconditions.checkNotNull(deploymentModelDataMapper,
                 "DeploymentModelDataMapper cannot be null");
-        mIUpdateDeploymentView = updateDeploymentView;
-        mGetDeployment = getDeployment;
-        mUpdateDeployment = updateDeployment;
-        mDeploymentModelDataMapper = deploymentModelDataMapper;
+    }
 
+    public void setView(View view) {
+        if (view == null) {
+            throw new IllegalArgumentException("View cannot be null.");
+        }
+        mView = view;
     }
 
     public void init(long deploymentId) {
@@ -92,7 +96,7 @@ public class UpdateDeploymentPresenter implements IPresenter {
 
     private void initForm(Deployment deployment) {
         final DeploymentModel deploymentModel = mDeploymentModelDataMapper.map(deployment);
-        mIUpdateDeploymentView.initForm(deploymentModel);
+        mView.initForm(deploymentModel);
     }
 
     @Override
@@ -107,14 +111,31 @@ public class UpdateDeploymentPresenter implements IPresenter {
 
 
     private void showErrorMessage(ErrorWrap errorWrap) {
-        String errorMessage = ErrorMessageFactory.create(mIUpdateDeploymentView.getContext(),
+        String errorMessage = ErrorMessageFactory.create(mView.getContext(),
                 errorWrap.getException());
-        mIUpdateDeploymentView.showError(errorMessage);
+        mView.showError(errorMessage);
     }
 
     public void updateDeployment(DeploymentModel deploymentModel) {
-        mIUpdateDeploymentView.showLoading();
         final Deployment deployment = mDeploymentModelDataMapper.unmap(deploymentModel);
         mUpdateDeployment.execute(deployment, mUpdateCallback);
+    }
+
+    /**
+     * Adds a deployment to a database
+     *
+     * @author Ushahidi Team <team@ushahidi.com>
+     */
+    public interface View extends IView {
+
+        /**
+         * Navigates or reloads deployment lists
+         */
+        void navigateOrReloadList();
+
+        /**
+         * Initializes the form with {@link com.ushahidi.android.model.DeploymentModel}
+         */
+        void initForm(DeploymentModel deploymentModel);
     }
 }

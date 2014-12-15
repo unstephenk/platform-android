@@ -25,7 +25,7 @@ import com.ushahidi.android.core.usecase.deployment.ActivateDeployment;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
-import com.ushahidi.android.ui.view.IActivateDeploymentView;
+import com.ushahidi.android.ui.view.IView;
 
 import java.util.List;
 
@@ -40,12 +40,12 @@ public class ActivateDeploymentPresenter implements IPresenter {
 
     private final ActivateDeployment mActivateDeployment;
 
-    private final IActivateDeploymentView mActivateDeploymentView;
+    private View mView;
 
     private final ActivateDeployment.Callback mCallback = new ActivateDeployment.Callback() {
         @Override
         public void onDeploymentActivated() {
-            mActivateDeploymentView.markStatus();
+            mView.markStatus();
         }
 
         @Override
@@ -55,11 +55,9 @@ public class ActivateDeploymentPresenter implements IPresenter {
     };
 
     @Inject
-    public ActivateDeploymentPresenter(IActivateDeploymentView activateDeploymentView,
-            ActivateDeployment activateDeployment,
+    public ActivateDeploymentPresenter(ActivateDeployment activateDeployment,
             DeploymentModelDataMapper deploymentModelDataMapper) {
-        mActivateDeploymentView = Preconditions.checkNotNull(activateDeploymentView,
-                "ActivateDeploymentView Cannot be null");
+
         mActivateDeployment = Preconditions
                 .checkNotNull(activateDeployment, "Activate deployment usecase cannot be null");
         mDeploymentModelDataMapper = Preconditions.checkNotNull(deploymentModelDataMapper,
@@ -68,9 +66,9 @@ public class ActivateDeploymentPresenter implements IPresenter {
     }
 
     private void showErrorMessage(ErrorWrap errorWrap) {
-        String errorMessage = ErrorMessageFactory.create(mActivateDeploymentView.getContext(),
+        String errorMessage = ErrorMessageFactory.create(mView.getContext(),
                 errorWrap.getException());
-        mActivateDeploymentView.showError(errorMessage);
+        mView.showError(errorMessage);
     }
 
     public void activateDeployment(List<DeploymentModel> deploymentModels, int position) {
@@ -78,8 +76,11 @@ public class ActivateDeploymentPresenter implements IPresenter {
         mActivateDeployment.execute(deployments, position, mCallback);
     }
 
-    public IActivateDeploymentView getActivateDeploymentView() {
-        return mActivateDeploymentView;
+    public void setView(View view) {
+        if (view == null) {
+            throw new IllegalArgumentException("View cannot be null.");
+        }
+        mView = view;
     }
 
     @Override
@@ -90,5 +91,10 @@ public class ActivateDeploymentPresenter implements IPresenter {
     @Override
     public void pause() {
         // Do nothing
+    }
+
+    public interface View extends IView {
+
+        public void markStatus();
     }
 }

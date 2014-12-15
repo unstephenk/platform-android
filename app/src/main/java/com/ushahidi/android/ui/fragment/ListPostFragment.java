@@ -18,13 +18,10 @@
 package com.ushahidi.android.ui.fragment;
 
 import com.ushahidi.android.R;
-import com.ushahidi.android.core.usecase.post.FetchPost;
-import com.ushahidi.android.core.usecase.post.ListPost;
 import com.ushahidi.android.model.PostModel;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
 import com.ushahidi.android.presenter.ListPostPresenter;
 import com.ushahidi.android.ui.adapter.PostAdapter;
-import com.ushahidi.android.ui.view.IPostListView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -45,21 +42,16 @@ import butterknife.InjectView;
  */
 public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAdapter>
         implements
-        IPostListView, RecyclerView.OnItemTouchListener {
+        ListPostPresenter.View, RecyclerView.OnItemTouchListener {
 
     @Inject
-    ListPost mListPost;
-
-    @Inject
-    FetchPost mFetchPost;
+    ListPostPresenter mPostListPresenter;
 
     @Inject
     PostModelDataMapper mPostModelDataMapper;
 
     @InjectView(android.R.id.empty)
     TextView mEmptyView;
-
-    private ListPostPresenter mPostListPresenter;
 
     private PostListListener mPostListListener;
 
@@ -100,8 +92,7 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
 
     @Override
     void initPresenter() {
-        mPostListPresenter = new ListPostPresenter(this, mListPost, mFetchPost,
-                mPostModelDataMapper);
+        mPostListPresenter.setView(this);
     }
 
     private void setEmptyView() {

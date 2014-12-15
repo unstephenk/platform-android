@@ -24,7 +24,6 @@ import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.UpdateDeploymentPresenter;
 import com.ushahidi.android.test.CustomAndroidTestCase;
-import com.ushahidi.android.ui.view.IUpdateDeploymentView;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -63,7 +62,7 @@ public class UpdateDeploymentPresenterTest extends CustomAndroidTestCase {
     private DeploymentModelDataMapper mMockDeploymentModelDataMapper;
 
     @Mock
-    private IUpdateDeploymentView mMockIUpdateDeploymentView;
+    private UpdateDeploymentPresenter.View mMockView;
 
     @Mock
     private UpdateDeployment mMockUpdateDeployment;
@@ -81,15 +80,16 @@ public class UpdateDeploymentPresenterTest extends CustomAndroidTestCase {
         mDeploymentModel.setUrl(DUMMY_URL);
         mDeploymentModel.setStatus(DUMMY_STATUS);
 
-        mUpdateDeploymentPresenter = new UpdateDeploymentPresenter(mMockIUpdateDeploymentView,
+        mUpdateDeploymentPresenter = new UpdateDeploymentPresenter(
                 mMockUpdateDeployment,
                 mMockGetDeployment, mMockDeploymentModelDataMapper);
+        mUpdateDeploymentPresenter.setView(mMockView);
     }
 
     public void testInitializingUpdateDeploymentPresenterWithNullValues() {
-        final String expectedMessage = "IUpdateDeploymentView cannot be null";
+        final String expectedMessage = "GetDeployment cannot be null";
         try {
-            new UpdateDeploymentPresenter(null, null, null, null);
+            new UpdateDeploymentPresenter(null, null, null);
         } catch (NullPointerException e) {
             assertEquals(expectedMessage, e.getMessage());
         }
@@ -100,11 +100,10 @@ public class UpdateDeploymentPresenterTest extends CustomAndroidTestCase {
         doNothing().when(mMockUpdateDeployment)
                 .execute(any(Deployment.class), any(UpdateDeployment.Callback.class));
 
-        given(mMockIUpdateDeploymentView.getContext()).willReturn(mMockContext);
+        given(mMockView.getContext()).willReturn(mMockContext);
 
         mUpdateDeploymentPresenter.updateDeployment(mDeploymentModel);
 
-        verify(mMockIUpdateDeploymentView).showLoading();
         verify(mMockDeploymentModelDataMapper).unmap(mDeploymentModel);
         verify(mMockUpdateDeployment)
                 .execute(any(Deployment.class), any(UpdateDeployment.Callback.class));
@@ -114,7 +113,7 @@ public class UpdateDeploymentPresenterTest extends CustomAndroidTestCase {
         doNothing().when(mMockGetDeployment)
                 .execute(anyLong(), any(GetDeployment.Callback.class));
 
-        given(mMockIUpdateDeploymentView.getContext()).willReturn(mMockContext);
+        given(mMockView.getContext()).willReturn(mMockContext);
 
         mUpdateDeploymentPresenter.init(DUMMY_ID);
 

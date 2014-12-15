@@ -23,18 +23,18 @@ import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
-import com.ushahidi.android.ui.view.IDeploymentListView;
+import com.ushahidi.android.ui.view.ILoadViewData;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * {@link IPresenter} facilitates interactions between deployment list view and deployment models.
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentListPresenter implements IPresenter {
-
-    private final IDeploymentListView mIDeploymentListView;
+public class ListDeploymentPresenter implements IPresenter {
 
     private final DeploymentModelDataMapper mDeploymentModelDataMapper;
 
@@ -56,17 +56,26 @@ public class DeploymentListPresenter implements IPresenter {
         }
     };
 
-    public DeploymentListPresenter(IDeploymentListView deploymentListView,
+    private View mView;
+
+    @Inject
+    public ListDeploymentPresenter(
             ListDeployment listDeployment,
             DeploymentModelDataMapper deploymentModelDataMapper) {
-        if (deploymentListView == null || listDeployment == null
+        if (listDeployment == null
                 || deploymentModelDataMapper == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
         }
 
         mListDeployment = listDeployment;
-        mIDeploymentListView = deploymentListView;
         mDeploymentModelDataMapper = deploymentModelDataMapper;
+    }
+
+    public void setView(View view) {
+        if (view == null) {
+            throw new IllegalArgumentException("View cannot be null.");
+        }
+        mView = view;
     }
 
     @Override
@@ -94,38 +103,57 @@ public class DeploymentListPresenter implements IPresenter {
     }
 
     public void onDeploymentClicked(DeploymentModel deploymentModel) {
-        mIDeploymentListView.editDeployment(deploymentModel);
+        mView.editDeployment(deploymentModel);
     }
 
     private void showViewLoading() {
-        mIDeploymentListView.showLoading();
+        mView.showLoading();
     }
 
     private void hideViewLoading() {
-        mIDeploymentListView.hideLoading();
+        mView.hideLoading();
     }
 
     private void showViewRetry() {
-        mIDeploymentListView.showRetry();
+        mView.showRetry();
     }
 
     private void hideViewRetry() {
-        mIDeploymentListView.hideRetry();
+        mView.hideRetry();
     }
 
     private void showErrorMessage(ErrorWrap errorWrap) {
-        String errorMessage = ErrorMessageFactory.create(mIDeploymentListView.getContext(),
+        String errorMessage = ErrorMessageFactory.create(mView.getContext(),
                 errorWrap.getException());
-        mIDeploymentListView.showError(errorMessage);
+        mView.showError(errorMessage);
     }
 
     private void showDeploymentsListInView(List<Deployment> listDeployments) {
         final List<DeploymentModel> deploymentModelsList =
                 mDeploymentModelDataMapper.map(listDeployments);
-        mIDeploymentListView.renderDeploymentList(deploymentModelsList);
+        mView.renderDeploymentList(deploymentModelsList);
     }
 
     private void getDeploymentList() {
         mListDeployment.execute(mListCallback);
+    }
+
+    public interface View extends ILoadViewData {
+
+        /**
+         * Render a deployment list in the UI.
+         *
+         * @param deploymentModel The collection of {@link DeploymentModel} that will be shown.
+         */
+        void renderDeploymentList(List<DeploymentModel> deploymentModel);
+
+        /**
+         * Edit {@link com.ushahidi.android.model.DeploymentModel}
+         *
+         * @param deploymentModel The deployment model to be edited
+         */
+        void editDeployment(DeploymentModel deploymentModel);
+
+        void refreshList();
     }
 }
