@@ -19,6 +19,7 @@ package com.ushahidi.android.data.entity.mapper;
 
 import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.data.entity.UserEntity;
+import java.util.Date;
 
 import java.util.ArrayList;
 import java.util.List;

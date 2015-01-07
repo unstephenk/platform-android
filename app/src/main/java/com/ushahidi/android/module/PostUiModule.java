@@ -22,6 +22,7 @@ import com.ushahidi.android.core.respository.IPostRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.deployment.ActivateDeployment;
+import com.ushahidi.android.core.usecase.deployment.GetActiveDeployment;
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
@@ -44,17 +45,17 @@ import dagger.Provides;
 public final class PostUiModule {
 
     @Provides
-    ListPost providesListPost(IPostRepository postRepository, ThreadExecutor threadExecutor,
+    ListPost providesListPost(ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
-        return new ListPost(postRepository, threadExecutor,
+        return new ListPost(threadExecutor,
                 postExecutionThread);
 
     }
 
     @Provides
-    FetchPost providesFetchPost(IPostRepository postRepository, ThreadExecutor threadExecutor,
+    FetchPost providesFetchPost(ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
-        return new FetchPost(postRepository, threadExecutor,
+        return new FetchPost(threadExecutor,
                 postExecutionThread);
 
     }
@@ -72,6 +73,13 @@ public final class PostUiModule {
     ActivateDeployment providesActivateDeployment(IDeploymentRepository deploymentRepository,
             ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         return new ActivateDeployment(deploymentRepository, threadExecutor, postExecutionThread);
+    }
+
+    @Provides
+    @Singleton
+    GetActiveDeployment providesActiveDeployment(IDeploymentRepository deploymentRepository,
+            ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+        return new GetActiveDeployment(deploymentRepository, threadExecutor, postExecutionThread);
     }
 
 }

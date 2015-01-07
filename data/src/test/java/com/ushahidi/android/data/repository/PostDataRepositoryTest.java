@@ -26,8 +26,8 @@ import com.ushahidi.android.data.entity.PostEntity;
 import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
 import com.ushahidi.android.data.exception.RepositoryError;
 import com.ushahidi.android.data.exception.ValidationException;
-import com.ushahidi.android.data.repository.datasource.PostDataSource;
-import com.ushahidi.android.data.repository.datasource.PostDataSourceFactory;
+import com.ushahidi.android.data.repository.datasource.post.PostDataSource;
+import com.ushahidi.android.data.repository.datasource.post.PostDataSourceFactory;
 
 import org.junit.Before;
 import org.junit.Rule;

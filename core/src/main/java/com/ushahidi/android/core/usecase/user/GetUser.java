@@ -17,13 +17,10 @@
 package com.ushahidi.android.core.usecase.user;
 
 import com.ushahidi.android.core.entity.User;
-import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.core.exception.ErrorWrap;
-import com.ushahidi.android.core.respository.IUserRepository;
 import com.ushahidi.android.core.respository.IUserRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
-import com.ushahidi.android.core.usecase.user.IGetUser;
 
 /**
  * This class is an implementation of {@link IGetUser} that represents a use case for retrieving

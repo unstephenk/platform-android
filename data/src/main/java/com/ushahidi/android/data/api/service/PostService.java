@@ -22,11 +22,14 @@ import com.ushahidi.android.data.api.model.Posts;
 import retrofit.Callback;
 import retrofit.http.GET;
 
+import static com.ushahidi.android.data.Constants.API_PATH;
+
+
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public interface PostService {
 
-    @GET("/posts")
+    @GET(API_PATH + "/posts")
     void posts(Callback<Posts> callback);
 }

@@ -18,9 +18,15 @@
 package com.ushahidi.android.module;
 
 import com.squareup.okhttp.OkHttpClient;
+import com.ushahidi.android.Util.PrefsUtils;
 import com.ushahidi.android.data.api.ApiHeader;
-import com.ushahidi.android.data.api.service.PostService;
 import com.ushahidi.android.data.api.qualifier.Bearer;
+import com.ushahidi.android.data.api.service.PostService;
+import com.ushahidi.android.data.api.service.UserService;
+import com.ushahidi.android.model.DeploymentModel;
+import com.ushahidi.android.ui.prefs.Prefs;
+
+import java.util.Timer;
 
 import javax.inject.Singleton;
 
@@ -31,6 +37,7 @@ import retrofit.Endpoints;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
+import timber.log.Timber;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
@@ -41,45 +48,9 @@ import retrofit.client.OkClient;
 )
 public final class ApiModule {
 
-    //TODO: Get this from a shared preference
-    public static final String SAMPLE_DEPLOYMENT_URL = "http://192.168.6.14:8081";
-
-    //TODO: Get this from AccountManager
-    public static final String  bearer = "password";
-
-    @Provides
-    @Singleton
-    @Bearer
-    String provideBearer() {
-        return bearer;
-    }
-
-    @Provides
-    @Singleton
-    Endpoint provideEndpoint() {
-        return Endpoints.newFixedEndpoint(SAMPLE_DEPLOYMENT_URL);
-    }
-
     @Provides
     @Singleton
     Client provideClient(OkHttpClient client) {
         return new OkClient(client);
-    }
-
-    @Provides
-    @Singleton
-    RestAdapter provideRestAdapter(Endpoint endpoint, Client client, ApiHeader header) {
-        return new RestAdapter.Builder()
-                .setClient(client)
-                .setEndpoint(endpoint)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setRequestInterceptor(header)
-                .build();
-    }
-
-    @Provides
-    @Singleton
-    PostService providePostService(RestAdapter restAdapter) {
-        return restAdapter.create(PostService.class);
     }
 }

@@ -18,9 +18,7 @@
 package com.ushahidi.android.ui.activity;
 
 import com.ushahidi.android.R;
-import com.ushahidi.android.module.DeploymentUiModule;
-import com.ushahidi.android.module.LoginModule;
-import com.ushahidi.android.ui.fragment.AddDeploymentFragment;
+import com.ushahidi.android.module.AccountModule;
 import com.ushahidi.android.ui.fragment.LoginFragment;
 
 import android.content.Context;
@@ -48,7 +46,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected List<Object> getModules() {
         List<Object> modules = new LinkedList<>();
-        modules.add(new LoginModule());
+        modules.add(new AccountModule());
         return modules;
     }
 

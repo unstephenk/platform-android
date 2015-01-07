@@ -3,7 +3,7 @@ apply plugin: 'robolectric'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.0.2"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         minSdkVersion 14
@@ -53,10 +53,12 @@ dependencies {
     compile 'javax.inject:javax.inject:1@jar'
     compile 'com.squareup.okhttp:okhttp:2.1.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:+'
-    compile 'com.squareup.retrofit:retrofit:1.8.+'
+    compile 'com.squareup.retrofit:retrofit:1.8.0'
     compile 'io.reactivex:rxandroid:0.23.0'
 
     androidTestCompile 'org.mockito:mockito-core:1.9.5'
+    androidTestCompile 'com.squareup.retrofit:retrofit-mock:1.8.0'
+    androidTestCompile 'com.squareup.okhttp:mockwebserver:2.1.0'
     androidTestCompile 'junit:junit:4.11'
     androidTestCompile('org.robolectric:robolectric:2.3') {
         exclude module: 'classworlds'

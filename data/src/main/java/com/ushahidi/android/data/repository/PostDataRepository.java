@@ -26,15 +26,10 @@ import com.ushahidi.android.data.entity.PostEntity;
 import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
 import com.ushahidi.android.data.exception.RepositoryError;
 import com.ushahidi.android.data.exception.ValidationException;
-import com.ushahidi.android.data.repository.datasource.PostApiDataSource;
-import com.ushahidi.android.data.repository.datasource.PostDataSource;
-import com.ushahidi.android.data.repository.datasource.PostDataSourceFactory;
-
-import android.util.Log;
+import com.ushahidi.android.data.repository.datasource.post.PostDataSource;
+import com.ushahidi.android.data.repository.datasource.post.PostDataSourceFactory;
 
 import java.util.List;
-
-import retrofit.RetrofitError;
 
 /**
  * {@link com.ushahidi.android.core.respository.IPostRepository} for retrieving post data

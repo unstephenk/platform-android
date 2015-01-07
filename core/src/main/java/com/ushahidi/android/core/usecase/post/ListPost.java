@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class ListPost implements IListPost {
 
-    private final IPostRepository mIPostRepository;
+    private IPostRepository mIPostRepository;
 
     private final ThreadExecutor mThreadExecutor;
 
@@ -57,21 +57,28 @@ public class ListPost implements IListPost {
     /**
      * Default constructor.
      *
-     * @param postRepository      A {@link com.ushahidi.android.core.respository.IPostRepository} as
-     *                            a source for retrieving data.
      * @param threadExecutor      {@link ThreadExecutor} used to execute this use case in a
      *                            background thread.
      * @param postExecutionThread {@link PostExecutionThread} used to post updates when the use case
      *                            has been executed.
      */
-    public ListPost(IPostRepository postRepository, ThreadExecutor threadExecutor,
+    public ListPost(ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
-        if (postRepository == null || threadExecutor == null || postExecutionThread == null) {
+
+        if (threadExecutor == null || postExecutionThread == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
         }
-        mIPostRepository = postRepository;
+
         mThreadExecutor = threadExecutor;
         mPostExecutionThread = postExecutionThread;
+    }
+
+    public void setPostRepository(IPostRepository postRepository) {
+
+        if(postRepository == null) {
+            throw new IllegalArgumentException("IPostRepository cannot be null");
+        }
+        mIPostRepository = postRepository;
     }
 
     @Override
@@ -85,6 +92,9 @@ public class ListPost implements IListPost {
 
     @Override
     public void run() {
+        if(mIPostRepository == null) {
+            throw new NullPointerException("You must call setPostRepository(...)");
+        }
         mIPostRepository.getPostList(mRepositoryCallback);
     }
 

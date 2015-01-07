@@ -18,12 +18,13 @@
 package com.ushahidi.android.ui.activity;
 
 import com.ushahidi.android.R;
+import com.ushahidi.android.data.entity.DeploymentEntity;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.module.PostUiModule;
 import com.ushahidi.android.presenter.ActivateDeploymentPresenter;
 import com.ushahidi.android.presenter.DeploymentNavPresenter;
-import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.fragment.ListPostFragment;
+import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.widget.NavDrawerItem;
 import com.ushahidi.android.ui.widget.SlidingTabLayout;
 
@@ -69,6 +70,8 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     private int mCurrentItem;
 
     private List<String> mTabTitle;
+
+    private DeploymentModel mDeploymentModel;
 
     public PostActivity() {
         super(R.layout.activity_post, R.menu.post, R.id.drawer_layout, R.id.navdrawer_items_list);
@@ -116,6 +119,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     public void onResume() {
         super.onResume();
         mDeploymentNavPresenter.resume();
+        mActivateDeploymentPresenter.resume();
         mSlidingTabStrip.getBackground().setAlpha(255);
     }
 
@@ -212,16 +216,13 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     @Override
     public void onNavDeploymentItemClick(NavDrawerItem navDrawerItem) {
         List<DeploymentModel> deploymentModels = mDeploymentNavPresenter.getDeployments();
-
         final int position = navDrawerItem.getPosition();
-        // Save into a shared preferences
 
-            mPrefs.getActiveDeploymentUrl().set(deploymentModels.get(position).getUrl());
-            mPrefs.getActiveDeploymentTitle().set(deploymentModels.get(position).getTitle());
+        if (deploymentModels.get(position).getStatus() == DeploymentModel.Status.DEACTIVATED) {
             setTitle();
-
-        mActivateDeploymentPresenter
-                .activateDeployment(deploymentModels, navDrawerItem.getPosition());
+            mActivateDeploymentPresenter.activateDeployment(deploymentModels,
+                    navDrawerItem.getPosition());
+        }
     }
 
     @Override
@@ -244,20 +245,20 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     }
 
     public void setTitle() {
-        final String title = mPrefs.getActiveDeploymentTitle().get();
-        if(title !=null) {
-            setActionBarTitle(title);
+
+        if (mDeploymentModel != null) {
+            setActionBarTitle(mDeploymentModel.getTitle());
         }
     }
 
     @Override
     public void showError(String message) {
-        showToast(message);
+        showToast(message+ DeploymentEntity.Status.ACTIVATED.name());
     }
 
     @Override
     public Context getContext() {
-        return getContext();
+        return getApplicationContext();
     }
 
     @Override
@@ -269,6 +270,13 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     @Override
     public void markStatus() {
         mDeploymentNavPresenter.resume();
+    }
+
+    @Override
+    public void getActiveDeployment(DeploymentModel deploymentModel) {
+        mPrefs.getActiveDeploymentUrl().set(deploymentModel.getUrl());
+        mDeploymentModel = deploymentModel;
+        setTitle();
     }
 
     private static enum PostTab {

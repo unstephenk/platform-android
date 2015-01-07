@@ -19,8 +19,6 @@ package com.ushahidi.android.data.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-import com.ushahidi.android.data.Entity;
-
 import java.util.Date;
 import java.util.List;
 

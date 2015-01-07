@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class FetchPost implements IFetchPost {
 
-    private final IPostRepository mIPostRepository;
+    private IPostRepository mIPostRepository;
 
     private final ThreadExecutor mThreadExecutor;
 
@@ -55,19 +55,16 @@ public class FetchPost implements IFetchPost {
     /**
      * Default constructor.
      *
-     * @param postRepository      A {@link com.ushahidi.android.core.respository.IPostRepository} as
-     *                            a source for retrieving data.
      * @param threadExecutor      {@link ThreadExecutor} used to execute this use case in a
      *                            background thread.
      * @param postExecutionThread {@link PostExecutionThread} used to post updates when the use case
      *                            has been executed.
      */
-    public FetchPost(IPostRepository postRepository, ThreadExecutor threadExecutor,
+    public FetchPost(ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
-        if (postRepository == null || threadExecutor == null || postExecutionThread == null) {
+        if (threadExecutor == null || postExecutionThread == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
         }
-        mIPostRepository = postRepository;
         mThreadExecutor = threadExecutor;
         mPostExecutionThread = postExecutionThread;
     }
@@ -81,8 +78,19 @@ public class FetchPost implements IFetchPost {
         mThreadExecutor.execute(this);
     }
 
+    public void setPostRepository(IPostRepository postRepository) {
+
+        if(postRepository == null) {
+            throw new IllegalArgumentException("IPostRepository cannot be null");
+        }
+        mIPostRepository = postRepository;
+    }
+
     @Override
     public void run() {
+        if(mIPostRepository == null) {
+            throw new NullPointerException("You must call setPostRepository(...)");
+        }
         mIPostRepository.getPostListViaApi(mRepositoryCallback);
     }
 

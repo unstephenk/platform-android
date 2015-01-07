@@ -124,7 +124,9 @@ public class User extends Entity {
     public enum Role {
 
         ADMIN("admin"),
-        USER("user");
+        USER("user"),
+        MEMBER("member"),
+        GUEST("guest");
 
         public final String value;
 

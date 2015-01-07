@@ -27,6 +27,7 @@ import android.net.NetworkInfo;
 public class ApiUtil {
 
     public static boolean isDeviceConnectedToInternet(Context context) {
+
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();

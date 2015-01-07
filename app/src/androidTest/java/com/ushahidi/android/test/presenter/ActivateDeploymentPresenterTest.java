@@ -19,6 +19,7 @@ package com.ushahidi.android.test.presenter;
 
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.usecase.deployment.ActivateDeployment;
+import com.ushahidi.android.core.usecase.deployment.GetActiveDeployment;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.ActivateDeploymentPresenter;
@@ -53,6 +54,9 @@ public class ActivateDeploymentPresenterTest extends CustomAndroidTestCase {
     private ActivateDeployment mMockActivateDeployment;
 
     @Mock
+    private GetActiveDeployment mMockGetActiveDeployment;
+
+    @Mock
     private ActivateDeploymentPresenter.View mMockView;
 
     @Mock
@@ -68,14 +72,14 @@ public class ActivateDeploymentPresenterTest extends CustomAndroidTestCase {
         super.setUp();
         MockitoAnnotations.initMocks(this);
         mActivateDeploymentPresenter = new ActivateDeploymentPresenter(
-                mMockActivateDeployment, mMockDeploymentModelDataMapper);
+                mMockActivateDeployment,mMockGetActiveDeployment, mMockDeploymentModelDataMapper);
         mActivateDeploymentPresenter.setView(mMockView);
     }
 
     public void testInitializingActivateDeploymentPresenterWithNullValues() {
         final String expectedMessage = "Activate deployment usecase cannot be null";
         try {
-            new ActivateDeploymentPresenter(null, null);
+            new ActivateDeploymentPresenter(null, null,null);
         } catch (NullPointerException e) {
             assertEquals(expectedMessage, e.getMessage());
         }

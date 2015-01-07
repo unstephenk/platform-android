@@ -17,6 +17,7 @@
 
 package com.ushahidi.android.ui.fragment;
 
+import com.andreabaccega.widget.FormAutoCompleteTextView;
 import com.andreabaccega.widget.FormEditText;
 import com.ushahidi.android.ui.activity.BaseActivity;
 
@@ -214,10 +215,6 @@ public abstract class BaseFragment extends Fragment {
                 .show();
     }
 
-    protected boolean validateForm(FormEditText item) {
-        return validateForm(item, true);
-    }
-
     private boolean validateForm(FormEditText item, boolean isFocus) {
         if (item.testValidity()) {
             return true;
@@ -229,7 +226,32 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    private boolean validateForm(FormAutoCompleteTextView item, boolean isFocus) {
+        if (item.testValidity()) {
+            return true;
+        } else {
+            if (isFocus) {
+                item.requestFocus();
+            }
+            return false;
+        }
+    }
+
+    private boolean validateForms(FormAutoCompleteTextView[] list, boolean isFocus) {
+        boolean result = true;
+        for (FormAutoCompleteTextView item : list) {
+            if (!validateForm(item, result && isFocus)) {
+                result = false;
+            }
+        }
+        return result;
+    }
+
     protected boolean validateForms(FormEditText... list) {
+        return validateForms(list, true);
+    }
+
+    protected boolean validateForms(FormAutoCompleteTextView... list) {
         return validateForms(list, true);
     }
 

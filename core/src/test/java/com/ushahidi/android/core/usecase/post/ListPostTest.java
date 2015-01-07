@@ -56,9 +56,9 @@ public class ListPostTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        mListPost = new ListPost(mMockPostRepository, mMockThreadExecutor,
+        mListPost = new ListPost(mMockThreadExecutor,
                 mMockPostExecutionThread);
-
+        mListPost.setPostRepository(mMockPostRepository);
     }
 
     @Test

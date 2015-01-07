@@ -17,7 +17,7 @@
 
 package com.ushahidi.android.ui.prefs;
 
-import com.ushahidi.android.data.Pref.StringPreference;
+import com.ushahidi.android.data.pref.StringPreference;
 
 import android.content.SharedPreferences;
 
@@ -39,8 +39,8 @@ public class Prefs {
         return new StringPreference(getSharedPreferences(), "active_deployment_url", null);
     }
 
-    public StringPreference getActiveDeploymentTitle() {
-        return new StringPreference(getSharedPreferences(), "active_deployment_title", null);
+    public StringPreference getAccessToken() {
+        return new StringPreference(getSharedPreferences(), "access_token", null);
     }
 
     public SharedPreferences getSharedPreferences() {

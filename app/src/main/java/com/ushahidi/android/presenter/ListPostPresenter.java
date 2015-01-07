@@ -19,14 +19,24 @@ package com.ushahidi.android.presenter;
 
 import com.google.common.base.Preconditions;
 
+import com.ushahidi.android.Util.ApiServiceUtil;
 import com.ushahidi.android.core.entity.Post;
 import com.ushahidi.android.core.exception.ErrorWrap;
+import com.ushahidi.android.core.respository.IPostRepository;
 import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
+import com.ushahidi.android.data.api.service.PostService;
+import com.ushahidi.android.data.database.PostDatabaseHelper;
+import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
+import com.ushahidi.android.data.repository.PostDataRepository;
+import com.ushahidi.android.data.repository.datasource.post.PostDataSourceFactory;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.PostModel;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
+import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.view.ILoadViewData;
+
+import android.content.Context;
 
 import java.util.List;
 
@@ -40,11 +50,21 @@ import javax.inject.Inject;
  */
 public class ListPostPresenter implements IPresenter {
 
+    private final PostEntityMapper mPostEntityMapper;
+
     private final PostModelDataMapper mPostModelDataMapper;
+
+    private final PostDatabaseHelper mPostDatabaseHelper;
 
     private final ListPost mListPost;
 
     private final FetchPost mFetchPost;
+
+    private final Prefs mPrefs;
+
+    private final ApiServiceUtil mApiServiceUtil;
+
+    private final Context mContext;
 
     private final ListPost.Callback mListCallback = new ListPost.Callback() {
 
@@ -83,11 +103,33 @@ public class ListPostPresenter implements IPresenter {
     @Inject
     public ListPostPresenter(ListPost listPost,
             FetchPost fetchPost,
-            PostModelDataMapper postModelDataMapper) {
+            PostModelDataMapper postModelDataMapper, PostEntityMapper postEntityMapper,
+            PostDatabaseHelper postDatabaseHelper,
+            Prefs prefs,
+            ApiServiceUtil apiServiceUtil,
+            Context context
+    ) {
         mListPost = Preconditions.checkNotNull(listPost, "ListPost cannot be null");
         mFetchPost = Preconditions.checkNotNull(fetchPost, "Fetch Post listing");
         mPostModelDataMapper = Preconditions
                 .checkNotNull(postModelDataMapper, "PostModelDataMapper cannot be null");
+        mPostEntityMapper = Preconditions.checkNotNull(postEntityMapper,
+                "Post entity mapper cannot be null");
+        mPostDatabaseHelper = Preconditions
+                .checkNotNull(postDatabaseHelper, "Post database helper cannot be null");
+        mPrefs = Preconditions.checkNotNull(prefs, "Preferences cannot be null");
+        mContext = context;
+        mApiServiceUtil = apiServiceUtil;
+        setPostService(createPostService());
+    }
+
+    public void setPostService(PostService postService) {
+        PostDataSourceFactory postDataSourceFactory = new PostDataSourceFactory(mContext,
+                mPostDatabaseHelper, postService);
+        IPostRepository postRepository = PostDataRepository
+                .getInstance(postDataSourceFactory, mPostEntityMapper);
+        mListPost.setPostRepository(postRepository);
+        mFetchPost.setPostRepository(postRepository);
     }
 
     public void setView(View view) {
@@ -95,6 +137,12 @@ public class ListPostPresenter implements IPresenter {
             throw new IllegalArgumentException("View cannot be null.");
         }
         mView = view;
+    }
+
+    public PostService createPostService() {
+        return mApiServiceUtil.createService(PostService.class,
+                mPrefs.getActiveDeploymentUrl().get(),
+                mPrefs.getAccessToken().get());
     }
 
     @Override
@@ -108,6 +156,7 @@ public class ListPostPresenter implements IPresenter {
     }
 
     public void init() {
+        setPostService(createPostService());
         loadList();
     }
 
@@ -158,6 +207,7 @@ public class ListPostPresenter implements IPresenter {
     }
 
     public void fetchPost() {
+        setPostService(createPostService());
         mFetchPost.execute(mCallback);
     }
 

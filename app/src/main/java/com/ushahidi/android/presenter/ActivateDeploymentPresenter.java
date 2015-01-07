@@ -22,6 +22,7 @@ import com.google.common.base.Preconditions;
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.exception.ErrorWrap;
 import com.ushahidi.android.core.usecase.deployment.ActivateDeployment;
+import com.ushahidi.android.core.usecase.deployment.GetActiveDeployment;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
@@ -40,12 +41,29 @@ public class ActivateDeploymentPresenter implements IPresenter {
 
     private final ActivateDeployment mActivateDeployment;
 
+    private final GetActiveDeployment mGetActiveDeployment;
+
     private View mView;
 
     private final ActivateDeployment.Callback mCallback = new ActivateDeployment.Callback() {
         @Override
         public void onDeploymentActivated() {
             mView.markStatus();
+            fetchActivateDeployment();
+        }
+
+        @Override
+        public void onError(ErrorWrap error) {
+            showErrorMessage(error);
+        }
+    };
+
+    private final GetActiveDeployment.Callback mGetActiveDeploymentCallback = new GetActiveDeployment.Callback() {
+
+        @Override
+        public void onActiveDeploymentLoaded(Deployment deployment) {
+            final DeploymentModel deploymentModel = mDeploymentModelDataMapper.map(deployment);
+            mView.getActiveDeployment(deploymentModel);
         }
 
         @Override
@@ -56,10 +74,12 @@ public class ActivateDeploymentPresenter implements IPresenter {
 
     @Inject
     public ActivateDeploymentPresenter(ActivateDeployment activateDeployment,
+            GetActiveDeployment getActiveDeployment,
             DeploymentModelDataMapper deploymentModelDataMapper) {
-
         mActivateDeployment = Preconditions
                 .checkNotNull(activateDeployment, "Activate deployment usecase cannot be null");
+        mGetActiveDeployment = Preconditions.checkNotNull(getActiveDeployment,
+                "Get active deployment cannot be null");
         mDeploymentModelDataMapper = Preconditions.checkNotNull(deploymentModelDataMapper,
                 "DeploymentModelDataMapper cannot be null");
 
@@ -76,6 +96,10 @@ public class ActivateDeploymentPresenter implements IPresenter {
         mActivateDeployment.execute(deployments, position, mCallback);
     }
 
+    public void fetchActivateDeployment() {
+        mGetActiveDeployment.execute(mGetActiveDeploymentCallback);
+    }
+
     public void setView(View view) {
         if (view == null) {
             throw new IllegalArgumentException("View cannot be null.");
@@ -85,7 +109,7 @@ public class ActivateDeploymentPresenter implements IPresenter {
 
     @Override
     public void resume() {
-        // Do nothing
+        fetchActivateDeployment();
     }
 
     @Override
@@ -96,5 +120,8 @@ public class ActivateDeploymentPresenter implements IPresenter {
     public interface View extends IView {
 
         public void markStatus();
+
+        public void getActiveDeployment(DeploymentModel deploymentModel);
+
     }
 }

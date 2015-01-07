@@ -16,7 +16,7 @@
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:ushEditTextForm="http://schemas.android.com/apk/res-auto"
+              xmlns:ushApp="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -56,7 +56,7 @@
                                 android:id="@+id/add_deployment_title"
                                 style="@style/FormInputText"
                                 android:inputType="textCapWords"
-                                ushEditTextForm:emptyErrorString="@string/add_deployment_empty_title"/>
+                                ushApp:emptyErrorString="@string/add_deployment_empty_title"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -72,7 +72,7 @@
                                 style="@style/FormUriInputText"
                                 android:hint="http://www.deployment.com"
                                 android:layout_gravity="center"
-                                ushEditTextForm:testType="webUrl"/>
+                                ushApp:testType="webUrl"/>
                     </LinearLayout>
 
                 </LinearLayout>

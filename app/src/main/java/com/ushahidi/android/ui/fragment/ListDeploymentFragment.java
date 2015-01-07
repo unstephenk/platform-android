@@ -316,7 +316,6 @@ public class ListDeploymentFragment
                                                         if(deploymentModel.getDeploymentModel().getStatus() ==
                                                                 DeploymentModel.Status.ACTIVATED) {
                                                             mPrefs.getActiveDeploymentUrl().delete();
-                                                            mPrefs.getActiveDeploymentTitle().delete();
                                                         }
                                                         mDeleteDeploymentPresenter
                                                                 .deleteDeployment(deploymentModel

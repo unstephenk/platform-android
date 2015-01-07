@@ -17,14 +17,23 @@
 
 package com.ushahidi.android.data.api.auth;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public abstract class BaseResponse {
 
+    @SerializedName("error_description")
+    private String errorDescription = null;
+
     private String error = null;
 
     public String getError() {
         return error;
+    }
+
+    public String getErrorDescription() {
+        return errorDescription;
     }
 }

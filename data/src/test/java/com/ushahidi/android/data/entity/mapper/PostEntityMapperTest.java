@@ -95,8 +95,8 @@ public class PostEntityMapperTest extends BaseTestCase {
 
         DUMMY_USER_ENTITY.setId(DUMMY_ID);
         DUMMY_USER_ENTITY.setRole(UserEntity.Role.USER);
-        DUMMY_USER_ENTITY.setCreated(DUMMY_CREATED);
-        DUMMY_USER_ENTITY.setUpdated(DUMMY_UPDATED);
+        DUMMY_USER_ENTITY.setCreated(new com.ushahidi.android.data.api.Date(DUMMY_CREATED));
+        DUMMY_USER_ENTITY.setUpdated(new com.ushahidi.android.data.api.Date(DUMMY_UPDATED));
         DUMMY_USER_ENTITY.setEmail(DUMMY_ARTHUR_EMAIL);
         DUMMY_USER_ENTITY.setUsername("dudebro");
         DUMMY_USER_ENTITY.setRealName(DUMMY_REAL_NAME);

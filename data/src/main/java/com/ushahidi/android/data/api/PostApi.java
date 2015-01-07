@@ -46,7 +46,7 @@ public class PostApi implements IPostApi {
 
     @Override
     public void getPostEntityList(final PostEntityListCallback postEntityListCallback) {
-        Preconditions.checkNotNull("PostListCallback cannot be null");
+        Preconditions.checkNotNull(postEntityListCallback);
         if (ApiUtil.isDeviceConnectedToInternet(mContext)) {
             mPostService.posts(new Callback<Posts>() {
 
@@ -63,5 +63,10 @@ public class PostApi implements IPostApi {
         } else {
             postEntityListCallback.onError(new NetworkConnectionException());
         }
+    }
+
+    // Workaround for testing static methods
+    public boolean isDeviceConnectedToInternet(Context context) {
+        return ApiUtil.isDeviceConnectedToInternet(context);
     }
 }

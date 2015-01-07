@@ -62,7 +62,6 @@ public class UpdateTagTest {
 
         mUpdateTag = new UpdateTag(mMockTagRepository, mMockThreadExecutor,
                 mMockPostExecutionThread);
-
     }
 
     @Test

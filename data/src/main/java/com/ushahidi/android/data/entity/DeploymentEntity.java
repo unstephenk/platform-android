@@ -17,8 +17,6 @@
 
 package com.ushahidi.android.data.entity;
 
-import com.ushahidi.android.data.Entity;
-
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */

@@ -47,8 +47,6 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
     @Inject
     ListPostPresenter mPostListPresenter;
 
-    @Inject
-    PostModelDataMapper mPostModelDataMapper;
 
     @InjectView(android.R.id.empty)
     TextView mEmptyView;

@@ -19,6 +19,8 @@ package com.ushahidi.android.data.api.auth;
 
 import com.google.gson.annotations.SerializedName;
 
+import com.ushahidi.android.data.api.Date;
+
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
@@ -30,16 +32,16 @@ public class AccessToken extends BaseResponse {
     @SerializedName("token_type")
     private String tokenType;
 
-    private Long expires;
+    private Date expires;
 
     @SerializedName("expires_in")
-    private Long expiresIn;
+    private Date expiresIn;
 
     @SerializedName("refresh_token")
     private String refreshToken;
 
     @SerializedName("refresh_token_expires_in")
-    private Long refreshTokenExpiresIn;
+    private Date refreshTokenExpiresIn;
 
     public String getTokenType() {
         return tokenType;
@@ -49,11 +51,11 @@ public class AccessToken extends BaseResponse {
         return accessToken;
     }
 
-    public Long getExpires() {
+    public Date getExpires() {
         return expires;
     }
 
-    public Long getExpiresIn() {
+    public Date getExpiresIn() {
         return expiresIn;
     }
 
@@ -61,7 +63,7 @@ public class AccessToken extends BaseResponse {
         return refreshToken;
     }
 
-    public Long getRefreshTokenExpiresIn() {
+    public Date getRefreshTokenExpiresIn() {
         return refreshTokenExpiresIn;
     }
 
@@ -69,7 +71,8 @@ public class AccessToken extends BaseResponse {
     public String toString() {
 
         if (super.getError() != null) {
-            return "AccessToken{error='" + super.getError() + "'}";
+            return "AccessToken{error='" + super.getError() + ", errorDescription='" + super
+                    .getErrorDescription() + "}";
         }
 
         return "AccessToken{" +

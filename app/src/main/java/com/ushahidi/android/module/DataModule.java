@@ -19,24 +19,34 @@ package com.ushahidi.android.module;
 
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
+import com.ushahidi.android.core.entity.UserAccount;
 import com.ushahidi.android.core.respository.IDeploymentRepository;
 import com.ushahidi.android.core.respository.IPostRepository;
+import com.ushahidi.android.core.respository.IUserAccountRepository;
+import com.ushahidi.android.core.respository.IUserRepository;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.data.api.service.PostService;
+import com.ushahidi.android.data.api.service.UserService;
 import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
 import com.ushahidi.android.data.database.PostDatabaseHelper;
-import com.ushahidi.android.data.entity.PostEntity;
+import com.ushahidi.android.data.database.UserDatabaseHelper;
 import com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper;
 import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
+import com.ushahidi.android.data.entity.mapper.UserAccountEntityMapper;
+import com.ushahidi.android.data.entity.mapper.UserEntityMapper;
 import com.ushahidi.android.data.repository.DeploymentDataRepository;
 import com.ushahidi.android.data.repository.PostDataRepository;
-import com.ushahidi.android.data.repository.datasource.PostDataSource;
-import com.ushahidi.android.data.repository.datasource.PostDataSourceFactory;
+import com.ushahidi.android.data.repository.UserAccountDataRepository;
+import com.ushahidi.android.data.repository.UserDataRepository;
+import com.ushahidi.android.data.repository.datasource.account.UserAccountDataSourceFactory;
+import com.ushahidi.android.data.repository.datasource.post.PostDataSourceFactory;
 import com.ushahidi.android.data.validator.UrlValidator;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
+import com.ushahidi.android.model.mapper.UserAccountModelDataMapper;
+import com.ushahidi.android.model.mapper.UserModelDataMapper;
 
-import android.app.Application;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -128,9 +138,29 @@ public class DataModule {
     }
 
     @Provides
+    IUserRepository provideUserRepository(
+            UserDatabaseHelper userDatabaseHelper, UserEntityMapper entityMapper,
+            UrlValidator urlValidator) {
+        return UserDataRepository
+                .getInstance(userDatabaseHelper, entityMapper, urlValidator);
+    }
+
+    @Provides
     @Singleton
     PostEntityMapper providesPostEntityMapper(){
         return new PostEntityMapper();
+    }
+
+    @Provides
+    @Singleton
+    UserEntityMapper provideUserEntityMapper(){
+        return new UserEntityMapper();
+    }
+
+    @Provides
+    @Singleton
+    UserAccountEntityMapper provideUserAccountEntityMapper(){
+        return new UserAccountEntityMapper();
     }
 
     @Provides
@@ -140,13 +170,27 @@ public class DataModule {
     }
 
     @Provides
-    PostDataSourceFactory providesPostDataSourceFactory(Context context,PostDatabaseHelper postDatabaseHelper, PostService postService){
-        return new PostDataSourceFactory(context,postDatabaseHelper,postService);
+    @Singleton
+    UserModelDataMapper provideUserModelDataMapper() {
+        return new UserModelDataMapper();
     }
 
     @Provides
-    IPostRepository providesDeploymentRepository(PostDataSourceFactory postDataSourceFactory, PostEntityMapper entityMapper) {
-        return PostDataRepository.getInstance(postDataSourceFactory, entityMapper);
+    @Singleton
+    UserAccountModelDataMapper provideUserAccountModelDataMapper() {
+        return new UserAccountModelDataMapper();
+    }
+
+    @Provides
+    @Singleton
+    UserDatabaseHelper provideUserDatabaseHelper(Context context, ThreadExecutor threadExecutor) {
+        return UserDatabaseHelper.getInstance(context,threadExecutor);
+    }
+
+    @Provides
+    @Singleton
+    public AccountManager provideAccountManager(Context context) {
+        return AccountManager.get(context);
     }
 
 }

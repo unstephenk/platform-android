@@ -17,28 +17,49 @@
 
 package com.ushahidi.android.ui.fragment;
 
+import com.andreabaccega.widget.FormAutoCompleteTextView;
+import com.andreabaccega.widget.FormEditText;
 import com.ushahidi.android.R;
+import com.ushahidi.android.data.Constants;
+import com.ushahidi.android.model.DeploymentModel;
+import com.ushahidi.android.model.UserAccountModel;
+import com.ushahidi.android.presenter.LoginPresenter;
+import com.ushahidi.android.ui.adapter.DeploymentSpinnerAdapter;
 
-import android.widget.AutoCompleteTextView;
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.Context;
+import android.util.Patterns;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.inject.Inject;
+
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnItemSelected;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class LoginFragment extends BaseFragment {
+public class LoginFragment extends BaseFragment implements LoginPresenter.View, RadioGroup.OnCheckedChangeListener{
+
+    public static final String LOGIN_FRAGMENT_TAG = "login_fragment";
 
     @InjectView(R.id.login_username)
-    EditText mUsername;
+    FormEditText mUsername;
 
     @InjectView(R.id.login_password)
-    EditText mPassword;
+    FormEditText mPassword;
 
     @InjectView(R.id.login_submit_btn)
     Button mLoginButton;
@@ -56,26 +77,152 @@ public class LoginFragment extends BaseFragment {
     RadioButton mRegisterRadioButton;
 
     @InjectView(R.id.active_email)
-    AutoCompleteTextView mEmailAutoComplete;
+    FormAutoCompleteTextView mEmailAutoComplete;
 
-    public static final String LOGIN_FRAGMENT_TAG = "login_fragment";
+    @Inject
+    LoginPresenter mLoginPresenter;
+
+    private DeploymentSpinnerAdapter mDeploymentSpinnerArrayAdapter;
+
+    private DeploymentModel mSelectedDeploymentModel;
 
     public LoginFragment() {
         super(R.layout.fragment_login, 0);
     }
 
+    public static LoginFragment newInstance() {
+        LoginFragment loginFragment = new LoginFragment();
+        return loginFragment;
+    }
+
     @Override
     void initPresenter() {
+        mLoginPresenter.setView(this);
+        init();
+    }
 
+    public void init() {
+        mTypeRadioGroup.setOnCheckedChangeListener(this);
+        mLoginRadioButton.setChecked(true);
+        mEmailAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                mEmailAutoComplete.showDropDown();
+            }
+        });
+        mLoginPresenter.getDeploymentList();
     }
 
     @OnClick(R.id.login_submit_btn)
     public void onClickSubmit() {
-        //TODO Implement login
+        submit();
     }
 
-    public static LoginFragment newInstance() {
-        LoginFragment loginFragment = new LoginFragment();
-        return loginFragment;
+    @OnItemSelected(R.id.select_deployment)
+    public void onItemSelected(int position) {
+        mSelectedDeploymentModel = mDeploymentSpinnerArrayAdapter.getDeploymentModels().get(position);
+    }
+
+
+    private void submit() {
+
+        mPassword.setError(null);
+
+         if(validateForms(mUsername, mPassword)) {
+             switch (mTypeRadioGroup.getCheckedRadioButtonId()) {
+                 case R.id.radio_btn_login:
+                     UserAccountModel userAccountModel = new UserAccountModel();
+                     userAccountModel.setAccountName(mUsername.getText().toString().trim());
+                     userAccountModel.setPassword(mPassword.getText().toString().trim());
+                     userAccountModel.setAuthTokenType(Constants.USHAHIDI_AUTHTOKEN_PASSWORD_TYPE);
+                     mLoginPresenter.login(userAccountModel, mSelectedDeploymentModel);
+
+                     break;
+                 case R.id.radio_btn_register:
+                     final String email = mEmailAutoComplete.getText().toString().trim();
+                     if(validateForms(mEmailAutoComplete)) {
+                         //TODO implement register
+                     }
+                     break;
+             }
+         }
+    }
+
+    @Override
+    public void loggedIn(UserAccountModel userAccountModel) {
+        //UshahidiAccount ushahidiAccount = new UshahidiAccount(userModel.getUsername(), userModel.g);
+
+        //mUshahidiAccountManager.addAccount(ushahidiAccount);
+    }
+
+    @Override
+    public void deploymentList(List<DeploymentModel> deploymentModelList) {
+        mDeploymentSpinnerArrayAdapter = new DeploymentSpinnerAdapter(getContext(),deploymentModelList);
+        mSpinner.setAdapter(mDeploymentSpinnerArrayAdapter);
+
+        // Select active deployment by default
+        mSpinner.setSelection(mLoginPresenter.getActiveDeploymetPosition(deploymentModelList));
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showRetry() {
+
+    }
+
+    @Override
+    public void hideRetry() {
+
+    }
+
+    @Override
+    public void showError(String message) {
+        showToast(message);
+    }
+
+    @Override
+    public Context getContext() {
+        return getActivity().getApplicationContext();
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+        switch (checkedId) {
+            case R.id.radio_btn_login:
+                mLoginButton.setText(R.string.login);
+                mEmailAutoComplete.setText(null);
+                mEmailAutoComplete.setVisibility(View.GONE);
+
+                // Set actionbar title to login
+                getActivity().setTitle(getResources().getString(R.string.login));
+                break;
+            case R.id.radio_btn_register:
+                mLoginButton.setText(R.string.register);
+                mEmailAutoComplete.setVisibility(View.VISIBLE);
+
+                // Set actionbar title to register
+                getActivity().setTitle(getResources().getString(R.string.register));
+                if (mEmailAutoComplete.getAdapter() == null) {
+                    final Set<String> emailSet = new HashSet<>();
+                    for (Account account : AccountManager.get(getActivity()).getAccounts()) {
+                        if (Patterns.EMAIL_ADDRESS.matcher(account.name).matches()) {
+                            emailSet.add(account.name);
+                        }
+                    }
+                    List<String> emails = new ArrayList<>(emailSet);
+                    mEmailAutoComplete.setAdapter(new ArrayAdapter<>(getActivity(),
+                            android.R.layout.simple_spinner_dropdown_item, emails));
+                }
+                break;
+        }
     }
 }

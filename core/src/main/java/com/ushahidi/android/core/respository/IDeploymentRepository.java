@@ -61,6 +61,16 @@ public interface IDeploymentRepository {
             DeploymentDetailsCallback deploymentDetailsCallback);
 
     /**
+     * Get an {@link com.ushahidi.android.core.entity.Deployment} by its status.
+     *
+     * @param status              The deployment used for retrieving deployment data.
+     * @param deploymentStatusCallback A {@link DeploymentDetailsCallback} used for notifying
+     *                                  clients about the status of the operation.
+     */
+    void getDeploymentByStatus(final Deployment.Status status,
+            DeploymentStatusCallback deploymentStatusCallback);
+
+    /**
      * Update a {@link com.ushahidi.android.core.entity.Deployment}
      *
      * @param deployment The Deployment to be deleted
@@ -107,6 +117,17 @@ public interface IDeploymentRepository {
     interface DeploymentDetailsCallback {
 
         void onDeploymentLoaded(Deployment deployment);
+
+        void onError(ErrorWrap errorWrap);
+    }
+
+    /**
+     * Callback used for notifying the client when either a deployment has been loaded or an error
+     * occurred during the process.
+     */
+    interface DeploymentStatusCallback {
+
+        void onActiveDeploymentLoaded(Deployment deployment);
 
         void onError(ErrorWrap errorWrap);
     }

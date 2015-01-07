@@ -19,12 +19,11 @@ package com.ushahidi.android.data.entity.mapper;
 
 import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.data.BaseTestCase;
+import java.util.Date;
 import com.ushahidi.android.data.entity.UserEntity;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Date;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -85,8 +84,8 @@ public class UserEntityMapperTest extends BaseTestCase {
         assertThat(user.getEmail(), is(DUMMY_EMAIL));
         assertThat(user.getRealName(), is(DUMMY_REAL_NAME));
         assertThat(user.getUsername(), is(DUMMY_USERNAME));
-        assertThat(user.getCreated(), is(DUMMY_CREATED));
-        assertThat(user.getUpdated(), is(DUMMY_UPDATED));
+        assertThat(user.getCreated(), is(new java.util.Date(1415718024)));
+        assertThat(user.getUpdated(), is(new java.util.Date(1415716223)));
         assertThat(user.getDeployment(), is(DUMMY_DEPLOYMENT));
         assertThat(user.getRole(), is(DUMMY_ROLE));
     }

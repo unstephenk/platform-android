@@ -17,6 +17,8 @@
 
 package com.ushahidi.android.data.api.auth;
 
+import com.google.gson.annotations.SerializedName;
+
 import com.ushahidi.android.data.api.qualifier.ClientId;
 import com.ushahidi.android.data.api.qualifier.ClientSecret;
 import com.ushahidi.android.data.api.qualifier.GrantType;
@@ -33,10 +35,13 @@ public class Payload {
 
     private final String password;
 
+    @SerializedName("grant_type")
     private final String grantType;
 
+    @SerializedName("client_id")
     private final String clientId;
 
+    @SerializedName("client_secret")
     private final String clientSecret;
 
     private final String scope;

@@ -19,8 +19,6 @@ package com.ushahidi.android.data.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-import com.ushahidi.android.data.Entity;
-
 import java.util.Date;
 
 /**
@@ -36,7 +34,7 @@ public class UserEntity extends Entity {
     @SerializedName("email")
     private String mEmail;
 
-    @SerializedName("real_name")
+    @SerializedName("realname")
     private String mRealName;
 
     @SerializedName("username")
@@ -132,8 +130,10 @@ public class UserEntity extends Entity {
     }
 
     public enum Role {
-
+        @SerializedName("admin")
         ADMIN("admin"),
+
+        @SerializedName("user")
         USER("user");
 
         public final String value;

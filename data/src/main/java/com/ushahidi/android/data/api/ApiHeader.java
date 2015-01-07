@@ -32,7 +32,6 @@ public final class ApiHeader implements RequestInterceptor {
 
     private final String authorizationValue;
 
-    @Inject
     public ApiHeader(@Bearer String bearer) {
         authorizationValue = AUTHORIZATION_BEARER + " " + bearer;
     }

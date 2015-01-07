@@ -149,6 +149,26 @@ public class DeploymentDataRepository implements IDeploymentRepository {
                 });
     }
 
+    @Override
+    public void getDeploymentByStatus(Deployment.Status status,
+            final DeploymentStatusCallback deploymentStatusCallback) {
+        mDeploymentDatabaseHelper.get(mDeploymentEntityMapper.unmap(status),
+                new IDeploymentDatabaseHelper.IDeploymentEntityCallback() {
+
+                    @Override
+                    public void onDeploymentEntityLoaded(DeploymentEntity deploymentEntity) {
+                        final Deployment deployment = mDeploymentEntityMapper
+                                .map(deploymentEntity);
+                        deploymentStatusCallback.onActiveDeploymentLoaded(deployment);
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        deploymentStatusCallback.onError(new RepositoryError(exception));
+                    }
+                });
+    }
+
     /**
      * {@inheritDoc}
      *

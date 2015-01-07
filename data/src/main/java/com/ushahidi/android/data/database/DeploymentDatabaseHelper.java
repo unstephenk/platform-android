@@ -78,7 +78,6 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
             public void run() {
                 if (!isClosed()) {
                     try {
-                        Log.e(TAG, "Repo " + deploymentEntity.toString());
                         cupboard().withDatabase(getWritableDatabase()).put(deploymentEntity);
                         callback.onDeploymentEntityPut();
                     } catch (Exception e) {
@@ -105,6 +104,26 @@ public class DeploymentDatabaseHelper extends BaseDatabseHelper
             }
         });
 
+    }
+
+    @Override
+    public void get(final DeploymentEntity.Status status,
+            final IDeploymentEntityCallback callback) {
+        this.asyncRun(new Runnable() {
+            @Override
+            public void run() {
+
+                final DeploymentEntity deploymentEntity = cupboard()
+                        .withDatabase(getReadableDatabase()).query(DeploymentEntity.class)
+                        .withSelection("mStatus = ?", status.name()).get();
+
+                if (deploymentEntity != null) {
+                    callback.onDeploymentEntityLoaded(deploymentEntity);
+                } else {
+                    callback.onError(new DeploymentNotFoundException());
+                }
+            }
+        });
     }
 
     @Override

@@ -88,4 +88,9 @@ public class DeploymentEntityMapper {
 
         return deploymentList;
     }
+
+    public DeploymentEntity.Status unmap(Deployment.Status status) {
+        return DeploymentEntity.Status.valueOf(
+               status.name());
+    }
 }
