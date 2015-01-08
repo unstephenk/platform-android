@@ -104,7 +104,18 @@
                     <category android:name="android.intent.category.DEFAULT"/>
                 </intent-filter>
         </activity>
+        <activity
+                android:name=".ui.activity.SettingsActivity"
+                android:label="@string/settings"
+                android:exported="false"
+                android:launchMode="singleTask"
+                android:parentActivityName=".ui.activity.PostActivity">
 
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.activity.PostActivity" />
+
+        </activity>
         <service android:name=".account.UserAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>

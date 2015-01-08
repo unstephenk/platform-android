@@ -33,7 +33,7 @@
         <Button
                 android:id="@+id/add_deployment_add"
                 style="@style/FLatButton.Ok"
-                android:text="@string/add_deployment_button"
+                android:text="@string/add"
                 android:layout_gravity="right"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
@@ -43,7 +43,7 @@
                 android:id="@+id/add_deployment_cancel"
                 style="@style/FLatButton"
                 android:layout_gravity="right"
-                android:text="@string/add_deployment_cancel"
+                android:text="@string/cancel"
                 android:layout_toStartOf="@+id/add_deployment_add"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/add_deployment_add"/>

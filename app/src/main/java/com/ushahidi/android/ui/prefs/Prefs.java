@@ -17,7 +17,9 @@
 
 package com.ushahidi.android.ui.prefs;
 
+import com.ushahidi.android.data.pref.BooleanPreference;
 import com.ushahidi.android.data.pref.StringPreference;
+import com.ushahidi.android.ui.widget.TimePickerPreference;
 
 import android.content.SharedPreferences;
 
@@ -45,6 +47,15 @@ public class Prefs {
 
     public SharedPreferences getSharedPreferences() {
         return mSharedPreferences;
+    }
+
+    public BooleanPreference enableAutoSync() {
+        return new BooleanPreference(getSharedPreferences(), "AutoSync", false);
+    }
+
+    public StringPreference getSyncFrequency() {
+        return new StringPreference(mSharedPreferences, "post_sync_frequency",
+                TimePickerPreference.DEFAULT_TIME_FREQUENCY);
     }
 
 }

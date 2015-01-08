@@ -65,13 +65,11 @@ public class ActivityLauncher {
     }
 
     /**
-     * Launches loging activity
+     * Launches login activity
      */
     public void launchLogin() {
         final Intent intent = LoginActivity.getIntent(mContext);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }
-
-
 }

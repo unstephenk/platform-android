@@ -150,7 +150,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
                         DeploymentActivity.getIntent(this)));
 
         mNavDrawerItemViews
-                .add(setNavDrawerItem(R.string.settings, R.drawable.ic_action_settings, 2));
+                .add(setNavDrawerItem(R.string.settings, R.drawable.ic_action_settings, 2, SettingsActivity.getIntent(this)));
 
         mNavDrawerItemViews.add(setNavDrawerItem(R.string.about, R.drawable.ic_action_info, 3));
 

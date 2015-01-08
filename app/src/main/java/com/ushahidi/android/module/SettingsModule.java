@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Ushahidi.
+ * Copyright (c) 2015 Ushahidi.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License as published by the Free
@@ -15,20 +15,18 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.Util;
+package com.ushahidi.android.module;
+
+import com.ushahidi.android.ui.activity.SettingsActivity;
+import com.ushahidi.android.ui.fragment.SettingsFragment;
+
+import dagger.Module;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class PrefsUtils {
+@Module(library = true, complete = false,
+        injects = {SettingsFragment.class, SettingsActivity.class})
+public class SettingsModule {
 
-    private static final int ONE_HOUR = 3600000;
-
-    private static final int ONE_MINUTE = 60000;
-
-    public static long calculateInterval(String time) {
-        String[] pieces = time.split(":");
-        return Integer.parseInt(pieces[0]) * ONE_HOUR +
-                Integer.parseInt(pieces[1]) * ONE_MINUTE;
-    }
 }
