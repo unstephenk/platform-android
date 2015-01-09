@@ -105,6 +105,16 @@
                 </intent-filter>
         </activity>
         <activity
+                android:name=".ui.activity.AboutActivity"
+                android:windowSoftInputMode="adjustResize"
+                android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+                android:parentActivityName=".ui.activity.PostActivity"
+                android:label="@string/about" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.activity.PostActivity" />
+        </activity>
+        <activity
                 android:name=".ui.activity.SettingsActivity"
                 android:label="@string/settings"
                 android:exported="false"

@@ -18,7 +18,7 @@
 package com.ushahidi.android.ui.activity;
 
 import com.ushahidi.android.R;
-import com.ushahidi.android.module.SettingsModule;
+import com.ushahidi.android.module.InjectModule;
 import com.ushahidi.android.ui.fragment.SettingsFragment;
 
 import android.content.Context;
@@ -54,7 +54,7 @@ public class SettingsActivity extends BaseActivity {
     @Override
     protected List<Object> getModules() {
         List<Object> modules = new LinkedList<>();
-        modules.add(new SettingsModule());
+        modules.add(new InjectModule());
         return modules;
     }
 

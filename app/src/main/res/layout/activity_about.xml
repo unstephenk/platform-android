@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2014 Ushahidi.
+  ~ Copyright (c) 2015 Ushahidi.
   ~
   ~ This program is free software: you can redistribute it and/or modify it under
   ~ the terms of the GNU Affero General Public License as published by the Free
@@ -16,22 +16,26 @@
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:padding="24dp">
+              android:orientation="vertical"
+              tools:context=".ui.AboutActivity">
 
-    <TextView
-            android:id="@+id/app_name"
+    <include layout="@layout/toolbar_actionbar"/>
+
+    <FrameLayout
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/app_name"
-            android:textSize="@dimen/text_size_xlarge"
-            android:textIsSelectable="false"/>
+            android:layout_height="match_parent">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/app_version"/>
+        <fragment
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:name="com.ushahidi.android.ui.fragment.AboutFragment"
+                android:id="@+id/fragment"
+                android:layout_gravity="center_horizontal|top"/>
+    </FrameLayout>
+
+
 </LinearLayout>

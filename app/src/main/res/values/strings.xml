@@ -83,6 +83,7 @@
     <string name="login_empty_password">Please enter your deployment account\'s password</string>
     <string name="set">Set</string>
     <string name="general_settings">General Settings</string>
+    <string name="build_date">Build date</string>
 
     <!-- enable auto sync -->
     <string name="chk_enable_auto_sync">Enable Auto Sync</string>

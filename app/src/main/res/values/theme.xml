@@ -48,6 +48,7 @@
         <item name="drawerArrowStyle">@style/Ushahidi.Widget.DrawerArrow</item>
         <item name="searchViewStyle">@style/Ushahidi.SearchBar.Widget</item>
         <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
     </style>
 
     <style name="Theme.Ushahidi" parent="Theme.Ushahidi.Base"/>

@@ -17,7 +17,9 @@
 
 package com.ushahidi.android.module;
 
+import com.ushahidi.android.ui.activity.AboutActivity;
 import com.ushahidi.android.ui.activity.SettingsActivity;
+import com.ushahidi.android.ui.fragment.AboutFragment;
 import com.ushahidi.android.ui.fragment.SettingsFragment;
 
 import dagger.Module;
@@ -26,7 +28,8 @@ import dagger.Module;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 @Module(library = true, complete = false,
-        injects = {SettingsFragment.class, SettingsActivity.class})
-public class SettingsModule {
+        injects = {SettingsFragment.class, SettingsActivity.class, AboutFragment.class,
+                AboutActivity.class})
+public class InjectModule {
 
 }

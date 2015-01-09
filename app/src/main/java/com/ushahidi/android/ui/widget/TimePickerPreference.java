@@ -20,10 +20,8 @@ package com.ushahidi.android.ui.widget;
 import com.ushahidi.android.R;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
-import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TimePicker;
@@ -47,12 +45,9 @@ public class TimePickerPreference extends DialogPreference {
 
     private TimePicker mTimePicker = null;
 
-    private SharedPreferences mSharedPreferences;
-
     public TimePickerPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         setPositiveButtonText(R.string.set);
         setNegativeButtonText(R.string.cancel);
     }
