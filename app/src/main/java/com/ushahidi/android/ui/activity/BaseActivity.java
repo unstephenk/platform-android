@@ -20,6 +20,7 @@ package com.ushahidi.android.ui.activity;
 import com.ushahidi.android.R;
 import com.ushahidi.android.UshahidiApplication;
 import com.ushahidi.android.module.ActivityModule;
+import com.ushahidi.android.ui.widget.MultiSwipeRefreshLayout;
 import com.ushahidi.android.ui.widget.NavDrawerItem;
 
 import android.content.Context;
@@ -28,6 +29,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -60,7 +62,7 @@ import static android.view.View.VISIBLE;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class BaseActivity extends ActionBarActivity{
+public abstract class BaseActivity extends ActionBarActivity {
 
     /**
      * Layout resource id
@@ -108,11 +110,14 @@ public abstract class BaseActivity extends ActionBarActivity{
 
     protected View mUserProfileLayout;
 
+    protected SwipeRefreshLayout mSwipeRefreshLayout;
+
     protected TextView mUserLoginTitle;
 
     protected TextView mFullnameTextView;
 
     protected TextView mUsernameTextView;
+
     protected ImageView mAvatarImageView;
 
     public BaseActivity(int layout, int menu, int drawerLayoutId, int drawerItemsContainerId) {
@@ -239,8 +244,15 @@ public abstract class BaseActivity extends ActionBarActivity{
         super.onPostCreate(savedInstanceState);
         createNavDrawer();
         setupAndShowLogin();
+        setupSwipeRefresh();
+
         if (mDrawerToggle != null) {
             mDrawerToggle.syncState();
+        }
+
+        View mainContent = findViewById(R.id.main_content);
+        if (mainContent != null) {
+           fadeIn(mainContent,true);
         }
     }
 
@@ -335,6 +347,36 @@ public abstract class BaseActivity extends ActionBarActivity{
             }
         }
         return mActionBarToolbar;
+    }
+
+    private void setupSwipeRefresh() {
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setColorSchemeResources(
+                    R.color.refresh_progress_start,
+                    R.color.refresh_progress_center,
+                    R.color.refresh_progress_end);
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    onSwipe();
+                }
+            });
+        }
+    }
+
+    protected void toggleSwipeRefreshing(boolean refreshing) {
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(refreshing);
+        }
+    }
+
+    protected void toggleSwipeRefresh(boolean enable) {
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setEnabled(enable);
+        }
     }
 
     @Override
@@ -468,4 +510,7 @@ public abstract class BaseActivity extends ActionBarActivity{
         fragmentTransaction.commit();
     }
 
+    protected void onSwipe() {
+        // Do nothing
+    }
 }

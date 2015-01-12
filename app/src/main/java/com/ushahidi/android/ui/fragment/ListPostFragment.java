@@ -69,17 +69,16 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPostListPresenter.init();
         initRecyclerView();
-
-        // Calling this here because when called in the onResume method the activity doesn't
-        // attached in time and causing getActivity() to return a null value.
-        mPostListPresenter.resume();
+        mPostListPresenter.init();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        // Calling this here because when called in the onResume method the activity doesn't
+        // attached in time and causing getActivity() to return a null value.
+        mPostListPresenter.resume();
     }
 
     @Override
@@ -123,12 +122,12 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
 
     @Override
     public void viewPost(PostModel postModel) {
-        //TODO: implement this to launch activity for viewing post detail
+        mPostListListener.onPostClicked(postModel);
     }
 
     @Override
     public void refreshList() {
-        mPostListPresenter.refreshList();
+        mPostListPresenter.init();
     }
 
     @Override
@@ -138,12 +137,12 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
 
     @Override
     public void showLoading() {
-        //TODO: implement loading animation
+        mPostListListener.enableSwipeRefresh();
     }
 
     @Override
     public void hideLoading() {
-        //TODO: implement this
+        mPostListListener.hideSwipeRefresh();
     }
 
     @Override
@@ -177,5 +176,8 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
     public interface PostListListener {
 
         void onPostClicked(final PostModel postModel);
+
+        void hideSwipeRefresh();
+        void enableSwipeRefresh();
     }
 }

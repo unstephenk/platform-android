@@ -20,6 +20,7 @@ package com.ushahidi.android.ui.activity;
 import com.ushahidi.android.R;
 import com.ushahidi.android.data.entity.DeploymentEntity;
 import com.ushahidi.android.model.DeploymentModel;
+import com.ushahidi.android.model.PostModel;
 import com.ushahidi.android.module.PostUiModule;
 import com.ushahidi.android.presenter.ActivateDeploymentPresenter;
 import com.ushahidi.android.presenter.DeploymentNavPresenter;
@@ -48,7 +49,10 @@ import javax.inject.Inject;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawerItemListener,
-        NavDrawerItem.NavDeploymentItemListener, DeploymentNavPresenter.View, ActivateDeploymentPresenter.View {
+        NavDrawerItem.NavDeploymentItemListener,
+        DeploymentNavPresenter.View,
+        ListPostFragment.PostListListener,
+        ActivateDeploymentPresenter.View {
 
     private static final String SELECTED_TAB = "selected_tab";
 
@@ -68,7 +72,6 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     private TabPagerAdapter mAdapter;
 
     private int mCurrentItem;
-
     private List<String> mTabTitle;
 
     private DeploymentModel mDeploymentModel;
@@ -279,6 +282,27 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
         setTitle();
     }
 
+    @Override
+    public void hideSwipeRefresh() {
+        toggleSwipeRefreshing(false);
+    }
+
+    @Override
+    public void enableSwipeRefresh() {
+        toggleSwipeRefreshing(true);
+    }
+
+    @Override
+    public void onPostClicked(final PostModel postModel) {
+
+    }
+
+    public void onSwipe() {
+        // TODO clean this up
+        ListPostFragment postFragment = (ListPostFragment) mAdapter.getItem(0);
+        postFragment.refreshList();
+    }
+
     private static enum PostTab {
         LIST, MAP
     }
@@ -289,6 +313,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
         private TabPagerAdapter(FragmentManager fm) {
             super(fm);
+
             mFragments = new ArrayList<>();
         }
 

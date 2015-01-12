@@ -60,4 +60,8 @@
     <color name="user_profile_background_tint_color">#6000</color>
     <color name="user_profile_default_background_color">@color/theme_primary</color>
 
+    <color name="refresh_progress_start">@color/theme_accent_2</color>
+    <color name="refresh_progress_center">@color/theme_accent_1</color>
+    <color name="refresh_progress_end">@color/theme_primary</color>
+
 </resources>

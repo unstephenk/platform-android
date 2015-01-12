@@ -25,7 +25,7 @@
         tools="ui.activity.PostActivity">
 
         <LinearLayout
-                android:id="@+id/headerbar"
+                android:id="@+id/main_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clickable="true"
@@ -40,7 +40,7 @@
                     android:gravity="center"
                     style="@style/TabSliding"/>
 
-            <com.ushahidi.android.ui.widget.MultiSwipeRefreshLayout
+            <android.support.v4.widget.SwipeRefreshLayout
                     android:id="@+id/swipe_refresh_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -50,7 +50,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0px"
                         android:layout_weight="1"/>
-            </com.ushahidi.android.ui.widget.MultiSwipeRefreshLayout>
+            </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
 
     <!-- Nav drawer -->
