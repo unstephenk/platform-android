@@ -32,8 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class MediaModelTest extends TestCase {
 
-    private MediaModel mMediaModel;
-
     private static final long DUMMY_ID = 1;
 
     private static final String DUMMY_CAPTION = "dummy description";
@@ -46,6 +44,7 @@ public class MediaModelTest extends TestCase {
 
     private static final Date DUMMY_UPDATED = new Date(1415718034);
 
+    private MediaModel mMediaModel;
 
     @Override
     public void setUp() throws Exception {

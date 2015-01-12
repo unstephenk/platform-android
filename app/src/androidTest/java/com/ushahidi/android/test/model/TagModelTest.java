@@ -32,8 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class TagModelTest extends TestCase {
 
-    private TagModel mTagModel;
-
     private static final long DUMMY_ID = 1;
 
     private static final String DUMMY_DESCRIPTION = "dummy description";
@@ -51,6 +49,8 @@ public class TagModelTest extends TestCase {
     private static final String DUMMY_SLUG = "slug";
 
     private static final TagModel.Type DUMMY_TYPE = TagModel.Type.CATEGORY;
+
+    private TagModel mTagModel;
 
     @Override
     public void setUp() throws Exception {

@@ -108,28 +108,6 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     private boolean mPaused;
 
     /**
-     * The callback interface used by {@link SwipeDismissListViewTouchListener} to inform its client
-     * about a successful dismissal of one or more list item positions.
-     */
-    public interface DismissCallbacks {
-
-        /**
-         * Called to determine whether the given position can be dismissed.
-         */
-        boolean canDismiss(int position);
-
-        /**
-         * Called when the user has indicated they she would like to dismiss one or more list item
-         * positions.
-         *
-         * @param listView               The originating {@link ListView}.
-         * @param reverseSortedPositions An array of positions to dismiss, sorted in descending
-         *                               order for convenience.
-         */
-        void onDismiss(ListView listView, int[] reverseSortedPositions);
-    }
-
-    /**
      * Constructs a new swipe-to-dismiss touch listener for the given list view.
      *
      * @param listView  The list view whose items should be dismissable.
@@ -351,24 +329,6 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
         return false;
     }
 
-    class PendingDismissData implements Comparable<PendingDismissData> {
-
-        public int position;
-
-        public View view;
-
-        public PendingDismissData(int position, View view) {
-            this.position = position;
-            this.view = view;
-        }
-
-        @Override
-        public int compareTo(PendingDismissData other) {
-            // Sort by descending position
-            return other.position - position;
-        }
-    }
-
     private void performDismiss(final View dismissView, final int dismissPosition) {
         // Animate the dismissed list item to zero-height and fire the dismiss callback when
         // all dismissed list item animations have completed. This triggers layout on each animation
@@ -429,5 +389,45 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 
         mPendingDismisses.add(new PendingDismissData(dismissPosition, dismissView));
         animator.start();
+    }
+
+    /**
+     * The callback interface used by {@link SwipeDismissListViewTouchListener} to inform its client
+     * about a successful dismissal of one or more list item positions.
+     */
+    public interface DismissCallbacks {
+
+        /**
+         * Called to determine whether the given position can be dismissed.
+         */
+        boolean canDismiss(int position);
+
+        /**
+         * Called when the user has indicated they she would like to dismiss one or more list item
+         * positions.
+         *
+         * @param listView               The originating {@link ListView}.
+         * @param reverseSortedPositions An array of positions to dismiss, sorted in descending
+         *                               order for convenience.
+         */
+        void onDismiss(ListView listView, int[] reverseSortedPositions);
+    }
+
+    class PendingDismissData implements Comparable<PendingDismissData> {
+
+        public int position;
+
+        public View view;
+
+        public PendingDismissData(int position, View view) {
+            this.position = position;
+            this.view = view;
+        }
+
+        @Override
+        public int compareTo(PendingDismissData other) {
+            // Sort by descending position
+            return other.position - position;
+        }
     }
 }

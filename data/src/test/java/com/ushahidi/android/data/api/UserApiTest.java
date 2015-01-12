@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
@@ -97,11 +98,12 @@ public class UserApiTest extends BaseTestCase {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((Callback<AccessToken>) invocation
-                        .getArguments()[1]).success(mMockAccessToken, any(Response.class));
+                Callback<AccessToken> accessTokenCallback = castObj(invocation.getArguments()[1]);
+                (accessTokenCallback).success(mMockAccessToken, any(Response.class));
                 return null;
             }
-        }).when(mMockUserService).getAccessToken(any(Payload.class), any(Callback.class));
+        }).when(mMockUserService).getAccessToken(any(Payload.class), Matchers
+                .<Callback<AccessToken>>any());
 
         given(mUserApi.isDeviceConnectedToInternet(mMockContext)).willReturn(true);
 
@@ -120,7 +122,8 @@ public class UserApiTest extends BaseTestCase {
                         .getArguments()[1]).onError(any(NetworkConnectionException.class));
                 return null;
             }
-        }).when(mMockUserService).getAccessToken(any(Payload.class), any(Callback.class));
+        }).when(mMockUserService).getAccessToken(any(Payload.class), Matchers
+                .<Callback<AccessToken>>any());
 
         given(mUserApi.isDeviceConnectedToInternet(mMockContext)).willReturn(false);
 
@@ -128,5 +131,10 @@ public class UserApiTest extends BaseTestCase {
 
         verify(mUserAccountLoggedInCallback, times(1))
                 .onError(any(NetworkConnectionException.class));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T castObj(Object obj) {
+        return (T) obj;
     }
 }

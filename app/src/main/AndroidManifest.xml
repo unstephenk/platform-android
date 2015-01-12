@@ -115,6 +115,16 @@
                     android:value=".ui.activity.PostActivity" />
         </activity>
         <activity
+                android:name=".ui.activity.SendFeedbackActivity"
+                android:windowSoftInputMode="adjustResize"
+                android:configChanges="screenLayout|orientation|keyboardHidden|touchscreen|navigation"
+                android:parentActivityName=".ui.activity.PostActivity"
+                android:label="@string/send_feedback" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.activity.PostActivity" />
+        </activity>
+        <activity
                 android:name=".ui.activity.SettingsActivity"
                 android:label="@string/settings"
                 android:exported="false"

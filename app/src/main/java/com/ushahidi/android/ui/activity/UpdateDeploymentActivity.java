@@ -36,10 +36,22 @@ import java.util.List;
 public class UpdateDeploymentActivity extends BaseActivity implements
         UpdateDeploymentFragment.DeploymentUpdateListener {
 
+    private static final String INTENT_EXTRA_PARAM_DEPLOYMENT_ID
+            = "com.ushahidi.android.INTENT_PARAM_DEPLOYMENT_ID";
+
+    private static final String INTENT_STATE_PARAM_DEPLOYMEN_ID
+            = "com.ushahidi.android.STATE_PARAM_DEPLOYMENT_ID";
+
     private Long mDeploymentId;
 
     public UpdateDeploymentActivity() {
         super(R.layout.activity_add_deployment, 0);
+    }
+
+    public static Intent getIntent(final Context context, long deploymentID) {
+        Intent intent = new Intent(context, UpdateDeploymentActivity.class);
+        intent.putExtra(INTENT_EXTRA_PARAM_DEPLOYMENT_ID, deploymentID);
+        return intent;
     }
 
     @Override
@@ -57,18 +69,6 @@ public class UpdateDeploymentActivity extends BaseActivity implements
         mDeploymentId = getIntent().getLongExtra(INTENT_EXTRA_PARAM_DEPLOYMENT_ID, -1);
         addFragment(R.id.fragment_container, UpdateDeploymentFragment.newInstance(mDeploymentId),
                 UpdateDeploymentFragment.UPDATE_FRAGMENT_TAG);
-    }
-
-    private static final String INTENT_EXTRA_PARAM_DEPLOYMENT_ID
-            = "com.ushahidi.android.INTENT_PARAM_DEPLOYMENT_ID";
-
-    private static final String INTENT_STATE_PARAM_DEPLOYMEN_ID
-            = "com.ushahidi.android.STATE_PARAM_DEPLOYMENT_ID";
-
-    public static Intent getIntent(final Context context, long deploymentID) {
-        Intent intent = new Intent(context, UpdateDeploymentActivity.class);
-        intent.putExtra(INTENT_EXTRA_PARAM_DEPLOYMENT_ID, deploymentID);
-        return intent;
     }
 
     @Override

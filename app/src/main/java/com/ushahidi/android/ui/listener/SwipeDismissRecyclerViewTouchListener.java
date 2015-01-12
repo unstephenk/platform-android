@@ -35,17 +35,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A {@link View.OnTouchListener} that makes the list items in a {@link ListView}
- * dismissable. {@link ListView} is given special treatment because by default it handles touches
- * for its list items... i.e. it's in charge of drawing the pressed state (the list selector),
- * handling list item clicks, etc.
+ * A {@link View.OnTouchListener} that makes the list items in a {@link ListView} dismissable.
+ * {@link ListView} is given special treatment because by default it handles touches for its list
+ * items... i.e. it's in charge of drawing the pressed state (the list selector), handling list item
+ * clicks, etc.
  *
- * <p>After creating the listener, the caller should also call
- * {@link ListView#setOnScrollListener(AbsListView.OnScrollListener)}, passing
- * in the scroll listener returned by {@link #makeScrollListener()}. If a scroll listener is
- * already assigned, the caller should still pass scroll changes through to this listener. This will
- * ensure that this {@link SwipeDismissRecyclerViewTouchListener} is paused during list view
- * scrolling.</p>
+ * <p>After creating the listener, the caller should also call {@link
+ * ListView#setOnScrollListener(AbsListView.OnScrollListener)}, passing in the scroll listener
+ * returned by {@link #makeScrollListener()}. If a scroll listener is already assigned, the caller
+ * should still pass scroll changes through to this listener. This will ensure that this {@link
+ * SwipeDismissRecyclerViewTouchListener} is paused during list view scrolling.</p>
  *
  * <p>Example usage:</p>
  *
@@ -65,67 +64,61 @@ import java.util.List;
  * listView.setOnScrollListener(touchListener.makeScrollListener());
  * </pre>
  *
- * <p>This class Requires API level 12 or later due to use of {@link
- * ViewPropertyAnimator}.</p>
+ * <p>This class Requires API level 12 or later due to use of {@link ViewPropertyAnimator}.</p>
  *
- * <p>For a generalized {@link View.OnTouchListener} that makes any view dismissable,
- * see {@link SwipeDismissRecyclerViewTouchListener}.</p>
+ * <p>For a generalized {@link View.OnTouchListener} that makes any view dismissable, see {@link
+ * SwipeDismissRecyclerViewTouchListener}.</p>
  *
  * @see SwipeDismissRecyclerViewTouchListener
  */
 public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListener {
+
     // Cached ViewConfiguration and system-wide constant values
     private int mSlop;
+
     private int mMinFlingVelocity;
+
     private int mMaxFlingVelocity;
+
     private long mAnimationTime;
 
     // Fixed properties
     private RecyclerView mRecyclerView;
+
     private DismissCallbacks mCallbacks;
+
     private int mViewWidth = 1; // 1 and not 0 to prevent dividing by zero
 
     // Transient properties
     private List<PendingDismissData> mPendingDismisses = new ArrayList<PendingDismissData>();
+
     private int mDismissAnimationRefCount = 0;
+
     private float mDownX;
+
     private float mDownY;
+
     private boolean mSwiping;
+
     private int mSwipingSlop;
+
     private VelocityTracker mVelocityTracker;
+
     private int mDownPosition;
+
     private View mDownView;
+
     private boolean mPaused;
-
-    /**
-     * The callback interface used by {@link SwipeDismissRecyclerViewTouchListener} to inform its client
-     * about a successful dismissal of one or more list item positions.
-     */
-    public interface DismissCallbacks {
-        /**
-         * Called to determine whether the given position can be dismissed.
-         */
-        boolean canDismiss(int position);
-
-        /**
-         * Called when the user has indicated they she would like to dismiss one or more list item
-         * positions.
-         *
-         * @param recyclerView               The originating {@link ListView}.
-         * @param reverseSortedPositions An array of positions to dismiss, sorted in descending
-         *                               order for convenience.
-         */
-        void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions);
-    }
 
     /**
      * Constructs a new swipe-to-dismiss touch listener for the given list view.
      *
-     * @param recyclerView  The list view whose items should be dismissable.
-     * @param callbacks The callback to trigger when the user has indicated that she would like to
-     *                  dismiss one or more list items.
+     * @param recyclerView The list view whose items should be dismissable.
+     * @param callbacks    The callback to trigger when the user has indicated that she would like
+     *                     to dismiss one or more list items.
      */
-    public SwipeDismissRecyclerViewTouchListener(RecyclerView recyclerView, DismissCallbacks callbacks) {
+    public SwipeDismissRecyclerViewTouchListener(RecyclerView recyclerView,
+            DismissCallbacks callbacks) {
         ViewConfiguration vc = ViewConfiguration.get(recyclerView.getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * 16;
@@ -146,11 +139,11 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     }
 
     /**
-     * Returns an {@link AbsListView.OnScrollListener} to be added to the {@link
-     * ListView} using {@link ListView#setOnScrollListener(AbsListView.OnScrollListener)}.
-     * If a scroll listener is already assigned, the caller should still pass scroll changes through
-     * to this listener. This will ensure that this {@link SwipeDismissRecyclerViewTouchListener} is
-     * paused during list view scrolling.</p>
+     * Returns an {@link AbsListView.OnScrollListener} to be added to the {@link ListView} using
+     * {@link ListView#setOnScrollListener(AbsListView.OnScrollListener)}. If a scroll listener is
+     * already assigned, the caller should still pass scroll changes through to this listener. This
+     * will ensure that this {@link SwipeDismissRecyclerViewTouchListener} is paused during list
+     * view scrolling.</p>
      *
      * @see SwipeDismissRecyclerViewTouchListener
      */
@@ -324,22 +317,6 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         return false;
     }
 
-    class PendingDismissData implements Comparable<PendingDismissData> {
-        public int position;
-        public View view;
-
-        public PendingDismissData(int position, View view) {
-            this.position = position;
-            this.view = view;
-        }
-
-        @Override
-        public int compareTo(PendingDismissData other) {
-            // Sort by descending position
-            return other.position - position;
-        }
-    }
-
     private void performDismiss(final View dismissView, final int dismissPosition) {
         // Animate the dismissed list item to zero-height and fire the dismiss callback when
         // all dismissed list item animations have completed. This triggers layout on each animation
@@ -400,5 +377,45 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 
         mPendingDismisses.add(new PendingDismissData(dismissPosition, dismissView));
         animator.start();
+    }
+
+    /**
+     * The callback interface used by {@link SwipeDismissRecyclerViewTouchListener} to inform its
+     * client about a successful dismissal of one or more list item positions.
+     */
+    public interface DismissCallbacks {
+
+        /**
+         * Called to determine whether the given position can be dismissed.
+         */
+        boolean canDismiss(int position);
+
+        /**
+         * Called when the user has indicated they she would like to dismiss one or more list item
+         * positions.
+         *
+         * @param recyclerView           The originating {@link ListView}.
+         * @param reverseSortedPositions An array of positions to dismiss, sorted in descending
+         *                               order for convenience.
+         */
+        void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions);
+    }
+
+    class PendingDismissData implements Comparable<PendingDismissData> {
+
+        public int position;
+
+        public View view;
+
+        public PendingDismissData(int position, View view) {
+            this.position = position;
+            this.view = view;
+        }
+
+        @Override
+        public int compareTo(PendingDismissData other) {
+            // Sort by descending position
+            return other.position - position;
+        }
     }
 }

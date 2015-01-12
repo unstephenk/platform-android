@@ -17,8 +17,6 @@
 
 package com.ushahidi.android.ui.view;
 
-import android.content.Context;
-
 /**
  * Implement this interface to load data into the view
  *

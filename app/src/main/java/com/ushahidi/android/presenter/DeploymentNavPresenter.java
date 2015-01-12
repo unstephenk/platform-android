@@ -37,8 +37,6 @@ import javax.inject.Inject;
  */
 public class DeploymentNavPresenter implements IPresenter {
 
-    private View mView;
-
     private final DeploymentModelDataMapper mDeploymentModelDataMapper;
 
     private final ListDeployment mListDeployment;
@@ -55,6 +53,8 @@ public class DeploymentNavPresenter implements IPresenter {
             showErrorMessage(error);
         }
     };
+
+    private View mView;
 
     private List<DeploymentModel> mDeployments;
 
@@ -97,12 +97,12 @@ public class DeploymentNavPresenter implements IPresenter {
 
     }
 
-    private void setDeployments(List<DeploymentModel> deploymentList) {
-        mDeployments = deploymentList;
-    }
-
     public List<DeploymentModel> getDeployments() {
         return mDeployments;
+    }
+
+    private void setDeployments(List<DeploymentModel> deploymentList) {
+        mDeployments = deploymentList;
     }
 
     @Override
@@ -120,7 +120,8 @@ public class DeploymentNavPresenter implements IPresenter {
         /**
          * Render a deployment list in the UI.
          *
-         * @param deploymentModel The collection of {@link com.ushahidi.android.model.DeploymentModel} that will be shown.
+         * @param deploymentModel The collection of {@link com.ushahidi.android.model.DeploymentModel}
+         *                        that will be shown.
          */
         public void renderDeploymentList(List<DeploymentModel> deploymentModel);
 

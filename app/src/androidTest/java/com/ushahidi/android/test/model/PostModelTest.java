@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 /**
  * Tests {@link com.ushahidi.android.model.PostModel}
@@ -36,8 +35,6 @@ import static org.mockito.Mockito.mock;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class PostModelTest extends TestCase {
-
-    private PostModel mPostModel;
 
     private static final long DUMMY_ID = 1;
 
@@ -65,6 +62,7 @@ public class PostModelTest extends TestCase {
 
     private static final String DUMMY_POST_TITLE = "post title";
 
+    private PostModel mPostModel;
 
     @Override
     public void setUp() throws Exception {

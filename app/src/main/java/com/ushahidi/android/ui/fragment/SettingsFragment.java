@@ -25,7 +25,6 @@ import com.ushahidi.android.ui.widget.TimePickerPreference;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.PreferenceFragment;
 
 import javax.inject.Inject;
@@ -33,7 +32,8 @@ import javax.inject.Inject;
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragment
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String ENABLE_AUTO_SYNC = "auto_sync_preference";
 
@@ -69,8 +69,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             mPrefs.enableAutoSync().set(sharedPreferences.getBoolean(ENABLE_AUTO_SYNC, false));
         }
 
-        if(key.equals(AUTO_SYNC_TIMES)) {
-            mPrefs.getSyncFrequency().set(sharedPreferences.getString(AUTO_SYNC_TIMES, TimePickerPreference.DEFAULT_TIME_FREQUENCY));
+        if (key.equals(AUTO_SYNC_TIMES)) {
+            mPrefs.getSyncFrequency().set(sharedPreferences
+                    .getString(AUTO_SYNC_TIMES, TimePickerPreference.DEFAULT_TIME_FREQUENCY));
         }
     }
 }

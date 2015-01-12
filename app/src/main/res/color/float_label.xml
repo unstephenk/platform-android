@@ -16,7 +16,7 @@
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/flat_button_text_color_okay" android:state_activated="true" />
+    <item android:color="@color/flat_button_text_color_okay" android:state_activated="true"/>
 
-    <item android:color="@color/flat_button_pressed_color" />
+    <item android:color="@color/flat_button_pressed_color"/>
 </selector>

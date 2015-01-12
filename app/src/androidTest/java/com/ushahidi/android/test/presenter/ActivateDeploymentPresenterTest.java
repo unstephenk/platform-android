@@ -72,14 +72,14 @@ public class ActivateDeploymentPresenterTest extends CustomAndroidTestCase {
         super.setUp();
         MockitoAnnotations.initMocks(this);
         mActivateDeploymentPresenter = new ActivateDeploymentPresenter(
-                mMockActivateDeployment,mMockGetActiveDeployment, mMockDeploymentModelDataMapper);
+                mMockActivateDeployment, mMockGetActiveDeployment, mMockDeploymentModelDataMapper);
         mActivateDeploymentPresenter.setView(mMockView);
     }
 
     public void testInitializingActivateDeploymentPresenterWithNullValues() {
         final String expectedMessage = "Activate deployment usecase cannot be null";
         try {
-            new ActivateDeploymentPresenter(null, null,null);
+            new ActivateDeploymentPresenter(null, null, null);
         } catch (NullPointerException e) {
             assertEquals(expectedMessage, e.getMessage());
         }

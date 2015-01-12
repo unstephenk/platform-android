@@ -24,12 +24,7 @@ package com.ushahidi.android.ui.fragment;
 import com.ushahidi.android.BuildConfig;
 import com.ushahidi.android.R;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -37,8 +32,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-
-import javax.inject.Inject;
 
 import butterknife.InjectView;
 
@@ -70,8 +63,8 @@ public class AboutFragment extends BaseFragment {
         StringBuilder sBuilder = new StringBuilder("v");
         sBuilder.append(BuildConfig.VERSION_NAME);
         sBuilder.append("-");
-            sBuilder.append(String.valueOf(BuildConfig.VERSION_CODE));
-        if(BuildConfig.DEBUG) {
+        sBuilder.append(String.valueOf(BuildConfig.VERSION_CODE));
+        if (BuildConfig.DEBUG) {
             sBuilder.append("-");
             sBuilder.append(BuildConfig.GIT_SHA);
         }

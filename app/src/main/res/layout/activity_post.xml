@@ -24,34 +24,34 @@
         android:fitsSystemWindows="true"
         tools="ui.activity.PostActivity">
 
-        <LinearLayout
-                android:id="@+id/main_content"
+    <LinearLayout
+            android:id="@+id/main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:orientation="vertical">
+
+        <include layout="@layout/toolbar_actionbar"/>
+
+        <com.ushahidi.android.ui.widget.SlidingTabLayout
+                android:id="@+id/tabs"
+                ushApp:indicatorHeight="2dp"
+                ushApp:selectedColor="?attr/colorAccent"
+                android:gravity="center"
+                style="@style/TabSliding"/>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
-            <include layout="@layout/toolbar_actionbar"/>
-
-            <com.ushahidi.android.ui.widget.SlidingTabLayout
-                    android:id="@+id/tabs"
-                    ushApp:indicatorHeight="2dp"
-                    ushApp:selectedColor="?attr/colorAccent"
-                    android:gravity="center"
-                    style="@style/TabSliding"/>
-
-            <android.support.v4.widget.SwipeRefreshLayout
-                    android:id="@+id/swipe_refresh_layout"
+            <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                <android.support.v4.view.ViewPager
-                        android:id="@+id/viewpager"
-                        android:layout_width="match_parent"
-                        android:layout_height="0px"
-                        android:layout_weight="1"/>
-            </android.support.v4.widget.SwipeRefreshLayout>
-        </LinearLayout>
+                    android:layout_height="0px"
+                    android:layout_weight="1"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </LinearLayout>
 
     <!-- Nav drawer -->
     <include layout="@layout/nav_drawer"/>

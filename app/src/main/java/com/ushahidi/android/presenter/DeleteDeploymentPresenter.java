@@ -34,8 +34,6 @@ import javax.inject.Inject;
  */
 public class DeleteDeploymentPresenter implements IPresenter {
 
-    private View mView;
-
     private final DeploymentModelDataMapper mDeploymentModelDataMapper;
 
     private final DeleteDeployment mDeleteDeployment;
@@ -53,11 +51,14 @@ public class DeleteDeploymentPresenter implements IPresenter {
         }
     };
 
+    private View mView;
+
     @Inject
     public DeleteDeploymentPresenter(DeleteDeployment deleteDeployment,
             DeploymentModelDataMapper deploymentModelDataMapper) {
 
-        mDeleteDeployment = Preconditions.checkNotNull(deleteDeployment, "DeleteDeployment cannot be null");
+        mDeleteDeployment = Preconditions
+                .checkNotNull(deleteDeployment, "DeleteDeployment cannot be null");
         mDeploymentModelDataMapper = Preconditions.checkNotNull(deploymentModelDataMapper,
                 "DeploymentModelDataMapper cannot be null");
 

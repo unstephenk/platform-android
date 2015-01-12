@@ -33,24 +33,24 @@ import java.util.List;
  */
 public abstract class FormWidget {
 
+    protected static final LinearLayout.LayoutParams DEFAULT_LAYOUT_PARAMS
+            = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT);
+
     protected String mName;
 
     protected String mLabel;
 
     protected LinearLayout mLayout;
 
-    private TextView mTextView;
-
     protected int mPriority;
 
-    protected static final LinearLayout.LayoutParams DEFAULT_LAYOUT_PARAMS
-            = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT);
+    protected List<Validator> mValidators = new ArrayList<>();
+
+    private TextView mTextView;
 
     // Validation
     private boolean mRequired;
-
-    protected List<Validator> mValidators = new ArrayList<>();
 
     public FormWidget(Context context, String name, String label) {
         mLayout = new LinearLayout(context);
@@ -82,12 +82,12 @@ public abstract class FormWidget {
         return mValidators;
     }
 
-    public void setPriority(int priority) {
-        mPriority = priority;
-    }
-
     public int getPriority() {
         return mPriority;
+    }
+
+    public void setPriority(int priority) {
+        mPriority = priority;
     }
 
     public String getName() {
@@ -98,21 +98,21 @@ public abstract class FormWidget {
         return mLabel;
     }
 
-    public void setRequired(boolean required) {
-        mRequired = required;
-    }
-
     public boolean isRequired() {
         return mRequired;
+    }
+
+    public void setRequired(boolean required) {
+        mRequired = required;
     }
 
     public TextView getLabelTextView() {
         return mTextView;
     }
 
-    public abstract void setValue(String value);
-
     public abstract String getValue();
+
+    public abstract void setValue(String value);
 
     public abstract boolean validate();
 

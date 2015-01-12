@@ -22,6 +22,8 @@ import butterknife.OnClick;
  */
 public class AddDeploymentFragment extends BaseFragment implements AddDeploymentPresenter.View {
 
+    public static final String ADD_FRAGMENT_TAG = "add_fragment";
+
     @Inject
     AddDeploymentPresenter mAddDeploymentPresenter;
 
@@ -30,8 +32,6 @@ public class AddDeploymentFragment extends BaseFragment implements AddDeployment
 
     @InjectView(R.id.add_deployment_url)
     FormEditText url;
-
-    public static final String ADD_FRAGMENT_TAG = "add_fragment";
 
     private AddDeploymentListener mActionListener;
 

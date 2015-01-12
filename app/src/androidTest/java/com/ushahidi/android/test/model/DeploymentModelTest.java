@@ -30,8 +30,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class DeploymentModelTest extends TestCase {
 
-    private DeploymentModel mDeploymentModel;
-
     private static final long DUMMY_ID = 1;
 
     private static final String DUMMY_TITLE = "Dummy Deployment Title";
@@ -39,6 +37,8 @@ public class DeploymentModelTest extends TestCase {
     private static final DeploymentModel.Status DUMMY_STATUS = DeploymentModel.Status.DEACTIVATED;
 
     private static final String DUMMY_URL = "http://deployment.com";
+
+    private DeploymentModel mDeploymentModel;
 
     @Override
     protected void setUp() throws Exception {

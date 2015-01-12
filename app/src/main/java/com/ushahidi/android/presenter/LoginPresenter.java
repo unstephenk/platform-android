@@ -36,7 +36,6 @@ import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.UserAccountModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.model.mapper.UserAccountModelDataMapper;
-import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.view.ILoadViewData;
 
 import android.accounts.AccountManager;
@@ -45,8 +44,6 @@ import android.content.Context;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import timber.log.Timber;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
@@ -136,7 +133,8 @@ public class LoginPresenter implements IPresenter {
     public void login(UserAccountModel userAccountModel, DeploymentModel deploymentModel) {
         UserAccount userAccount = mUserAccountModelDataMapper.unmap(userAccountModel);
         UserService userService = mApiServiceUtil
-                .createService(UserService.class,deploymentModel.getUrl(),Constants.USHAHIDI_AUTHTOKEN_PASSWORD_TYPE);
+                .createService(UserService.class, deploymentModel.getUrl(),
+                        Constants.USHAHIDI_AUTHTOKEN_PASSWORD_TYPE);
         this.setUserService(userService);
         mLogin.execute(userAccount, mCallback);
     }
@@ -190,8 +188,8 @@ public class LoginPresenter implements IPresenter {
         /**
          * loggedIn
          *
-         * @param userModel The collection of {@link com.ushahidi.android.model.PostModel} that will be
-         *             shown.
+         * @param userModel The collection of {@link com.ushahidi.android.model.PostModel} that will
+         *                  be shown.
          */
         void loggedIn(UserAccountModel userModel);
 

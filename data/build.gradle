@@ -51,7 +51,7 @@ dependencies {
     compile 'nl.qbusict:cupboard:2.+'
     compile 'com.google.guava:guava:18.+'
     compile 'javax.inject:javax.inject:1@jar'
-    compile 'com.squareup.okhttp:okhttp:2.1.0'
+    compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:+'
     compile 'com.squareup.retrofit:retrofit:1.8.0'
     compile 'io.reactivex:rxandroid:0.23.0'
@@ -87,3 +87,4 @@ idea {
         testOutputDir = file('build/test-classes/debug')
     }
 }
+

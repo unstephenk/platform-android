@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 Ushahidi.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under
+  ~ the terms of the GNU Affero General Public License as published by the Free
+  ~ Software Foundation, either version 3 of the License, or (at your option)
+  ~ any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT
+  ~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program in the file LICENSE-AGPL. If not, see
+  ~ https://www.gnu.org/licenses/agpl-3.0.html
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:ushApp="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/element_spacing_normal">
+
+            <Spinner
+                    android:id="@+id/select_subject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/subjects"
+                    android:spinnerMode="dropdown"/>
+
+            <com.ushahidi.android.ui.widget.FloatLabelLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/element_spacing_normal"
+                    ushApp:floatLabelTextAppearance="@style/TextAppearance.FloatLabel">
+
+                <com.andreabaccega.widget.FormEditText
+                        android:id="@+id/feedback_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/message"
+                        android:capitalize="sentences"/>
+
+            </com.ushahidi.android.ui.widget.FloatLabelLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/element_spacing_normal"
+                    android:layout_marginTop="@dimen/element_spacing_normal">
+
+                <TextView
+                        android:id="@+id/feedback_device_info_label"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:text="@string/device_info"
+                        android:textAllCaps="true"
+                        android:textStyle="bold"/>
+
+                <TextView
+                        android:id="@+id/feedback_device_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textIsSelectable="false"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:buttonBarStyle">
+
+        <Button
+                android:id="@+id/feedback_send"
+                style="?android:attr/buttonBarButtonStyle"
+                android:textColor="@color/theme_accent_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/send"/>
+    </LinearLayout>
+
+</LinearLayout>

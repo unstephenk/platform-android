@@ -72,6 +72,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     private TabPagerAdapter mAdapter;
 
     private int mCurrentItem;
+
     private List<String> mTabTitle;
 
     private DeploymentModel mDeploymentModel;
@@ -153,12 +154,15 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
                         DeploymentActivity.getIntent(this)));
 
         mNavDrawerItemViews
-                .add(setNavDrawerItem(R.string.settings, R.drawable.ic_action_settings, 2, SettingsActivity.getIntent(this)));
+                .add(setNavDrawerItem(R.string.settings, R.drawable.ic_action_settings, 2,
+                        SettingsActivity.getIntent(this)));
 
-        mNavDrawerItemViews.add(setNavDrawerItem(R.string.about, R.drawable.ic_action_info, 3, AboutActivity.getIntent(this)));
+        mNavDrawerItemViews.add(setNavDrawerItem(R.string.about, R.drawable.ic_action_info, 3,
+                AboutActivity.getIntent(this)));
 
         mNavDrawerItemViews
-                .add(setNavDrawerItem(R.string.send_feedback, R.drawable.ic_action_help, 4));
+                .add(setNavDrawerItem(R.string.send_feedback, R.drawable.ic_action_help, 4,
+                        SendFeedbackActivity.getIntent(this)));
         setFragments();
         setTitle();
 
@@ -256,7 +260,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
     @Override
     public void showError(String message) {
-        showToast(message+ DeploymentEntity.Status.ACTIVATED.name());
+        showToast(message + DeploymentEntity.Status.ACTIVATED.name());
     }
 
     @Override

@@ -47,7 +47,7 @@ public abstract class BaseDatabseHelper extends SQLiteOpenHelper {
 
     static {
         // Register our entities
-        for (Class clazz : ENTITIES) {
+        for (Class<?> clazz : ENTITIES) {
             cupboard().register(clazz);
         }
     }

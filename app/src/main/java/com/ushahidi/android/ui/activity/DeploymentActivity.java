@@ -58,6 +58,10 @@ public class DeploymentActivity extends BaseActivity
         super(R.layout.activity_deployment_list, R.menu.list_deployment);
     }
 
+    public static Intent getIntent(final Context context) {
+        return new Intent(context, DeploymentActivity.class);
+    }
+
     private void init() {
 
         addDeploymentLayout
@@ -190,11 +194,6 @@ public class DeploymentActivity extends BaseActivity
     protected void initNavDrawerItems() {
         // DO Nothing as this activity doesn't support navigation drawer
     }
-
-    public static Intent getIntent(final Context context) {
-        return new Intent(context, DeploymentActivity.class);
-    }
-
 
     @Override
     public void onDeploymentClicked(DeploymentModel deploymentModel) {

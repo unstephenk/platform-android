@@ -36,8 +36,6 @@ import static org.mockito.Mockito.mock;
  */
 public class MediaModelDataMapperTest extends CustomAndroidTestCase {
 
-    private MediaModelDataMapper mMediaModelDataMapper;
-
     private static final long DUMMY_ID = 1;
 
     private static final String DUMMY_CAPTION = "dummy description";
@@ -49,6 +47,8 @@ public class MediaModelDataMapperTest extends CustomAndroidTestCase {
     private static final Date DUMMY_CREATED = new Date(1415718024);
 
     private static final Date DUMMY_UPDATED = new Date(1415718034);
+
+    private MediaModelDataMapper mMediaModelDataMapper;
 
     @Override
     public void setUp() throws Exception {

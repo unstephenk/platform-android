@@ -58,7 +58,7 @@ public class AddDeploymentActivityTest extends
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        mSolo = new Solo(getInstrumentation(),getActivity());
+        mSolo = new Solo(getInstrumentation(), getActivity());
         mAddDeploymentActivity = (AddDeploymentActivity) mSolo.getCurrentActivity();
         deploymentTitle = (EditText) mSolo.getView(R.id.add_deployment_title);
         deploymentUrl = (EditText) mSolo.getView(R.id.add_deployment_url);

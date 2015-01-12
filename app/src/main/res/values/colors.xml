@@ -52,7 +52,7 @@
 
     <!-- Control colors -->
     <color name="color_control_highlight">#3fff</color>
-	<color name="list_dropdown_foreground_normal">#ff333333</color>
+    <color name="list_dropdown_foreground_normal">#ff333333</color>
     <color name="nav_drawer_separator_color">#e5e5e5</color>
     <color name="fab_color_primary">#8fc266</color>
     <color name="fab_color_pressed">#71a646</color>

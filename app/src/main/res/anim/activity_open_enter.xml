@@ -16,8 +16,8 @@
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
 <set
-        android:zAdjustment="top"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:zAdjustment="top">
     <translate
             android:duration="300"
             android:fromXDelta="100.0%"

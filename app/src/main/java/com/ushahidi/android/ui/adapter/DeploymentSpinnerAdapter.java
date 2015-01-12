@@ -18,7 +18,6 @@
 package com.ushahidi.android.ui.adapter;
 
 import com.ushahidi.android.R;
-import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.model.DeploymentModel;
 
 import android.content.Context;
@@ -57,7 +56,7 @@ public class DeploymentSpinnerAdapter extends ArrayAdapter<String> {
 
         if (convertView == null) {
             convertView = inflater.inflate(LAYOUT_RESOURCE_ID,
-                    parent,false);
+                    parent, false);
             widget = new Widgets(convertView);
             convertView.setTag(widget);
         } else {
@@ -74,7 +73,7 @@ public class DeploymentSpinnerAdapter extends ArrayAdapter<String> {
 
     public void setItems(List<DeploymentModel> deploymentModels) {
 
-        for(DeploymentModel deploymentModel : deploymentModels) {
+        for (DeploymentModel deploymentModel : deploymentModels) {
             add(deploymentModel.getTitle(), deploymentModel);
         }
     }

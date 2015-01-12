@@ -84,6 +84,19 @@
     <string name="set">Set</string>
     <string name="general_settings">General Settings</string>
     <string name="build_date">Build date</string>
+    <string name="message">Message</string>
+    <string name="send">Send</string>
+    <string name="device_info">Device info</string>
+    <string name="other">Other</string>
+    <string name="suggestion">Suggestion</string>
+    <string name="problem">Problem</string>
+    <string name="launching_email_client">Opening email client…</string>
+    <string name="failed_launching_email_client">"Couldn't open an email client"</string>
+    <string name="could_not_get_device_info">"Couldn't get device info"</string>
+    <string name="device_os">OS</string>
+    <string name="device_brand">Brand</string>
+    <string name="device_manufacturer">Manufacturer</string>
+    <string name="device_model">Model</string>
 
     <!-- enable auto sync -->
     <string name="chk_enable_auto_sync">Enable Auto Sync</string>

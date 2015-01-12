@@ -63,14 +63,14 @@ public abstract class BaseRecyclerViewAdapter<M extends Model>
         return mItems;
     }
 
-    public M getItem(int position) {
-        return mItems.get(position);
-    }
-
     public void setItems(List<M> items) {
         mItems.clear();
         mItems.addAll(items);
         notifyDataSetChanged();
+    }
+
+    public M getItem(int position) {
+        return mItems.get(position);
     }
 
     public void addItem(M item, int position) {
@@ -98,13 +98,6 @@ public abstract class BaseRecyclerViewAdapter<M extends Model>
         mRecyclerviewViewHolder = recyclerviewViewHolder;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
     public interface RecyclerviewViewHolder {
 
         void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position);
@@ -112,5 +105,12 @@ public abstract class BaseRecyclerViewAdapter<M extends Model>
         RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position);
 
         int getItemCount();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+        }
     }
 }

@@ -108,7 +108,7 @@ public class ListDeploymentFragment
 
         swipeToDeleteUndo();
         if (mFab != null) {
-            setViewGone(mFab,false);
+            setViewGone(mFab, false);
             mFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -166,7 +166,7 @@ public class ListDeploymentFragment
 
     private void initRecyclerView() {
         mDeploymentRecyclerView.setOnTouchListener(mListViewTouchListener);
-        mRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver(){
+        mRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
@@ -253,7 +253,7 @@ public class ListDeploymentFragment
     }
 
     private void onItemClick(int position) {
-        if( mRecyclerViewAdapter.getItemCount() > 0 ) {
+        if (mRecyclerViewAdapter.getItemCount() > 0) {
             DeploymentModel deploymentModel = mRecyclerViewAdapter.getItem(position);
             onDeplomentClicked(deploymentModel);
         }
@@ -313,9 +313,11 @@ public class ListDeploymentFragment
                                                 if (!items.isEmpty()) {
 
                                                     for (DeploymentParcelable deploymentModel : items) {
-                                                        if(deploymentModel.getDeploymentModel().getStatus() ==
+                                                        if (deploymentModel.getDeploymentModel()
+                                                                .getStatus() ==
                                                                 DeploymentModel.Status.ACTIVATED) {
-                                                            mPrefs.getActiveDeploymentUrl().delete();
+                                                            mPrefs.getActiveDeploymentUrl()
+                                                                    .delete();
                                                         }
                                                         mDeleteDeploymentPresenter
                                                                 .deleteDeployment(deploymentModel

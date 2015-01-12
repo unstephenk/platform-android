@@ -46,7 +46,13 @@ do so follow the steps below:
     2. Navigate to and choose the settings.gradle file in this project
     3. Press OK
 
-6. Choose Build > Make Project in Android Studio or run the following
+6. Place the following in `~/.gradle/gradle.properties`:
+
+   ```
+   FEEDBACK_EMAIL_ADDRESS=<feedback_email_address>
+   ```
+
+7. Choose Build > Make Project in Android Studio or run the following
     command in the project root directory:
     
    `./gradlew clean build` Assemble the output(s) of the projects and runs all checks.
@@ -55,7 +61,7 @@ do so follow the steps below:
    
    `./gradlew spoon` Execute tests that runs on connected devices. This requires a device to be connected.
    
-7. To install on your test device:
+8. To install on your test device:
 
    ```
     ./gradlew installDebug

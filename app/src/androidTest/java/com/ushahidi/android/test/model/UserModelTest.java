@@ -32,8 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class UserModelTest extends TestCase {
 
-    private UserModel mUserModel;
-
     private static final long DUMMY_ID = 1;
 
     private static final String DUMMY_EMAIL = "email@example.com";
@@ -49,6 +47,8 @@ public class UserModelTest extends TestCase {
     private static final long DUMMY_DEPLOYMENT = 1;
 
     private static final UserModel.Role DUMMY_USER_ENTITY_ROLE = UserModel.Role.USER;
+
+    private UserModel mUserModel;
 
     @Override
     public void setUp() throws Exception {

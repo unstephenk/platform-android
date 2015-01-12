@@ -19,14 +19,9 @@ package com.ushahidi.android.module;
 
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
-import com.ushahidi.android.core.entity.UserAccount;
 import com.ushahidi.android.core.respository.IDeploymentRepository;
-import com.ushahidi.android.core.respository.IPostRepository;
-import com.ushahidi.android.core.respository.IUserAccountRepository;
 import com.ushahidi.android.core.respository.IUserRepository;
 import com.ushahidi.android.core.task.ThreadExecutor;
-import com.ushahidi.android.data.api.service.PostService;
-import com.ushahidi.android.data.api.service.UserService;
 import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
 import com.ushahidi.android.data.database.PostDatabaseHelper;
 import com.ushahidi.android.data.database.UserDatabaseHelper;
@@ -35,11 +30,7 @@ import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
 import com.ushahidi.android.data.entity.mapper.UserAccountEntityMapper;
 import com.ushahidi.android.data.entity.mapper.UserEntityMapper;
 import com.ushahidi.android.data.repository.DeploymentDataRepository;
-import com.ushahidi.android.data.repository.PostDataRepository;
-import com.ushahidi.android.data.repository.UserAccountDataRepository;
 import com.ushahidi.android.data.repository.UserDataRepository;
-import com.ushahidi.android.data.repository.datasource.account.UserAccountDataSourceFactory;
-import com.ushahidi.android.data.repository.datasource.post.PostDataSourceFactory;
 import com.ushahidi.android.data.validator.UrlValidator;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
@@ -51,13 +42,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.io.File;
-import java.io.IOException;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import timber.log.Timber;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -73,23 +62,23 @@ public class DataModule {
 
     static final int DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
 
-    static OkHttpClient createOkHttpClient(Context app) {
+    private static OkHttpClient createOkHttpClient(Context app) {
         OkHttpClient client = new OkHttpClient();
-        try {
-            File cacheDir = new File(app.getApplicationContext().getCacheDir(), "ushahidi-android-http-cache");
-            Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
-            client.setCache(cache);
-        } catch (IOException e) {
-            Timber.e(e, "Unable to install disk cache.");
-        }
 
+        File cacheDir = new File(app.getApplicationContext().getCacheDir(),
+                    "ushahidi-android-http-cache");
+
+        Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
+
+        client.setCache(cache);
         return client;
     }
 
     @Provides
     @Singleton
     SharedPreferences provideSharedPreferences(Context app) {
-        return app.getApplicationContext().getSharedPreferences("ushahidi-android-shared-prefs", MODE_PRIVATE);
+        return app.getApplicationContext()
+                .getSharedPreferences("ushahidi-android-shared-prefs", MODE_PRIVATE);
     }
 
     @Provides
@@ -126,7 +115,7 @@ public class DataModule {
     @Provides
     @Singleton
     PostDatabaseHelper providesPostDatabaseHelper(Context context, ThreadExecutor threadExecutor) {
-        return PostDatabaseHelper.getInstance(context,threadExecutor);
+        return PostDatabaseHelper.getInstance(context, threadExecutor);
     }
 
     @Provides
@@ -147,19 +136,19 @@ public class DataModule {
 
     @Provides
     @Singleton
-    PostEntityMapper providesPostEntityMapper(){
+    PostEntityMapper providesPostEntityMapper() {
         return new PostEntityMapper();
     }
 
     @Provides
     @Singleton
-    UserEntityMapper provideUserEntityMapper(){
+    UserEntityMapper provideUserEntityMapper() {
         return new UserEntityMapper();
     }
 
     @Provides
     @Singleton
-    UserAccountEntityMapper provideUserAccountEntityMapper(){
+    UserAccountEntityMapper provideUserAccountEntityMapper() {
         return new UserAccountEntityMapper();
     }
 
@@ -184,7 +173,7 @@ public class DataModule {
     @Provides
     @Singleton
     UserDatabaseHelper provideUserDatabaseHelper(Context context, ThreadExecutor threadExecutor) {
-        return UserDatabaseHelper.getInstance(context,threadExecutor);
+        return UserDatabaseHelper.getInstance(context, threadExecutor);
     }
 
     @Provides

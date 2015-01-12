@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 /**
  * Tests {@link com.ushahidi.android.model.mapper.UserModelDataMapper}
@@ -35,10 +34,6 @@ import static org.mockito.Mockito.mock;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class UserModelDataMapperTest extends CustomAndroidTestCase {
-
-    private UserModelDataMapper mUserModelMapper;
-
-    private UserModel mUserModel;
 
     private static final long DUMMY_ID = 1;
 
@@ -57,6 +52,10 @@ public class UserModelDataMapperTest extends CustomAndroidTestCase {
     private static final User.Role DUMMY_ROLE = User.Role.USER;
 
     private static final UserModel.Role DUMMY_USER_ENTITY_ROLE = UserModel.Role.USER;
+
+    private UserModelDataMapper mUserModelMapper;
+
+    private UserModel mUserModel;
 
     @Override
     public void setUp() throws Exception {

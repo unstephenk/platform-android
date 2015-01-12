@@ -34,10 +34,6 @@ import static org.assertj.android.api.Assertions.assertThat;
  */
 public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginActivity> {
 
-    private Solo mSolo;
-
-    private LoginActivity mLoginActivity;
-
     FormEditText mUsername;
 
     FormEditText mPassword;
@@ -45,6 +41,10 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
     Button mLoginButton;
 
     Spinner mSpinner;
+
+    private Solo mSolo;
+
+    private LoginActivity mLoginActivity;
 
     public LoginActivityTest() {
         super(LoginActivity.class);

@@ -40,6 +40,12 @@ import android.widget.TextView;
  */
 public class InteractiveToast {
 
+    private static final String STATE_MESSAGE = "com.ushahidi.android.widget.message";
+
+    private static final int HIDE_DELAY = 5000;
+
+    private static final int ANIMATION_DURATION = 600;
+
     private InteractiveToastListener mInteractiveToastListener;
 
     private OnHideListener mOnHideListener;
@@ -50,8 +56,6 @@ public class InteractiveToast {
 
     private AlphaAnimation mFadeOutAnimation;
 
-    private static final String STATE_MESSAGE = "com.ushahidi.android.widget.message";
-
     private TextView mMessageView;
 
     private TextView mButton;
@@ -60,28 +64,29 @@ public class InteractiveToast {
 
     private boolean mShowing;
 
-    private static final int HIDE_DELAY = 5000;
-
-    private static final int ANIMATION_DURATION = 600;
-
     private InteractiveToastMessage mMessage;
 
-    /**
-     * Event listener when a button is clicked
-     */
-    public interface InteractiveToastListener {
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mOnHideListener != null && mMessage != null) {
+                mOnHideListener.onHide(mMessage.mToken);
+            }
+            mContainer.startAnimation(mFadeOutAnimation);
+        }
+    };
 
-        void onPressed(Parcelable token);
-    }
-
-    /**
-     * Callback when the view vanishes without any interaction. The client can take certain actions
-     * as the widget vanishes.
-     */
-    public interface OnHideListener {
-
-        void onHide(Parcelable token);
-    }
+    private final View.OnClickListener mButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mInteractiveToastListener != null && mMessage != null) {
+                mInteractiveToastListener.onPressed(mMessage.mToken);
+                mMessage = null;
+                mHandler.removeCallbacks(mHideRunnable);
+                mHideRunnable.run();
+            }
+        }
+    };
 
     /**
      * The default constructor
@@ -216,34 +221,40 @@ public class InteractiveToast {
         mOnHideListener = onHideListener;
     }
 
-    private final View.OnClickListener mButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (mInteractiveToastListener != null && mMessage != null) {
-                mInteractiveToastListener.onPressed(mMessage.mToken);
-                mMessage = null;
-                mHandler.removeCallbacks(mHideRunnable);
-                mHideRunnable.run();
-            }
-        }
-    };
-
     public void clear() {
         mMessage = null;
         mHideRunnable.run();
     }
 
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (mOnHideListener != null && mMessage != null) {
-                mOnHideListener.onHide(mMessage.mToken);
-            }
-            mContainer.startAnimation(mFadeOutAnimation);
-        }
-    };
+    /**
+     * Event listener when a button is clicked
+     */
+    public interface InteractiveToastListener {
+
+        void onPressed(Parcelable token);
+    }
+
+    /**
+     * Callback when the view vanishes without any interaction. The client can take certain actions
+     * as the widget vanishes.
+     */
+    public interface OnHideListener {
+
+        void onHide(Parcelable token);
+    }
 
     private static class InteractiveToastMessage implements Parcelable {
+
+        public static final Parcelable.Creator<InteractiveToastMessage> CREATOR
+                = new Parcelable.Creator<InteractiveToastMessage>() {
+            public InteractiveToastMessage createFromParcel(Parcel in) {
+                return new InteractiveToastMessage(in);
+            }
+
+            public InteractiveToastMessage[] newArray(int size) {
+                return new InteractiveToastMessage[size];
+            }
+        };
 
         final String mMessage;
 
@@ -280,16 +291,5 @@ public class InteractiveToast {
             parcel.writeInt(mActionIcon);
             parcel.writeParcelable(mToken, 0);
         }
-
-        public static final Parcelable.Creator<InteractiveToastMessage> CREATOR
-                = new Parcelable.Creator<InteractiveToastMessage>() {
-            public InteractiveToastMessage createFromParcel(Parcel in) {
-                return new InteractiveToastMessage(in);
-            }
-
-            public InteractiveToastMessage[] newArray(int size) {
-                return new InteractiveToastMessage[size];
-            }
-        };
     }
 }

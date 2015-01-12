@@ -15,23 +15,39 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.module;
+package com.ushahidi.android.ui.activity;
 
-import com.ushahidi.android.ui.activity.AboutActivity;
-import com.ushahidi.android.ui.activity.SendFeedbackActivity;
-import com.ushahidi.android.ui.activity.SettingsActivity;
-import com.ushahidi.android.ui.fragment.AboutFragment;
-import com.ushahidi.android.ui.fragment.SendFeedbackFragment;
-import com.ushahidi.android.ui.fragment.SettingsFragment;
+import com.ushahidi.android.R;
+import com.ushahidi.android.module.InjectModule;
 
-import dagger.Module;
+import android.content.Context;
+import android.content.Intent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Module(library = true, complete = false,
-        injects = {SettingsFragment.class, SettingsActivity.class, AboutFragment.class,
-                AboutActivity.class, SendFeedbackActivity.class, SendFeedbackFragment.class})
-public class InjectModule {
+public class SendFeedbackActivity extends BaseActivity {
 
+    public SendFeedbackActivity() {
+        super(R.layout.activity_send_feedback, 0);
+    }
+
+    public static Intent getIntent(final Context context) {
+        return new Intent(context, SendFeedbackActivity.class);
+    }
+
+    @Override
+    protected List<Object> getModules() {
+        List<Object> modules = new ArrayList<>();
+        modules.add(new InjectModule());
+        return modules;
+    }
+
+    @Override
+    protected void initNavDrawerItems() {
+        // No nav items
+    }
 }

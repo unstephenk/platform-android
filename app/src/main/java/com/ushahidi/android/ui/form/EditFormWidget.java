@@ -45,13 +45,13 @@ public class EditFormWidget extends FormWidget {
     }
 
     @Override
-    public void setValue(String value) {
-        mInput.setText(value);
+    public String getValue() {
+        return mInput.getText().toString();
     }
 
     @Override
-    public String getValue() {
-        return mInput.getText().toString();
+    public void setValue(String value) {
+        mInput.setText(value);
     }
 
     @Override

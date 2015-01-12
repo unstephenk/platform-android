@@ -35,16 +35,26 @@ import java.util.List;
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class AboutActivity extends BaseActivity{
+public class AboutActivity extends BaseActivity {
 
     public AboutActivity() {
         super(R.layout.activity_about, 0);
     }
 
+    public static Intent getIntent(final Context context) {
+        return new Intent(context, AboutActivity.class);
+    }
+
+    private static boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(isTablet(this)) {
+        if (isTablet(this)) {
             showAsPopup(this);
         }
     }
@@ -76,15 +86,5 @@ public class AboutActivity extends BaseActivity{
         params.alpha = 1.0f;
         params.dimAmount = 0.5f;
         activity.getWindow().setAttributes((params));
-    }
-
-    public static Intent getIntent(final Context context) {
-        return new Intent(context, AboutActivity.class);
-    }
-
-    private static boolean isTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK)
-                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 }

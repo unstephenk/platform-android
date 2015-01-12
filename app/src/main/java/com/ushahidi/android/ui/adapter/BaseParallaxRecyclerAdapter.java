@@ -47,15 +47,6 @@ public class BaseParallaxRecyclerAdapter<M extends Model> extends BaseRecyclerVi
 
     private RecyclerView mRecyclerView;
 
-    private class VIEW_TYPES {
-
-        public static final int NORMAL = 1;
-
-        public static final int HEADER = 2;
-
-        public static final int FIRST_VIEW = 3;
-    }
-
     public void translateHeader(float of) {
         float ofCalculated = of * SCROLL_MULTIPLIER;
         mHeader.setTranslationY(ofCalculated);
@@ -137,11 +128,6 @@ public class BaseParallaxRecyclerAdapter<M extends Model> extends BaseRecyclerVi
         notifyItemInserted(position + (mHeader == null ? 0 : 1));
     }
 
-    /*@Override
-    public M getItem(int position) {
-        return mItems.get(position + (mHeader == null ? 0 : 1));
-    }*/
-
     @Override
     public void removeItem(M item) {
         int position = mItems.indexOf(item);
@@ -151,6 +137,11 @@ public class BaseParallaxRecyclerAdapter<M extends Model> extends BaseRecyclerVi
         mItems.remove(item);
         notifyItemRemoved(position + (mHeader == null ? 0 : 1));
     }
+
+    /*@Override
+    public M getItem(int position) {
+        return mItems.get(position + (mHeader == null ? 0 : 1));
+    }*/
 
     @Override
     public int getItemCount() {
@@ -206,5 +197,14 @@ public class BaseParallaxRecyclerAdapter<M extends Model> extends BaseRecyclerVi
             mOffset = offset;
             invalidate();
         }
+    }
+
+    private class VIEW_TYPES {
+
+        public static final int NORMAL = 1;
+
+        public static final int HEADER = 2;
+
+        public static final int FIRST_VIEW = 3;
     }
 }

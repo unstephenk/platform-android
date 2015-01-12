@@ -18,26 +18,13 @@
 package com.ushahidi.android.module;
 
 import com.squareup.okhttp.OkHttpClient;
-import com.ushahidi.android.Util.PrefsUtils;
-import com.ushahidi.android.data.api.ApiHeader;
-import com.ushahidi.android.data.api.qualifier.Bearer;
-import com.ushahidi.android.data.api.service.PostService;
-import com.ushahidi.android.data.api.service.UserService;
-import com.ushahidi.android.model.DeploymentModel;
-import com.ushahidi.android.ui.prefs.Prefs;
-
-import java.util.Timer;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.Endpoints;
-import retrofit.RestAdapter;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
-import timber.log.Timber;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>

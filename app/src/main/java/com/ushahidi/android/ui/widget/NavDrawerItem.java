@@ -29,7 +29,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import static com.ushahidi.android.model.DeploymentModel.Status;
 
@@ -83,7 +82,8 @@ public class NavDrawerItem implements View.OnTouchListener {
         this(context, title, iconId, position, false, fragment, fragmentContainerId, fragmentTag);
     }
 
-    public NavDrawerItem(ActionBarActivity context, String title, int iconId, int position, Intent intent) {
+    public NavDrawerItem(ActionBarActivity context, String title, int iconId, int position,
+            Intent intent) {
         this(context, title, iconId, position, false, intent);
     }
 
@@ -118,7 +118,6 @@ public class NavDrawerItem implements View.OnTouchListener {
         mView = LayoutInflater.from(context).inflate(inflateLayout, null, false);
         mText = (TextView) mView.findViewById(R.id.title);
         mActiveIcon = (ImageView) mView.findViewById(R.id.status);
-
 
         if (iconId > 0) {
             // Set Icon and Text
@@ -169,13 +168,13 @@ public class NavDrawerItem implements View.OnTouchListener {
                 mActivity.getResources().getColor(R.color.navdrawer_item_pressed_state)
                 : mActivity.getResources().getColor(R.color.navdrawer_item_unpressed_state));
 
-        if(mIcon !=null) {
+        if (mIcon != null) {
             mIcon.setColorFilter(isSelected() ?
                     mActivity.getResources().getColor(R.color.navdrawer_icon_tint_selected) :
                     mActivity.getResources().getColor(R.color.navdrawer_icon_tint));
         }
 
-        if(mText !=null) {
+        if (mText != null) {
             mText.setTextColor(isSelected() ?
                     mActivity.getResources().getColor(R.color.navdrawer_text_color_selected) :
                     mActivity.getResources().getColor(R.color.navdrawer_text_color));

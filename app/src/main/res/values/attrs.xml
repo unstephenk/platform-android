@@ -36,21 +36,21 @@
     </declare-styleable>
 
     <declare-styleable name="ScrimInsetsView">
-        <attr name="insetForeground" format="reference|color" />
+        <attr name="insetForeground" format="reference|color"/>
     </declare-styleable>
 
     <declare-styleable name="SlidingTabLayout">
-        <attr name="selectedColor" format="color" />
-        <attr name="indicatorHeight" format="reference|dimension" />
-        <attr name="dividerColor" format="color" />
-        <attr name="android:textAppearance" />
+        <attr name="selectedColor" format="color"/>
+        <attr name="indicatorHeight" format="reference|dimension"/>
+        <attr name="dividerColor" format="color"/>
+        <attr name="android:textAppearance"/>
     </declare-styleable>
 
     <declare-styleable name="FontSupportedTextView">
-        <attr name="fontFile" format="string" />
+        <attr name="fontFile" format="string"/>
     </declare-styleable>
     <declare-styleable name="FloatLabelLayout">
-        <attr name="floatLabelTextAppearance" format="reference" />
-        <attr name="floatLabelSidePadding" format="reference|dimension" />
+        <attr name="floatLabelTextAppearance" format="reference"/>
+        <attr name="floatLabelSidePadding" format="reference|dimension"/>
     </declare-styleable>
 </resources>

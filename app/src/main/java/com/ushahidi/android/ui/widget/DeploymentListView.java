@@ -48,6 +48,8 @@ import java.util.Map;
  */
 public class DeploymentListView extends ListView {
 
+    private static final String BUNDLE_KEY = "selected";
+
     private Activity mActivity;
 
     private boolean mSelectionMode = false;
@@ -65,8 +67,6 @@ public class DeploymentListView extends ListView {
     private Map<Integer, DeploymentModel> mDeploymentModels;
 
     private InteractiveToast mInteractiveToast;
-
-    private static final String BUNDLE_KEY = "selected";
 
     public DeploymentListView(Context context) {
         this(context, null, 0);
@@ -196,44 +196,6 @@ public class DeploymentListView extends ListView {
         mDeploymentModels.clear();
     }
 
-    class ActionBarModeCallback implements ActionMode.Callback {
-
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            actionMode.getMenuInflater()
-                    .inflate(R.menu.list_deployment_contextual_actionbar_menu, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            // Resets any previously selected number of items.
-            mNumberOfItemsDeleted = 0;
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            boolean result = false;
-
-            if (menuItem.getItemId() == R.id.list_deployment_delete) {
-                performDelete();
-                result = true;
-            }
-
-            if (mActionMode != null) {
-                mActionMode.finish();
-            }
-            return result;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-            clearItems();
-            mActionMode = null;
-        }
-    }
-
     public void setDeleteDeploymentPresenter(DeleteDeploymentPresenter deleteDeploymentPresenter) {
         mDeleteDeploymentPresenter = deleteDeploymentPresenter;
     }
@@ -342,6 +304,17 @@ public class DeploymentListView extends ListView {
      */
     public static class DeploymentParcelable implements Parcelable {
 
+        public static final Parcelable.Creator<DeploymentParcelable> CREATOR
+                = new Parcelable.Creator<DeploymentParcelable>() {
+            public DeploymentParcelable createFromParcel(Parcel in) {
+                return new DeploymentParcelable(in);
+            }
+
+            public DeploymentParcelable[] newArray(int size) {
+                return new DeploymentParcelable[size];
+            }
+        };
+
         private DeploymentModel mDeploymentModel;
 
         private int mPosition;
@@ -378,16 +351,43 @@ public class DeploymentListView extends ListView {
             parcel.writeInt(mPosition);
             parcel.writeValue(mDeploymentModel);
         }
+    }
 
-        public static final Parcelable.Creator<DeploymentParcelable> CREATOR
-                = new Parcelable.Creator<DeploymentParcelable>() {
-            public DeploymentParcelable createFromParcel(Parcel in) {
-                return new DeploymentParcelable(in);
+    class ActionBarModeCallback implements ActionMode.Callback {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            actionMode.getMenuInflater()
+                    .inflate(R.menu.list_deployment_contextual_actionbar_menu, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            // Resets any previously selected number of items.
+            mNumberOfItemsDeleted = 0;
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            boolean result = false;
+
+            if (menuItem.getItemId() == R.id.list_deployment_delete) {
+                performDelete();
+                result = true;
             }
 
-            public DeploymentParcelable[] newArray(int size) {
-                return new DeploymentParcelable[size];
+            if (mActionMode != null) {
+                mActionMode.finish();
             }
-        };
+            return result;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode) {
+            clearItems();
+            mActionMode = null;
+        }
     }
 }

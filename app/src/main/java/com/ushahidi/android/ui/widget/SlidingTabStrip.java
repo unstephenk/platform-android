@@ -30,16 +30,21 @@ import android.widget.LinearLayout;
 public class SlidingTabStrip extends LinearLayout {
 
     private static final int DEFAULT_INDICATOR_HEIGHT_DIPS = 4;
+
     private static final int DEFAULT_DIVIDER_THICKNESS_DIPS = 1;
+
     private static final float DEFAULT_DIVIDER_HEIGHT = 0.5f;
 
-    private int mSelectedIndicatorHeight;
     private final Paint mSelectedIndicatorPaint;
 
     private final Paint mDividerPaint;
+
     private final float mDividerHeight;
 
+    private int mSelectedIndicatorHeight;
+
     private int mSelectedPosition;
+
     private float mSelectionOffset;
 
     SlidingTabStrip(Context context) {

@@ -19,7 +19,6 @@ package com.ushahidi.android.ui.fragment;
 
 import com.ushahidi.android.R;
 import com.ushahidi.android.model.PostModel;
-import com.ushahidi.android.model.mapper.PostModelDataMapper;
 import com.ushahidi.android.presenter.ListPostPresenter;
 import com.ushahidi.android.ui.adapter.PostAdapter;
 
@@ -38,6 +37,7 @@ import butterknife.InjectView;
 
 /**
  * Shows list of posts
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAdapter>
@@ -178,6 +178,7 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
         void onPostClicked(final PostModel postModel);
 
         void hideSwipeRefresh();
+
         void enableSwipeRefresh();
     }
 }

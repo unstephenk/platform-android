@@ -37,6 +37,10 @@ public class LoginActivity extends BaseActivity {
         super(R.layout.activity_login, 0);
     }
 
+    public static Intent getIntent(final Context context) {
+        return new Intent(context, LoginActivity.class);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,9 +62,5 @@ public class LoginActivity extends BaseActivity {
     private void init() {
         addFragment(R.id.fragment_container, LoginFragment.newInstance(),
                 LoginFragment.LOGIN_FRAGMENT_TAG);
-    }
-
-    public static Intent getIntent(final Context context) {
-        return new Intent(context, LoginActivity.class);
     }
 }

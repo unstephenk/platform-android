@@ -43,8 +43,6 @@ public class ActivateDeploymentPresenter implements IPresenter {
 
     private final GetActiveDeployment mGetActiveDeployment;
 
-    private View mView;
-
     private final ActivateDeployment.Callback mCallback = new ActivateDeployment.Callback() {
         @Override
         public void onDeploymentActivated() {
@@ -58,7 +56,8 @@ public class ActivateDeploymentPresenter implements IPresenter {
         }
     };
 
-    private final GetActiveDeployment.Callback mGetActiveDeploymentCallback = new GetActiveDeployment.Callback() {
+    private final GetActiveDeployment.Callback mGetActiveDeploymentCallback
+            = new GetActiveDeployment.Callback() {
 
         @Override
         public void onActiveDeploymentLoaded(Deployment deployment) {
@@ -71,6 +70,8 @@ public class ActivateDeploymentPresenter implements IPresenter {
             showErrorMessage(error);
         }
     };
+
+    private View mView;
 
     @Inject
     public ActivateDeploymentPresenter(ActivateDeployment activateDeployment,

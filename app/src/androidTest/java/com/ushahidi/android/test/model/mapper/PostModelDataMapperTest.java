@@ -38,8 +38,6 @@ import static org.mockito.Mockito.mock;
  */
 public class PostModelDataMapperTest extends CustomAndroidTestCase {
 
-    private PostModelDataMapper mPostModelDataMapper;
-
     private static final long DUMMY_ID = 1;
 
     private static final User DUMMY_USER = new User();
@@ -65,6 +63,8 @@ public class PostModelDataMapperTest extends CustomAndroidTestCase {
     private static final List<Tag> DUMMY_TAGS = new ArrayList<>();
 
     private static final String DUMMY_POST_TITLE = "post title";
+
+    private PostModelDataMapper mPostModelDataMapper;
 
     @Override
     public void setUp() throws Exception {

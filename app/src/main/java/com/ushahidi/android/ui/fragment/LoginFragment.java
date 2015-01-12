@@ -51,7 +51,8 @@ import butterknife.OnItemSelected;
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class LoginFragment extends BaseFragment implements LoginPresenter.View, RadioGroup.OnCheckedChangeListener{
+public class LoginFragment extends BaseFragment
+        implements LoginPresenter.View, RadioGroup.OnCheckedChangeListener {
 
     public static final String LOGIN_FRAGMENT_TAG = "login_fragment";
 
@@ -120,7 +121,8 @@ public class LoginFragment extends BaseFragment implements LoginPresenter.View, 
 
     @OnItemSelected(R.id.select_deployment)
     public void onItemSelected(int position) {
-        mSelectedDeploymentModel = mDeploymentSpinnerArrayAdapter.getDeploymentModels().get(position);
+        mSelectedDeploymentModel = mDeploymentSpinnerArrayAdapter.getDeploymentModels()
+                .get(position);
     }
 
 
@@ -128,24 +130,24 @@ public class LoginFragment extends BaseFragment implements LoginPresenter.View, 
 
         mPassword.setError(null);
 
-         if(validateForms(mUsername, mPassword)) {
-             switch (mTypeRadioGroup.getCheckedRadioButtonId()) {
-                 case R.id.radio_btn_login:
-                     UserAccountModel userAccountModel = new UserAccountModel();
-                     userAccountModel.setAccountName(mUsername.getText().toString().trim());
-                     userAccountModel.setPassword(mPassword.getText().toString().trim());
-                     userAccountModel.setAuthTokenType(Constants.USHAHIDI_AUTHTOKEN_PASSWORD_TYPE);
-                     mLoginPresenter.login(userAccountModel, mSelectedDeploymentModel);
+        if (validateForms(mUsername, mPassword)) {
+            switch (mTypeRadioGroup.getCheckedRadioButtonId()) {
+                case R.id.radio_btn_login:
+                    UserAccountModel userAccountModel = new UserAccountModel();
+                    userAccountModel.setAccountName(mUsername.getText().toString().trim());
+                    userAccountModel.setPassword(mPassword.getText().toString().trim());
+                    userAccountModel.setAuthTokenType(Constants.USHAHIDI_AUTHTOKEN_PASSWORD_TYPE);
+                    mLoginPresenter.login(userAccountModel, mSelectedDeploymentModel);
 
-                     break;
-                 case R.id.radio_btn_register:
-                     final String email = mEmailAutoComplete.getText().toString().trim();
-                     if(validateForms(mEmailAutoComplete)) {
-                         //TODO implement register
-                     }
-                     break;
-             }
-         }
+                    break;
+                case R.id.radio_btn_register:
+                    final String email = mEmailAutoComplete.getText().toString().trim();
+                    if (validateForms(mEmailAutoComplete)) {
+                        //TODO implement register
+                    }
+                    break;
+            }
+        }
     }
 
     @Override
@@ -157,7 +159,8 @@ public class LoginFragment extends BaseFragment implements LoginPresenter.View, 
 
     @Override
     public void deploymentList(List<DeploymentModel> deploymentModelList) {
-        mDeploymentSpinnerArrayAdapter = new DeploymentSpinnerAdapter(getContext(),deploymentModelList);
+        mDeploymentSpinnerArrayAdapter = new DeploymentSpinnerAdapter(getContext(),
+                deploymentModelList);
         mSpinner.setAdapter(mDeploymentSpinnerArrayAdapter);
 
         // Select active deployment by default

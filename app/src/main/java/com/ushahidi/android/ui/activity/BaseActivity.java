@@ -20,13 +20,11 @@ package com.ushahidi.android.ui.activity;
 import com.ushahidi.android.R;
 import com.ushahidi.android.UshahidiApplication;
 import com.ushahidi.android.module.ActivityModule;
-import com.ushahidi.android.ui.widget.MultiSwipeRefreshLayout;
 import com.ushahidi.android.ui.widget.NavDrawerItem;
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -50,7 +48,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import dagger.ObjectGraph;
 
 import static android.view.View.GONE;
@@ -87,6 +84,21 @@ public abstract class BaseActivity extends ActionBarActivity {
     // Navigation drawer view items
     protected List<NavDrawerItem> mNavDrawerItemViews = new ArrayList<>();
 
+    // User profile
+    protected View mLoginLayout;
+
+    protected View mUserProfileLayout;
+
+    protected SwipeRefreshLayout mSwipeRefreshLayout;
+
+    protected TextView mUserLoginTitle;
+
+    protected TextView mFullnameTextView;
+
+    protected TextView mUsernameTextView;
+
+    protected ImageView mAvatarImageView;
+
     @Inject
     ActivityLauncher launcher;
 
@@ -104,21 +116,6 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     // ViewGroup that habours the navigation drawer items
     private ViewGroup mDrawerItemsContainer;
-
-    // User profile
-    protected View mLoginLayout;
-
-    protected View mUserProfileLayout;
-
-    protected SwipeRefreshLayout mSwipeRefreshLayout;
-
-    protected TextView mUserLoginTitle;
-
-    protected TextView mFullnameTextView;
-
-    protected TextView mUsernameTextView;
-
-    protected ImageView mAvatarImageView;
 
     public BaseActivity(int layout, int menu, int drawerLayoutId, int drawerItemsContainerId) {
         mLayout = layout;
@@ -252,7 +249,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         View mainContent = findViewById(R.id.main_content);
         if (mainContent != null) {
-           fadeIn(mainContent,true);
+            fadeIn(mainContent, true);
         }
     }
 
@@ -325,7 +322,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         mLoginLayout = findViewById(R.id.layout_user_login);
         mUserProfileLayout = findViewById(R.id.layout_user_profile);
 
-        if( mLoginLayout == null ) {
+        if (mLoginLayout == null) {
             return;
         }
         mLoginLayout.setVisibility(VISIBLE);
@@ -492,7 +489,8 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param tag             The tag for the fragment
      */
     protected void addFragment(int containerViewId, Fragment fragment, String tag) {
-        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.add(containerViewId, fragment, tag);
         fragmentTransaction.commit();
     }
@@ -505,7 +503,8 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param tag             The tag for the fragment
      */
     protected void replaceFragment(int containerViewId, Fragment fragment, String tag) {
-        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager()
+                .beginTransaction();
         fragmentTransaction.replace(containerViewId, fragment, tag);
         fragmentTransaction.commit();
     }

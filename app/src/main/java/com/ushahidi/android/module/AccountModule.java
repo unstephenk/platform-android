@@ -17,16 +17,11 @@
 
 package com.ushahidi.android.module;
 
-import com.ushahidi.android.core.respository.IUserAccountRepository;
-import com.ushahidi.android.core.respository.IUserRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.account.Login;
 import com.ushahidi.android.ui.activity.LoginActivity;
 import com.ushahidi.android.ui.fragment.LoginFragment;
-
-import android.accounts.AccountManager;
-import android.content.Context;
 
 import javax.inject.Singleton;
 

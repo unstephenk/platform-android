@@ -23,6 +23,10 @@ public class AddDeploymentActivity extends BaseActivity implements
         super(R.layout.activity_add_deployment, 0);
     }
 
+    public static Intent getIntent(final Context context) {
+        return new Intent(context, AddDeploymentActivity.class);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,11 +36,6 @@ public class AddDeploymentActivity extends BaseActivity implements
     private void init() {
         addFragment(R.id.fragment_container, AddDeploymentFragment.newInstance(),
                 AddDeploymentFragment.ADD_FRAGMENT_TAG);
-    }
-
-
-    public static Intent getIntent(final Context context) {
-        return new Intent(context, AddDeploymentActivity.class);
     }
 
     @Override

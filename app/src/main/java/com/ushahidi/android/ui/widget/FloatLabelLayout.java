@@ -62,11 +62,12 @@ public class FloatLabelLayout extends FrameLayout {
         final TypedArray array = context
                 .obtainStyledAttributes(attrs, R.styleable.FloatLabelLayout);
 
-        final int dpToPix = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_PADDING_LEFT_RIGHT_DP,
-                getResources().getDisplayMetrics());
+        final int dpToPix = (int) TypedValue
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_PADDING_LEFT_RIGHT_DP,
+                        getResources().getDisplayMetrics());
 
         final int sidePadding = array.getDimensionPixelSize(
-                R.styleable.FloatLabelLayout_floatLabelSidePadding,dpToPix);
+                R.styleable.FloatLabelLayout_floatLabelSidePadding, dpToPix);
 
         mLabel = new TextView(context);
         mLabel.setPadding(sidePadding, 0, sidePadding, 0);

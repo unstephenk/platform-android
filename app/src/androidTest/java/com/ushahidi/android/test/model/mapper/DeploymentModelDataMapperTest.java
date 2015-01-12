@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 /**
  * Tests {@link com.ushahidi.android.model.mapper.DeploymentModelDataMapper}
@@ -86,7 +85,7 @@ public class DeploymentModelDataMapperTest extends CustomAndroidTestCase {
     }
 
     public void testDeploymentListMap() {
-        Deployment deploymentOne =  new Deployment();
+        Deployment deploymentOne = new Deployment();
         deploymentOne.setStatus(DEPLOYMENT_DUMMY_STATUS);
         deploymentOne.setTitle(DUMMY_TITLE);
         deploymentOne.setUrl(DUMMY_URL);

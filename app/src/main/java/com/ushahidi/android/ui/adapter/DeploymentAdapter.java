@@ -41,15 +41,6 @@ import java.util.List;
 public class DeploymentAdapter extends BaseRecyclerViewAdapter<DeploymentModel> implements
         Filterable {
 
-    private SparseBooleanArray mSelectedItems;
-
-    private Filter mFilter = null;
-
-    public DeploymentAdapter() {
-        this.setRecyclerviewViewHolder(mRecyclerviewViewHolder);
-        mSelectedItems = new SparseBooleanArray();
-    }
-
     RecyclerviewViewHolder mRecyclerviewViewHolder = new RecyclerviewViewHolder() {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
@@ -70,6 +61,15 @@ public class DeploymentAdapter extends BaseRecyclerViewAdapter<DeploymentModel> 
             return mItems.size();
         }
     };
+
+    private SparseBooleanArray mSelectedItems;
+
+    private Filter mFilter = null;
+
+    public DeploymentAdapter() {
+        this.setRecyclerviewViewHolder(mRecyclerviewViewHolder);
+        mSelectedItems = new SparseBooleanArray();
+    }
 
     public void toggleSelection(int position) {
         if (mSelectedItems.get(position, false)) {

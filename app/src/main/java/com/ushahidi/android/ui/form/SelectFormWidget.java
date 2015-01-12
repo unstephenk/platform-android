@@ -57,13 +57,13 @@ public class SelectFormWidget extends FormWidget {
     }
 
     @Override
-    public void setValue(String value) {
-        mSpinner.setSelection(mAdapter.getPosition(value));
+    public String getValue() {
+        return mAdapter.getItem(mSpinner.getSelectedItemPosition());
     }
 
     @Override
-    public String getValue() {
-        return mAdapter.getItem(mSpinner.getSelectedItemPosition());
+    public void setValue(String value) {
+        mSpinner.setSelection(mAdapter.getPosition(value));
     }
 
     @Override

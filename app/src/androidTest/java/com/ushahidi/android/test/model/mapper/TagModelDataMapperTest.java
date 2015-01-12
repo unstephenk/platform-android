@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 /**
  * Tests {@link com.ushahidi.android.model.mapper.TagModelDataMapper}
@@ -35,10 +34,6 @@ import static org.mockito.Mockito.mock;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class TagModelDataMapperTest extends CustomAndroidTestCase {
-
-    private TagModelDataMapper mTagModelDataMapper;
-
-    private TagModel mTagModel;
 
     private static final long DUMMY_ID = 1;
 
@@ -59,6 +54,10 @@ public class TagModelDataMapperTest extends CustomAndroidTestCase {
     private static final TagModel.Type DUMMY_TAG_ENTITY_TYPE = TagModel.Type.CATEGORY;
 
     private static final Tag.Type DUMMY_TAG_TYPE = Tag.Type.CATEGORY;
+
+    private TagModelDataMapper mTagModelDataMapper;
+
+    private TagModel mTagModel;
 
     @Override
     public void setUp() throws Exception {
