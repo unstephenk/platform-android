@@ -76,7 +76,7 @@
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="prompt_login">Select A Deployment To Login to</string>
-    <string name="empty_post_list">No post has been added. Pull down to fetch new posts.</string>
+    <string name="empty_post_list"><b>No posts</b>\n\nPull down on the <b>screen</b> to fetch new posts.</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="email_address">Email address</string>
