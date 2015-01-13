@@ -26,20 +26,23 @@
 
     <item
             android:id="@+id/menu_filter_posts"
-            android:title="@string/filter"
+            android:title="@string/sort"
             android:icon="@drawable/ic_action_filter"
             android:orderInCategory="1"
-            ushahidiApp:showAsAction="ifRoom"/>
+            ushahidiApp:showAsAction="ifRoom">
+        <menu>
+        <item
+                android:id="@+id/menu_sort_by_title"
+                android:title="@string/sort_by_title"/>
+        <item
+                android:id="@+id/menu_sort_by_date"
+                android:title="@string/sort_by_date"/>
+        </menu>
+            </item>
     <item
             android:id="@+id/menu_refresh_post"
             android:title="@string/refresh"
             android:icon="@drawable/ic_action_reload"
-            android:orderInCategory="1"
-            ushahidiApp:showAsAction="never"/>
-    <item
-            android:id="@+id/menu_login"
-            android:title="@string/menu_sign_in"
-            android:icon="@drawable/ic_action_import"
             android:orderInCategory="1"
             ushahidiApp:showAsAction="never"/>
 </menu>

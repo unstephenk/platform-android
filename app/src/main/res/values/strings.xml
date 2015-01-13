@@ -61,7 +61,9 @@
     <string name="open">Open</string>
     <string name="refresh">Refresh</string>
     <string name="search">Search</string>
-    <string name="filter">Filter</string>
+    <string name="sort">Sort</string>
+    <string name="sort_by_title">Sort by title</string>
+    <string name="sort_by_date">Sort by date</string>
     <string name="list">List</string>
     <string name="map">Map</string>
     <string name="posts">Posts</string>
