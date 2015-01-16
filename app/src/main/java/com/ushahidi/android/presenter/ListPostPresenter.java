@@ -23,6 +23,8 @@ import com.ushahidi.android.Util.ApiServiceUtil;
 import com.ushahidi.android.core.entity.Post;
 import com.ushahidi.android.core.exception.ErrorWrap;
 import com.ushahidi.android.core.respository.IPostRepository;
+import com.ushahidi.android.core.usecase.ISearch;
+import com.ushahidi.android.core.usecase.Search;
 import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
 import com.ushahidi.android.data.api.service.PostService;
@@ -62,6 +64,8 @@ public class ListPostPresenter implements IPresenter {
 
     private final Prefs mPrefs;
 
+    private final Search<Post> mSearch;
+
     private final ApiServiceUtil mApiServiceUtil;
 
     private final Context mContext;
@@ -98,10 +102,29 @@ public class ListPostPresenter implements IPresenter {
         }
     };
 
+    private final Search.Callback<Post> mSearchCallback = new Search.Callback<Post>() {
+
+        @Override
+        public void onError(ErrorWrap error) {
+            mView.showEmptySearchResultsInfo();
+            showErrorMessage(error);
+        }
+
+        @Override
+        public void onEntityFound(List<Post> entityList) {
+            if(entityList.size() > 0) {
+                showPostsListInView(entityList);
+            } else {
+                mView.showEmptySearchResultsInfo();
+            }
+        }
+    };
+
     private View mView;
 
     @Inject
     public ListPostPresenter(ListPost listPost,
+            Search<Post> search,
             FetchPost fetchPost,
             PostModelDataMapper postModelDataMapper, PostEntityMapper postEntityMapper,
             PostDatabaseHelper postDatabaseHelper,
@@ -110,6 +133,7 @@ public class ListPostPresenter implements IPresenter {
             Context context
     ) {
         mListPost = Preconditions.checkNotNull(listPost, "ListPost cannot be null");
+        mSearch = Preconditions.checkNotNull(search, "Search cannot be null");
         mFetchPost = Preconditions.checkNotNull(fetchPost, "Fetch Post listing");
         mPostModelDataMapper = Preconditions
                 .checkNotNull(postModelDataMapper, "PostModelDataMapper cannot be null");
@@ -130,6 +154,7 @@ public class ListPostPresenter implements IPresenter {
                 .getInstance(postDataSourceFactory, mPostEntityMapper);
         mListPost.setPostRepository(postRepository);
         mFetchPost.setPostRepository(postRepository);
+        mSearch.setRepository(postRepository);
     }
 
     public void setView(View view) {
@@ -211,6 +236,9 @@ public class ListPostPresenter implements IPresenter {
         mFetchPost.execute(mCallback);
     }
 
+    public void search(String search) {
+        mSearch.execute(search,mSearchCallback);
+    }
     public interface View extends ILoadViewData {
 
         /**
@@ -231,6 +259,8 @@ public class ListPostPresenter implements IPresenter {
         /**
          * Refreshes the existing items in the list view without any visual loaders
          */
+        void showEmptySearchResultsInfo();
+
         void refreshList();
     }
 }

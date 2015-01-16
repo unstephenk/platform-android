@@ -17,9 +17,11 @@
 
 package com.ushahidi.android.module;
 
+import com.ushahidi.android.core.entity.Post;
 import com.ushahidi.android.core.respository.IDeploymentRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
+import com.ushahidi.android.core.usecase.Search;
 import com.ushahidi.android.core.usecase.deployment.ActivateDeployment;
 import com.ushahidi.android.core.usecase.deployment.GetActiveDeployment;
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
@@ -79,6 +81,13 @@ public final class PostUiModule {
     GetActiveDeployment providesActiveDeployment(IDeploymentRepository deploymentRepository,
             ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         return new GetActiveDeployment(deploymentRepository, threadExecutor, postExecutionThread);
+    }
+
+    @Provides
+    @Singleton
+    Search<Post> providePostSearch(ThreadExecutor threadExecutor,
+            PostExecutionThread postExecutionThread) {
+        return new Search<>(threadExecutor, postExecutionThread);
     }
 
 }

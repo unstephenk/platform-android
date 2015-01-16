@@ -29,6 +29,7 @@ import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.widget.NavDrawerItem;
 import com.ushahidi.android.ui.widget.SlidingTabLayout;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +37,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
+import android.view.Menu;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -77,6 +81,12 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
     private DeploymentModel mDeploymentModel;
 
+    private SearchView mSearchView = null;
+
+    private String mQuery = "";
+
+    private ListPostFragment mListPostFragment;
+
     public PostActivity() {
         super(R.layout.activity_post, R.menu.post, R.id.drawer_layout, R.id.navdrawer_items_list);
     }
@@ -116,6 +126,85 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
         if (savedInstanceState != null) {
             mCurrentItem = savedInstanceState.getInt(SELECTED_TAB);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleSearchIntent(intent);
+    }
+
+    private void handleSearchIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            query = query == null ? "" : query;
+            mQuery = query;
+            performQuery(query);
+            if (mSearchView != null) {
+                mSearchView.setQuery(query, false);
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        mSearchView =
+                (SearchView) menu.findItem(R.id.menu_search_post).getActionView();
+        initSearchView();
+        return true;
+    }
+
+    private void initSearchView() {
+        final SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        mSearchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        mSearchView.setIconified(false);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                mSearchView.clearFocus();
+                performQuery(s);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (TextUtils.isEmpty(s)) {
+                    refresh();
+                } else {
+                    performQuery(s);
+                }
+
+                return true;
+            }
+        });
+
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                //Reload list upon closing search view.
+                return false;
+            }
+        });
+
+        if (!TextUtils.isEmpty(mQuery)) {
+            mSearchView.setQuery(mQuery, false);
+        }
+        SearchView.SearchAutoComplete searchAutoComplete
+                = (SearchView.SearchAutoComplete) mSearchView
+                .findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchAutoComplete.setHintTextColor(getResources().getColor(android.R.color.white));
+        searchAutoComplete.setTextSize(14);
+    }
+
+    private void performQuery(String query) {
+        if(mListPostFragment != null) {
+            mListPostFragment.search(query);
         }
     }
 
@@ -171,7 +260,10 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     private void setFragments() {
 
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(createTabFragments(PostTab.LIST));
+
+        mListPostFragment = new ListPostFragment();
+
+        fragments.add(mListPostFragment);
         fragments.add(createTabFragments(PostTab.MAP));
 
         mAdapter.setFragments(fragments);
@@ -302,11 +394,14 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     }
 
     public void onSwipe() {
-        // TODO clean this up
-        ListPostFragment postFragment = (ListPostFragment) mAdapter.getItem(0);
-        postFragment.refreshList();
+        refresh();
     }
 
+    private void refresh() {
+        if(mListPostFragment !=null) {
+            mListPostFragment.refreshList();
+        }
+    }
     private static enum PostTab {
         LIST, MAP
     }

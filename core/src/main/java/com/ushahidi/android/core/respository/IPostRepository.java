@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public interface IPostRepository {
+public interface IPostRepository extends ISearchRepository<Post> {
 
     /**
      * Add/Update a {@link com.ushahidi.android.core.entity.Post}.

@@ -22,7 +22,8 @@
             android:icon="@drawable/ic_action_search"
             android:title="@string/search"
             android:orderInCategory="1"
-            ushahidiApp:showAsAction="always"/>
+            ushahidiApp:actionViewClass="android.support.v7.widget.SearchView"
+            ushahidiApp:showAsAction="collapseActionView|always"/>
 
     <item
             android:id="@+id/menu_filter_posts"

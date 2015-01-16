@@ -19,6 +19,8 @@ package com.ushahidi.android.test.presenter;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.ushahidi.android.Util.ApiServiceUtil;
+import com.ushahidi.android.core.entity.Post;
+import com.ushahidi.android.core.usecase.Search;
 import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
 import com.ushahidi.android.data.api.service.PostService;
@@ -77,6 +79,9 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
     private FetchPost mMockFetchPost;
 
     @Mock
+    private Search<Post> mSearch;
+
+    @Mock
     private PostEntityMapper mMockPostEntityMapper;
 
     @Mock
@@ -90,7 +95,7 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
 
         setupPrefsMock();
         mPostListPresenter = new ListPostPresenter(
-                mMockListPost, mMockFetchPost, mMockPostModelDataMapper,
+                mMockListPost, mSearch, mMockFetchPost, mMockPostModelDataMapper,
                 mMockPostEntityMapper,
                 mMockPostDatabaseHelper,
                 mMockPrefs,
@@ -103,7 +108,7 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
     public void testInitializingPostListPresenterWithNullValues() {
         final String expectedMessage = "ListPost cannot be null";
         try {
-            new ListPostPresenter(null, null, null, null, null, null, null, null);
+            new ListPostPresenter(null,null, null, null, null, null, null, null, null);
         } catch (NullPointerException e) {
             assertEquals(expectedMessage, e.getMessage());
         }

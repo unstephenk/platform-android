@@ -17,6 +17,7 @@
 
 package com.ushahidi.android.data.repository.datasource.post;
 
+import com.ushahidi.android.data.database.ISearchDatabaseHelper;
 import com.ushahidi.android.data.database.PostDatabaseHelper;
 import com.ushahidi.android.data.entity.PostEntity;
 
@@ -85,6 +86,22 @@ public class PostDatabaseDataSource implements PostDataSource {
             @Override
             public void onPostEntityDeleted() {
                 callback.onPostEntityDeleted();
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                callback.onError(exception);
+            }
+        });
+    }
+
+    @Override
+    public void search(String query, final SearchCallback callback) {
+        mPostDatabaseHelper.search(query, new PostDatabaseHelper.SearchCallback<PostEntity>() {
+
+            @Override
+            public void onSearchResult(List postList) {
+                callback.onSearchResult(postList);
             }
 
             @Override

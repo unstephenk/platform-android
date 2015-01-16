@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class PostEntity extends Entity {
+public class PostEntity extends Entity implements Comparable<PostEntity> {
 
     @SerializedName("id")
     private Long _id;
@@ -204,5 +204,10 @@ public class PostEntity extends Entity {
                 ", mValues='" + mValues + '\'' +
                 ", mTags=" + mTags +
                 '}';
+    }
+
+    @Override
+    public int compareTo(PostEntity another) {
+        return getTitle().compareToIgnoreCase(another.getTitle());
     }
 }

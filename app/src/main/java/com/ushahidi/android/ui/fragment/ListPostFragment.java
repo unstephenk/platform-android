@@ -113,6 +113,10 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
         setEmptyView();
     }
 
+    public void search(String query) {
+        mPostListPresenter.search(query);
+    }
+
     @Override
     public void renderPostList(List<PostModel> postModel) {
         if (postModel != null && mRecyclerViewAdapter != null) {
@@ -127,7 +131,13 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
 
     @Override
     public void refreshList() {
-        mPostListPresenter.init();
+        mEmptyView.setText(R.string.empty_post_list);
+        mPostListPresenter.refreshList();
+    }
+    @Override
+    public void showEmptySearchResultsInfo() {
+        mEmptyView.setText(R.string.post_not_found);
+        setEmptyView();
     }
 
     @Override

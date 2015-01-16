@@ -36,7 +36,7 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class PostDatabaseHelper  extends BaseDatabseHelper
-        implements IPostDatabaseHelper {
+        implements IPostDatabaseHelper, ISearchDatabaseHelper<PostEntity> {
 
     private static PostDatabaseHelper sInstance;
 
@@ -146,7 +146,7 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
                     db = getWritableDatabase();
                     db.beginTransaction();
                     for (PostEntity postEntity : postEntities) {
-                        cupboard().withDatabase(db).put(postEntities);
+                        cupboard().withDatabase(db).put(postEntity);
                     }
                     db.setTransactionSuccessful();
                     callback.onPostEntityPut();
@@ -201,6 +201,27 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
         });
     }
 
+    @Override
+    public void search(final String query, final SearchCallback<PostEntity> callback) {
+        this.asyncRun(new Runnable() {
+            @Override
+            public void run() {
+                if(!isClosed()) {
+                    try {
+                        final List<PostEntity> postEntityList = search(query);
+                        callback.onSearchResult(postEntityList);
+                    }catch (Exception e) {
+                        callback.onError(e);
+                    }
+                }
+            }
+        });
+    }
 
-
+    public List<PostEntity> search(final String query) {
+        String selection = " mTitle = ? OR mContent = ?";
+        // Post title holds the search term
+        return cupboard().withDatabase(getReadableDatabase()).query(
+                PostEntity.class).withSelection(selection, query, query).list();
+    }
 }

@@ -193,4 +193,21 @@ public class PostDataRepository implements IPostRepository {
                     }
                 });
     }
+
+    @Override
+    public void search(final String query, final SearchCallback<Post> callback) {
+        final PostDataSource postDataSource = mPostDataSourceFactory.createPostDatabaseDataSource();
+        postDataSource.search(query, new PostDataSource.SearchCallback() {
+            @Override
+            public void onSearchResult(List<PostEntity> postEntityList) {
+                final List<Post> posts = mPostEntityMapper.map(postEntityList);
+                callback.onSearchResult(posts);
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                callback.onError(new RepositoryError(exception));
+            }
+        });
+    }
 }

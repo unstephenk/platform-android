@@ -73,6 +73,11 @@ public class PostApiDataSource implements PostDataSource {
         //TODO implement DELETE via the API
     }
 
+    @Override
+    public void search(String query, SearchCallback callback) {
+        // Do nothing for now
+    }
+
     private void putPostEntityList(List<PostEntity> postEntityList,
             final PostEntityListCallback postListCallback) {
         mPostDatabaseHelper.put(postEntityList, new IPostDatabaseHelper.IPostEntityPutCallback() {

@@ -77,6 +77,7 @@
     <string name="register">Register</string>
     <string name="prompt_login">Select A Deployment To Login to</string>
     <string name="empty_post_list"><b>No posts</b>\n\nPull down on the <b>screen</b> to fetch new posts.</string>
+    <string name="post_not_found"><b>No post found</b>\n\nPlease try again with a different search term.</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="email_address">Email address</string>
@@ -99,6 +100,7 @@
     <string name="device_brand">Brand</string>
     <string name="device_manufacturer">Manufacturer</string>
     <string name="device_model">Model</string>
+    <string name="search_posts">Search Posts</string>
 
     <!-- enable auto sync -->
     <string name="chk_enable_auto_sync">Enable Auto Sync</string>

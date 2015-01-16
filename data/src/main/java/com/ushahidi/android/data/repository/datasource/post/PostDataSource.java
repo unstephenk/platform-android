@@ -64,6 +64,16 @@ public interface PostDataSource {
     void deletePostEntity(final PostEntity postEntity, PostEntityDeletedCallback callback);
 
     /**
+     * Search for a {@link com.ushahidi.android.data.entity.Entity}
+     *
+     * @param query    The search query.
+     * @param callback A {@link SearchCallback} used for notifying clients about the delete
+     *                 status.
+     */
+    void search(final String query, SearchCallback callback);
+
+
+    /**
      * Callback used for notifying the client when either a post has been successfully added to the
      * database or an error occurred during the process.
      */
@@ -105,5 +115,16 @@ public interface PostDataSource {
         void onPostEntityDeleted();
 
         void onError(Exception e);
+    }
+
+    /**
+     * Callback used for notifying the client when either a post has been searched for or failed to
+     * be executed.
+     */
+    interface SearchCallback {
+
+        void onSearchResult(List<PostEntity> postList);
+
+        void onError(Exception exception);
     }
 }
