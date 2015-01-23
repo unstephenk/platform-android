@@ -17,11 +17,11 @@
 
 package com.ushahidi.android.data.repository.datasource.user;
 
+import com.google.common.base.Preconditions;
+
 import com.ushahidi.android.data.api.UserApi;
 import com.ushahidi.android.data.api.service.UserService;
 import com.ushahidi.android.data.database.UserDatabaseHelper;
-import com.ushahidi.android.data.repository.datasource.account.UserAccountApiDataSource;
-import com.ushahidi.android.data.repository.datasource.account.UserAccountDataSource;
 
 import android.content.Context;
 
@@ -32,19 +32,26 @@ public class UserDataSourceFactory {
 
     private final Context mContext;
 
-    private final UserService mUserService;
+    private UserService mUserService;
 
     private UserDatabaseHelper mUserDatabaseHelper;
 
-    public UserDataSourceFactory(Context context, UserDatabaseHelper userDatabaseHelper,
-            UserService userService) {
+    public UserDataSourceFactory(Context context, UserDatabaseHelper userDatabaseHelper) {
         mContext = context;
         mUserDatabaseHelper = userDatabaseHelper;
+    }
+
+    public void setUserService(UserService userService) {
         mUserService = userService;
     }
 
-    public UserAccountDataSource createUserApiDataSource() {
+    public UserDataSource createUserApiDataSource() {
+        Preconditions.checkNotNull(mUserService, "mUserService cannot be null, call setUserService(...)");
         UserApi userApi = new UserApi(mContext, mUserService);
-        return new UserAccountApiDataSource(userApi);
+        return new UserApiDataSource(userApi);
+    }
+
+    public UserDataSource createUserDatabaseDataSource() {
+        return new UserDatabaseDataSource(mUserDatabaseHelper);
     }
 }

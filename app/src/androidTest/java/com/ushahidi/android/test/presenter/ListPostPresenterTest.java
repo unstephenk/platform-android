@@ -17,31 +17,30 @@
 
 package com.ushahidi.android.test.presenter;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.ushahidi.android.Util.ApiServiceUtil;
 import com.ushahidi.android.core.entity.Post;
+import com.ushahidi.android.core.repository.IPostRepository;
 import com.ushahidi.android.core.usecase.Search;
 import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
 import com.ushahidi.android.data.api.service.PostService;
-import com.ushahidi.android.data.database.PostDatabaseHelper;
-import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
 import com.ushahidi.android.data.pref.StringPreference;
+import com.ushahidi.android.data.repository.datasource.post.PostDataSourceFactory;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
 import com.ushahidi.android.presenter.ListPostPresenter;
+import com.ushahidi.android.state.IDeploymentState;
 import com.ushahidi.android.test.CustomAndroidTestCase;
 import com.ushahidi.android.ui.prefs.Prefs;
+import com.ushahidi.android.util.ApiServiceUtil;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import android.content.Context;
 
-import retrofit.client.OkClient;
-
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,7 +64,7 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
     private PostModelDataMapper mMockPostModelDataMapper;
 
     @Mock
-    private PostDatabaseHelper mMockPostDatabaseHelper;
+    private PostDataSourceFactory mockPostDataSourceFactory;
 
     @Mock
     private Prefs mMockPrefs;
@@ -73,42 +72,46 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
     @Mock
     private ListPost mMockListPost;
 
+    @Mock
     private ApiServiceUtil mMockApiServiceUtil;
 
     @Mock
     private FetchPost mMockFetchPost;
 
     @Mock
-    private Search<Post> mSearch;
+    private Search<Post> mMockSearch;
 
     @Mock
-    private PostEntityMapper mMockPostEntityMapper;
+    private IPostRepository mMockPostRepository;
 
     @Mock
-    private PostService mPostService;
+    private PostService mMockPostService;
+
+    @Mock
+    private IDeploymentState mDeploymentState;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         MockitoAnnotations.initMocks(this);
-        mMockApiServiceUtil = new ApiServiceUtil(new OkClient(new OkHttpClient()));
+      /*  mMockApiServiceUtil = new ApiServiceUtil(new OkClient(new OkHttpClient()),
+                new UnauthorizedAccessErrorHandler(new ApplicationState(new Bus())));*/
 
         setupPrefsMock();
         mPostListPresenter = new ListPostPresenter(
-                mMockListPost, mSearch, mMockFetchPost, mMockPostModelDataMapper,
-                mMockPostEntityMapper,
-                mMockPostDatabaseHelper,
+                mMockListPost, mMockSearch, mMockFetchPost, mMockPostModelDataMapper,
+                mMockPostRepository,
+                mockPostDataSourceFactory,
                 mMockPrefs,
                 mMockApiServiceUtil,
-                mMockContext);
-        //mPostListPresenter.setPostService(mPostService);
+                mDeploymentState);
         mPostListPresenter.setView(mMockView);
     }
 
     public void testInitializingPostListPresenterWithNullValues() {
         final String expectedMessage = "ListPost cannot be null";
         try {
-            new ListPostPresenter(null,null, null, null, null, null, null, null, null);
+            new ListPostPresenter(null, null, null, null, null, null, null, null, null);
         } catch (NullPointerException e) {
             assertEquals(expectedMessage, e.getMessage());
         }
@@ -120,12 +123,16 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
                 .execute(any(ListPost.Callback.class));
 
         given(mMockView.getContext()).willReturn(mMockContext);
+        given(mMockApiServiceUtil.createService(PostService.class,"", "")).willReturn(
+                mMockPostService);
 
         mPostListPresenter.init();
 
-        verify(mMockView).hideRetry();
-        verify(mMockView).showLoading();
-        verify(mMockListPost).execute(any(ListPost.Callback.class));
+        verify(mockPostDataSourceFactory).setPostService(mMockPostService);
+        verify(mMockListPost).setPostRepository(mMockPostRepository);
+        verify(mMockFetchPost).setPostRepository(mMockPostRepository);
+        verify(mMockSearch).setRepository(mMockPostRepository);
+
     }
 
     private void setupPrefsMock() {

@@ -19,7 +19,7 @@ package com.ushahidi.android.core.usecase.post;
 
 import com.ushahidi.android.core.entity.Post;
 import com.ushahidi.android.core.exception.ErrorWrap;
-import com.ushahidi.android.core.respository.IPostRepository;
+import com.ushahidi.android.core.repository.IPostRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 

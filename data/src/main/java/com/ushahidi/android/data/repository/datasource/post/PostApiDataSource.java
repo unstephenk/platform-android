@@ -78,12 +78,12 @@ public class PostApiDataSource implements PostDataSource {
         // Do nothing for now
     }
 
-    private void putPostEntityList(List<PostEntity> postEntityList,
+    private void putPostEntityList(final List<PostEntity> postEntityList,
             final PostEntityListCallback postListCallback) {
         mPostDatabaseHelper.put(postEntityList, new IPostDatabaseHelper.IPostEntityPutCallback() {
             @Override
             public void onPostEntityPut() {
-
+                postListCallback.onPostEntityListLoaded(postEntityList);
             }
 
             @Override

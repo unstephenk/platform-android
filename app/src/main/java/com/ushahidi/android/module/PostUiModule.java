@@ -18,7 +18,8 @@
 package com.ushahidi.android.module;
 
 import com.ushahidi.android.core.entity.Post;
-import com.ushahidi.android.core.respository.IDeploymentRepository;
+import com.ushahidi.android.core.repository.IDeploymentRepository;
+import com.ushahidi.android.core.repository.IUserRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.Search;
@@ -27,6 +28,7 @@ import com.ushahidi.android.core.usecase.deployment.GetActiveDeployment;
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
+import com.ushahidi.android.core.usecase.user.ListDeploymentUsers;
 import com.ushahidi.android.ui.activity.PostActivity;
 import com.ushahidi.android.ui.fragment.ListPostFragment;
 
@@ -89,5 +91,4 @@ public final class PostUiModule {
             PostExecutionThread postExecutionThread) {
         return new Search<>(threadExecutor, postExecutionThread);
     }
-
 }

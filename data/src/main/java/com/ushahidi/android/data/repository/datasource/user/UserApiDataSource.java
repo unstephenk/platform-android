@@ -17,6 +17,7 @@
 
 package com.ushahidi.android.data.repository.datasource.user;
 
+import com.ushahidi.android.data.api.IUserApi;
 import com.ushahidi.android.data.api.UserApi;
 import com.ushahidi.android.data.entity.UserEntity;
 
@@ -32,9 +33,26 @@ public class UserApiDataSource implements UserDataSource {
     }
 
     @Override
-    public void addUserEntity(UserEntity userEntity,
-            UserEntityAddCallback userEntityCallback) {
+    public void getUserEntityById(final long userEntityId,
+            final UserEntityDetailsCallback userEntityDetailsCallback) {
+        mUserApi.getUserProfile(new IUserApi.UserProfileCallback() {
 
+            @Override
+            public void onUserProfileLoaded(UserEntity userEntity) {
+                userEntityDetailsCallback.onUserEntityLoaded(userEntity);
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                userEntityDetailsCallback.onError(exception);
+            }
+        });
+    }
+
+    @Override
+    public void addUserEntity(final UserEntity userEntity,
+            final UserEntityAddCallback userEntityCallback) {
+        //Do nothing
     }
 
     @Override
@@ -43,8 +61,8 @@ public class UserApiDataSource implements UserDataSource {
     }
 
     @Override
-    public void getUserEntityById(long userEntityId,
-            UserEntityDetailsCallback userEntityDetailsCallback) {
+    public void getUserEntityListByDeploymentId(Long deploymentId,
+            UserEntityListCallback userEntityListCallback) {
 
     }
 

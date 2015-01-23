@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Ushahidi.
+ * Copyright (c) 2015 Ushahidi.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License as published by the Free
@@ -15,20 +15,25 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.Util;
+package com.ushahidi.android.state;
+
+import com.ushahidi.android.core.entity.UserAccount;
+import com.ushahidi.android.model.DeploymentModel;
+import com.ushahidi.android.model.UserAccountModel;
+import com.ushahidi.android.model.UserModel;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class PrefsUtils {
+public interface Istate {
 
-    private static final int ONE_HOUR = 3600000;
+    public UserAccountModel getActiveUserAccount();
 
-    private static final int ONE_MINUTE = 60000;
+    public UserModel getUserModel();
 
-    public static long calculateInterval(String time) {
-        String[] pieces = time.split(":");
-        return Integer.parseInt(pieces[0]) * ONE_HOUR +
-                Integer.parseInt(pieces[1]) * ONE_MINUTE;
-    }
+    public DeploymentModel getActiveDeployment();
+
+    public void registerEvent(Object receiver);
+
+    public void unregisterEvent(Object receiver);
 }

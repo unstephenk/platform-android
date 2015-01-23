@@ -20,6 +20,7 @@ package com.ushahidi.android.exception;
 import com.ushahidi.android.R;
 import com.ushahidi.android.data.exception.AddDeploymentException;
 import com.ushahidi.android.data.exception.DeploymentNotFoundException;
+import com.ushahidi.android.data.exception.LoginFailedException;
 import com.ushahidi.android.data.exception.NetworkConnectionException;
 import com.ushahidi.android.data.exception.ValidationException;
 
@@ -57,6 +58,8 @@ public class ErrorMessageFactory {
             message = exception.getMessage();
         } else if (exception instanceof RetrofitError) {
             message = exception.getMessage();
+        } else if (exception instanceof LoginFailedException) {
+            message = context.getString(R.string.login_failed);
         }
 
         return message;

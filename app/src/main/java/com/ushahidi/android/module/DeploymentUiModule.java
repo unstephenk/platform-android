@@ -17,7 +17,7 @@
 
 package com.ushahidi.android.module;
 
-import com.ushahidi.android.core.respository.IDeploymentRepository;
+import com.ushahidi.android.core.repository.IDeploymentRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.deployment.AddDeployment;

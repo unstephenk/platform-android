@@ -47,7 +47,6 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
     @Inject
     ListPostPresenter mPostListPresenter;
 
-
     @InjectView(android.R.id.empty)
     TextView mEmptyView;
 
@@ -129,14 +128,20 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
         mPostListListener.onPostClicked(postModel);
     }
 
-    @Override
-    public void refreshList() {
-        mEmptyView.setText(R.string.empty_post_list);
-        mPostListPresenter.refreshList();
+    public void refreshLists() {
+        if(mEmptyView !=null) {
+            mEmptyView.setText(R.string.empty_post_list);
+        }
+
+        //if(mPostListPresenter !=null) {
+            mPostListPresenter.refreshList();
+        //}
     }
     @Override
     public void showEmptySearchResultsInfo() {
-        mEmptyView.setText(R.string.post_not_found);
+        if(mEmptyView != null) {
+            mEmptyView.setText(R.string.post_not_found);
+        }
         setEmptyView();
     }
 

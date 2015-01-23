@@ -34,13 +34,16 @@ public class PostDataSourceFactory {
 
     private final PostDatabaseHelper mPostDatabaseHelper;
 
-    private final PostService mPostService;
+    private PostService mPostService;
 
-    public PostDataSourceFactory(Context context, PostDatabaseHelper postDatabaseHelper, PostService postService) {
+    public PostDataSourceFactory(Context context, PostDatabaseHelper postDatabaseHelper) {
         mContext = Preconditions.checkNotNull(context, "Context cannot be null.");
         mPostDatabaseHelper = Preconditions
                 .checkNotNull(postDatabaseHelper, "PostDatabaseHelper cannot be null");
-        mPostService = Preconditions.checkNotNull(postService, "PostService cannot be null");
+    }
+
+    public void setPostService(PostService postService){
+        mPostService = postService;
     }
 
     public PostDataSource createPostDatabaseDataSource() {
@@ -48,6 +51,7 @@ public class PostDataSourceFactory {
     }
 
     public PostDataSource createPostApiDataSource() {
+        Preconditions.checkNotNull(mPostService, "mPostService cannot be null, call setPostService(...)");
         PostApi postApi = new PostApi(mContext, mPostService);
         return new PostApiDataSource(postApi, mPostDatabaseHelper);
     }

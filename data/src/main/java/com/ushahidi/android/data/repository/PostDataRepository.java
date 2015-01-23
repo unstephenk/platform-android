@@ -21,7 +21,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import com.ushahidi.android.core.entity.Post;
-import com.ushahidi.android.core.respository.IPostRepository;
+import com.ushahidi.android.core.repository.IPostRepository;
 import com.ushahidi.android.data.entity.PostEntity;
 import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
 import com.ushahidi.android.data.exception.RepositoryError;
@@ -32,7 +32,7 @@ import com.ushahidi.android.data.repository.datasource.post.PostDataSourceFactor
 import java.util.List;
 
 /**
- * {@link com.ushahidi.android.core.respository.IPostRepository} for retrieving post data
+ * {@link com.ushahidi.android.core.repository.IPostRepository} for retrieving post data
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
@@ -45,7 +45,7 @@ public class PostDataRepository implements IPostRepository {
     private final PostDataSourceFactory mPostDataSourceFactory;
 
 
-    protected PostDataRepository(PostDataSourceFactory postDataSourceFactory,
+    public PostDataRepository(PostDataSourceFactory postDataSourceFactory,
             PostEntityMapper entityMapper) {
 
         mPostDataSourceFactory = Preconditions
@@ -67,7 +67,7 @@ public class PostDataRepository implements IPostRepository {
      * {@inheritDoc}
      *
      * @param post         The Post to be saved.
-     * @param postCallback A {@link com.ushahidi.android.core.respository.IPostRepository.PostAddCallback}
+     * @param postCallback A {@link com.ushahidi.android.core.repository.IPostRepository.PostAddCallback}
      *                     used for notifying clients.
      */
     @Override
@@ -173,7 +173,7 @@ public class PostDataRepository implements IPostRepository {
      * {@inheritDoc}
      *
      * @param post     The ID of the post to be deleted.
-     * @param callback A {@link com.ushahidi.android.core.respository.IPostRepository.PostDeletedCallback}
+     * @param callback A {@link com.ushahidi.android.core.repository.IPostRepository.PostDeletedCallback}
      *                 used for notifying clients.
      */
     @Override

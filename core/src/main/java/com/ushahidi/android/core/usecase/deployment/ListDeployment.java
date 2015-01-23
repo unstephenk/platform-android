@@ -19,7 +19,7 @@ package com.ushahidi.android.core.usecase.deployment;
 
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.exception.ErrorWrap;
-import com.ushahidi.android.core.respository.IDeploymentRepository;
+import com.ushahidi.android.core.repository.IDeploymentRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 
@@ -58,7 +58,7 @@ public class ListDeployment implements IListDeployment {
     /**
      * Constructor.
      *
-     * @param deploymentRepository A {@link com.ushahidi.android.core.respository.IDeploymentRepository}
+     * @param deploymentRepository A {@link com.ushahidi.android.core.repository.IDeploymentRepository}
      *                             as a source for retrieving data.
      * @param threadExecutor       {@link ThreadExecutor} used to execute this use case in a
      *                             background thread.

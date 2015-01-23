@@ -1,0 +1,19 @@
+{
+    "id": 2,
+    "url": "http://v3.ushahidi.com:8000/api/v2/users/2",
+    "email": null,
+    "realname": null,
+    "username": "admin",
+    "logins": 0,
+    "failed_attempts": 0,
+    "last_login": null,
+    "last_attempt": null,
+    "created": "1970-01-01T00:00:00+00:00",
+    "updated": null,
+    "role": "admin",
+    "allowed_methods": [
+        "get",
+        "post",
+        "put"
+    ]
+}

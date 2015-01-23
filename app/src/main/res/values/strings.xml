@@ -101,6 +101,7 @@
     <string name="device_manufacturer">Manufacturer</string>
     <string name="device_model">Model</string>
     <string name="search_posts">Search Posts</string>
+    <string name="login_failed">Login failed, check your username and password.</string>
 
     <!-- enable auto sync -->
     <string name="chk_enable_auto_sync">Enable Auto Sync</string>

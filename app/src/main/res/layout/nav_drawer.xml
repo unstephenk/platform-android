@@ -39,6 +39,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+            <!-- User account list items -->
+            <LinearLayout
+                    android:id="@+id/user_account_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical"
+                    android:visibility="invisible"/>
+
             <!-- The navigation drawer -->
             <LinearLayout
                     android:id="@+id/navdrawer_items_list"

@@ -19,8 +19,7 @@ package com.ushahidi.android.core.usecase.account;
 
 import com.ushahidi.android.core.entity.UserAccount;
 import com.ushahidi.android.core.exception.ErrorWrap;
-import com.ushahidi.android.core.respository.IPostRepository;
-import com.ushahidi.android.core.respository.IUserAccountRepository;
+import com.ushahidi.android.core.repository.IUserAccountRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 

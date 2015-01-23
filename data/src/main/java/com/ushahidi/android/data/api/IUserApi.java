@@ -37,12 +37,25 @@ public interface IUserApi {
     void loginUserAccount(Payload payload, UserAccountLoggedInCallback userEntityListCallback);
 
     /**
+     * Gets user profile from the API {@link com.ushahidi.android.data.entity.UserEntity}
+     *
+     * @param userEntityCallback A {@link UserProfileCallback} used for notifying clients about the
+     *                           status of the operation.
+     */
+    void getUserProfile(UserProfileCallback userEntityCallback);
+
+    /**
      * Callback used for notifying the client when either a post list has been loaded successfully
      * or an error occurred during the process.
      */
     interface UserAccountLoggedInCallback {
 
         void onUserAccountLoggedIn(AccessToken accessToken);
-        void onError(Exception e);
+        void onError(Exception exception);
+    }
+
+    interface UserProfileCallback {
+        void onUserProfileLoaded(UserEntity userEntity);
+        void onError(Exception exception);
     }
 }

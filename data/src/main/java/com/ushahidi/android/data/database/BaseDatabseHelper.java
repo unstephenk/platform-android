@@ -25,9 +25,19 @@ import com.ushahidi.android.data.entity.TagEntity;
 import com.ushahidi.android.data.entity.UserEntity;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.lang.reflect.Field;
+
+import nl.qbusict.cupboard.Cupboard;
+import nl.qbusict.cupboard.CupboardBuilder;
+import nl.qbusict.cupboard.CupboardFactory;
+import nl.qbusict.cupboard.convert.EntityConverter;
+import nl.qbusict.cupboard.convert.EntityConverterFactory;
+import nl.qbusict.cupboard.convert.ReflectiveEntityConverter;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -45,7 +55,12 @@ public abstract class BaseDatabseHelper extends SQLiteOpenHelper {
     private static final Class[] ENTITIES = new Class[]{DeploymentEntity.class, UserEntity.class,
             TagEntity.class, MediaEntity.class, PostEntity.class};
 
+
     static {
+        CupboardFactory.setCupboard(new CupboardBuilder()
+                .registerFieldConverter(UserEntity.Role.class,
+                        new UserEntityFieldConverter<>(UserEntity.Role.class)).build());
+
         // Register our entities
         for (Class<?> clazz : ENTITIES) {
             cupboard().register(clazz);

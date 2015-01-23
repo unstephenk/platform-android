@@ -73,7 +73,7 @@ public class UserAccountAuthenticator extends AbstractAccountAuthenticator {
 
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse accountAuthenticatorResponse,
-            Account account, String s, Bundle bundle) throws NetworkErrorException {
+            Account account, String authTokenType, Bundle options) throws NetworkErrorException {
         final Bundle result = new Bundle();
         final String password = mAccountManager.getPassword(account);
 

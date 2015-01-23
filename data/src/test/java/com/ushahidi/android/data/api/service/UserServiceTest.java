@@ -113,7 +113,7 @@ public class UserServiceTest extends BaseApiTestCase {
                 assertThat(accessToken.getRefreshToken(),
                         equalTo("GyOHosEcJFPI4cMxPtJiCBNsb1L9mFFG4xzc7anc"));
                 assertThat(accessToken.getTokenType(), equalTo("Bearer"));
-                assertThat(accessToken.getExpires(), equalTo(new Date(1418997691)));
+                assertThat(accessToken.getExpires(), equalTo(1418997691l));
             }
 
             @Override

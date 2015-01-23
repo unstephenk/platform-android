@@ -21,7 +21,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import com.ushahidi.android.core.entity.Tag;
-import com.ushahidi.android.core.respository.ITagRepository;
+import com.ushahidi.android.core.repository.ITagRepository;
 import com.ushahidi.android.data.database.ITagDatabaseHelper;
 import com.ushahidi.android.data.database.TagDatabaseHelper;
 import com.ushahidi.android.data.entity.TagEntity;

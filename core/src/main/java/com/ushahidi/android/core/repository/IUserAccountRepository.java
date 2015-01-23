@@ -15,7 +15,7 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.core.respository;
+package com.ushahidi.android.core.repository;
 
 import com.ushahidi.android.core.entity.UserAccount;
 import com.ushahidi.android.core.exception.ErrorWrap;

@@ -21,7 +21,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import com.ushahidi.android.core.entity.Deployment;
-import com.ushahidi.android.core.respository.IDeploymentRepository;
+import com.ushahidi.android.core.repository.IDeploymentRepository;
 import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
 import com.ushahidi.android.data.database.IDeploymentDatabaseHelper;
 import com.ushahidi.android.data.entity.DeploymentEntity;
@@ -33,7 +33,7 @@ import com.ushahidi.android.data.validator.Validator;
 import java.util.List;
 
 /**
- * {@link com.ushahidi.android.core.respository.IDeploymentRepository} for retrieving deployment
+ * {@link com.ushahidi.android.core.repository.IDeploymentRepository} for retrieving deployment
  * data
  *
  * @author Ushahidi Team <team@ushahidi.com>

@@ -20,6 +20,8 @@ package com.ushahidi.android.module;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.account.Login;
+import com.ushahidi.android.core.usecase.user.AddUser;
+import com.ushahidi.android.core.usecase.user.FetchUser;
 import com.ushahidi.android.ui.activity.LoginActivity;
 import com.ushahidi.android.ui.fragment.LoginFragment;
 
@@ -40,5 +42,18 @@ public class AccountModule {
     @Singleton
     Login provideLogin(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         return new Login(threadExecutor, postExecutionThread);
+    }
+
+    @Provides
+    @Singleton
+    FetchUser provideFetchUser(ThreadExecutor threadExecutor,
+            PostExecutionThread postExecutionThread) {
+        return new FetchUser(threadExecutor, postExecutionThread);
+    }
+
+    @Provides
+    @Singleton
+    AddUser provideAddUser(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+        return new AddUser(threadExecutor, postExecutionThread);
     }
 }

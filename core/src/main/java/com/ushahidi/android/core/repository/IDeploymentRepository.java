@@ -20,7 +20,7 @@
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-package com.ushahidi.android.core.respository;
+package com.ushahidi.android.core.repository;
 
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.exception.ErrorWrap;

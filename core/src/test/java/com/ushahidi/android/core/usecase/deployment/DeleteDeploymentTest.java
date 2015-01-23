@@ -18,7 +18,7 @@
 package com.ushahidi.android.core.usecase.deployment;
 
 import com.ushahidi.android.core.entity.Deployment;
-import com.ushahidi.android.core.respository.IDeploymentRepository;
+import com.ushahidi.android.core.repository.IDeploymentRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.IInteractor;

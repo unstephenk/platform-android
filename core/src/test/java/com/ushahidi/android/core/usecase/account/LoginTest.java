@@ -17,14 +17,11 @@
 
 package com.ushahidi.android.core.usecase.account;
 
-import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.core.entity.UserAccount;
-import com.ushahidi.android.core.respository.IUserAccountRepository;
-import com.ushahidi.android.core.respository.IUserRepository;
+import com.ushahidi.android.core.repository.IUserAccountRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.IInteractor;
-import com.ushahidi.android.core.usecase.account.Login;
 
 import org.junit.Before;
 import org.junit.Test;

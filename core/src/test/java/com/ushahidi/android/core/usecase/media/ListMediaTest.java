@@ -17,7 +17,7 @@
 
 package com.ushahidi.android.core.usecase.media;
 
-import com.ushahidi.android.core.respository.IMediaRepository;
+import com.ushahidi.android.core.repository.IMediaRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.IInteractor;

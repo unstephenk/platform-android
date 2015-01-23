@@ -21,7 +21,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import com.ushahidi.android.core.entity.Media;
-import com.ushahidi.android.core.respository.IMediaRepository;
+import com.ushahidi.android.core.repository.IMediaRepository;
 import com.ushahidi.android.data.database.IMediaDatabaseHelper;
 import com.ushahidi.android.data.database.MediaDatabaseHelper;
 import com.ushahidi.android.data.entity.MediaEntity;
@@ -70,7 +70,7 @@ public class MediaDataRepository implements IMediaRepository {
      * {@inheritDoc}
      *
      * @param media         The Media to be saved.
-     * @param mediaCallback A {@link com.ushahidi.android.core.respository.IMediaRepository.MediaAddCallback}
+     * @param mediaCallback A {@link com.ushahidi.android.core.repository.IMediaRepository.MediaAddCallback}
      *                      used for notifying clients.
      */
     @Override
@@ -144,7 +144,7 @@ public class MediaDataRepository implements IMediaRepository {
      * {@inheritDoc}
      *
      * @param media         The Media to be saved.
-     * @param mediaCallback A {@link com.ushahidi.android.core.respository.IMediaRepository.MediaUpdateCallback}
+     * @param mediaCallback A {@link com.ushahidi.android.core.repository.IMediaRepository.MediaUpdateCallback}
      *                      used for notifying clients.
      */
     @Override
@@ -179,7 +179,7 @@ public class MediaDataRepository implements IMediaRepository {
      * {@inheritDoc}
      *
      * @param media    The ID of the media to be deleted.
-     * @param callback A {@link com.ushahidi.android.core.respository.IMediaRepository.MediaDeletedCallback}
+     * @param callback A {@link com.ushahidi.android.core.repository.IMediaRepository.MediaDeletedCallback}
      *                 used for notifying clients.
      */
     @Override

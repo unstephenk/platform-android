@@ -26,6 +26,7 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 
+import static com.ushahidi.android.data.Constants.USERS_ME;
 /**
  * User API sources
  *
@@ -36,6 +37,6 @@ public interface UserService {
     @POST("/oauth/token")
     void getAccessToken(@Body Payload payload, Callback<AccessToken> callback);
 
-    @GET("/users/me")
+    @GET(USERS_ME)
     void getUser(Callback<UserEntity> callback);
 }

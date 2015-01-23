@@ -15,7 +15,7 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.Util;
+package com.ushahidi.android.util;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
@@ -24,6 +24,7 @@ import com.google.gson.GsonBuilder;
 import com.ushahidi.android.data.api.ApiHeader;
 import com.ushahidi.android.data.api.Date;
 import com.ushahidi.android.data.api.DateDeserializer;
+import com.ushahidi.android.exception.UnauthorizedAccessErrorHandler;
 
 import javax.inject.Inject;
 
@@ -41,9 +42,12 @@ public class ApiServiceUtil {
 
     private Client mClient;
 
+    private UnauthorizedAccessErrorHandler mUnauthorizedAccessErrorHandler;
+
     @Inject
-    public ApiServiceUtil(Client client) {
+    public ApiServiceUtil(Client client, UnauthorizedAccessErrorHandler unauthorizedAccessErrorHandler ) {
         mClient = client;
+        mUnauthorizedAccessErrorHandler = unauthorizedAccessErrorHandler;
     }
 
     public <T> T createService(Class<T> serviceClass, String baseUrl,
@@ -54,6 +58,7 @@ public class ApiServiceUtil {
         ApiHeader header = new ApiHeader(accessToken);
         Endpoint endpoint = Endpoints.newFixedEndpoint(baseUrl);
         GsonBuilder builder = new GsonBuilder();
+        builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         builder.registerTypeAdapter(Date.class, new DateDeserializer());
         Gson gson = builder.create();
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -61,6 +66,7 @@ public class ApiServiceUtil {
                 .setClient(mClient)
                 .setEndpoint(endpoint)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setErrorHandler(mUnauthorizedAccessErrorHandler)
                 .setRequestInterceptor(header)
                 .build();
 

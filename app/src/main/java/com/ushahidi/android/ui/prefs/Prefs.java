@@ -58,4 +58,7 @@ public class Prefs {
                 TimePickerPreference.DEFAULT_TIME_FREQUENCY);
     }
 
+    public StringPreference getActiveUserAccount() {
+        return new StringPreference(getSharedPreferences(), "active_user_account", null);
+    }
 }

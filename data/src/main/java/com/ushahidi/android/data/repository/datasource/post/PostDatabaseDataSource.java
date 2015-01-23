@@ -17,7 +17,6 @@
 
 package com.ushahidi.android.data.repository.datasource.post;
 
-import com.ushahidi.android.data.database.ISearchDatabaseHelper;
 import com.ushahidi.android.data.database.PostDatabaseHelper;
 import com.ushahidi.android.data.entity.PostEntity;
 
@@ -35,7 +34,8 @@ public class PostDatabaseDataSource implements PostDataSource {
     }
 
     @Override
-    public void putPostEntity(final PostEntity postEntity, final PostEntityAddCallback postCallback) {
+    public void putPostEntity(final PostEntity postEntity,
+            final PostEntityAddCallback postCallback) {
         mPostDatabaseHelper.put(postEntity, new PostDatabaseHelper.IPostEntityPutCallback() {
             @Override
             public void onPostEntityPut() {
@@ -79,6 +79,7 @@ public class PostDatabaseDataSource implements PostDataSource {
             }
         });
     }
+
     @Override
     public void deletePostEntity(PostEntity postEntity,
             final PostEntityDeletedCallback callback) {

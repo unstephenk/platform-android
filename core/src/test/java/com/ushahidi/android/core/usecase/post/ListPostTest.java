@@ -17,7 +17,7 @@
 
 package com.ushahidi.android.core.usecase.post;
 
-import com.ushahidi.android.core.respository.IPostRepository;
+import com.ushahidi.android.core.repository.IPostRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.IInteractor;

@@ -21,7 +21,9 @@ import com.ushahidi.android.data.BaseTestCase;
 import com.ushahidi.android.data.api.auth.AccessToken;
 import com.ushahidi.android.data.api.auth.Payload;
 import com.ushahidi.android.data.api.service.UserService;
+import com.ushahidi.android.data.entity.UserEntity;
 import com.ushahidi.android.data.exception.NetworkConnectionException;
+import com.ushahidi.android.data.repository.datasource.user.UserDataSource;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -30,7 +32,6 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.robolectric.Robolectric;
@@ -62,17 +63,22 @@ public class UserApiTest extends BaseTestCase {
 
     private Context mMockContext;
 
-    @Spy
-    private Payload mSpyPayload = new Payload("", "", "", "", "", "");
+    private Payload mSpyPayload;
 
     @Mock
-    private IUserApi.UserAccountLoggedInCallback mUserAccountLoggedInCallback;
+    private IUserApi.UserAccountLoggedInCallback mMockUserAccountLoggedInCallback;
+
+    @Mock
+    private IUserApi.UserProfileCallback mMockUserProfileCallback;
 
     @Mock
     private UserService mMockUserService;
 
     @Mock
     private Callback<AccessToken> mMockCallback;
+
+    @Mock
+    private UserEntity mMockUserEntity;
 
 
     private UserApi mUserApi;
@@ -83,6 +89,7 @@ public class UserApiTest extends BaseTestCase {
         MockitoAnnotations.initMocks(this);
         mMockContext = Robolectric.application.getBaseContext();
         mUserApi = spy(new UserApi(mMockContext, mMockUserService));
+        mSpyPayload = spy(new Payload("", "", "", "", "", ""));
     }
 
     @Test
@@ -107,13 +114,13 @@ public class UserApiTest extends BaseTestCase {
 
         given(mUserApi.isDeviceConnectedToInternet(mMockContext)).willReturn(true);
 
-        mUserApi.loginUserAccount(mSpyPayload, mUserAccountLoggedInCallback);
+        mUserApi.loginUserAccount(mSpyPayload, mMockUserAccountLoggedInCallback);
 
-        verify(mUserAccountLoggedInCallback).onUserAccountLoggedIn(mMockAccessToken);
+        verify(mMockUserAccountLoggedInCallback).onUserAccountLoggedIn(mMockAccessToken);
     }
 
     @Test
-    public void shouldLoginUserAccountFailBecauseNoInternetConnect() throws IOException {
+    public void shouldLoginUserAccountFailBecauseNoInternetConnection() throws IOException {
 
         doAnswer(new Answer() {
             @Override
@@ -127,9 +134,48 @@ public class UserApiTest extends BaseTestCase {
 
         given(mUserApi.isDeviceConnectedToInternet(mMockContext)).willReturn(false);
 
-        mUserApi.loginUserAccount(mSpyPayload, mUserAccountLoggedInCallback);
+        mUserApi.loginUserAccount(mSpyPayload, mMockUserAccountLoggedInCallback);
 
-        verify(mUserAccountLoggedInCallback, times(1))
+        verify(mMockUserAccountLoggedInCallback, times(1))
+                .onError(any(NetworkConnectionException.class));
+    }
+
+    @Test
+    public void shouldSuccessfullyFetchUserProfile() throws IOException {
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Callback<UserEntity> userEntityCallback = castObj(invocation.getArguments()[0]);
+                (userEntityCallback).success(mMockUserEntity, any(Response.class));
+                return null;
+            }
+        }).when(mMockUserService).getUser(Matchers.<Callback<UserEntity>>any());
+
+        given(mUserApi.isDeviceConnectedToInternet(mMockContext)).willReturn(true);
+
+        mUserApi.getUserProfile(mMockUserProfileCallback);
+
+        verify(mMockUserProfileCallback).onUserProfileLoaded(mMockUserEntity);
+    }
+
+    @Test
+    public void shouldFailToFetchUserProfileNoInternetConnection() throws IOException {
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Callback<UserEntity> userEntityCallback = castObj(invocation.getArguments()[0]);
+                (userEntityCallback).success(mMockUserEntity, any(Response.class));
+                return null;
+            }
+        }).when(mMockUserService).getUser(Matchers.<Callback<UserEntity>>any());
+
+        given(mUserApi.isDeviceConnectedToInternet(mMockContext)).willReturn(false);
+
+        mUserApi.getUserProfile(mMockUserProfileCallback);
+
+        verify(mMockUserProfileCallback, times(1))
                 .onError(any(NetworkConnectionException.class));
     }
 

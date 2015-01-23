@@ -14,9 +14,8 @@
  * along with this program in the file LICENSE-AGPL. If not, see
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
-package com.ushahidi.android.core.respository;
+package com.ushahidi.android.core.repository;
 
-import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.core.exception.ErrorWrap;
 
@@ -26,16 +25,6 @@ import java.util.List;
  * Interface that represents a Repository for getting {@link User} related data.
  */
 public interface IUserRepository {
-
-    /**
-     * Add a {@link com.ushahidi.android.core.entity.User}.
-     *
-     * @param user         The User to be saved.
-     * @param userCallback A {@link UserAddCallback} used for notifying clients about
-     *                           the status of the operation.
-     * @author Ushahidi Team <team@ushahidi.com>
-     */
-    void addUser(User user, UserAddCallback userCallback);
 
     /**
      * Get a list of {@link com.ushahidi.android.core.entity.User}.
@@ -48,12 +37,24 @@ public interface IUserRepository {
     /**
      * Get an {@link com.ushahidi.android.core.entity.User} by id.
      *
+     * @param deploymentId              The user id used for retrieving user data.
+     * @param userListCallback A {@link UserListCallback} used for notifying clients
+     *                               about the status of the operation.
+     */
+    void getUserListByDeploymentId(final Long deploymentId,
+            UserListCallback userListCallback);
+
+    /**
+     * Get a list of {@link com.ushahidi.android.core.entity.User} by .
+     *
      * @param userId              The user id used for retrieving user data.
      * @param userDetailsCallback A {@link UserDetailsCallback} used for notifying
      *                                  clients about the status of the operation.
      */
     void getUserById(final long userId,
             UserDetailsCallback userDetailsCallback);
+
+    void getUserViaApi(UserDetailsCallback userDetailsCallback);
 
     /**
      * Update a {@link com.ushahidi.android.core.entity.User}
@@ -74,12 +75,20 @@ public interface IUserRepository {
     void deleteUser(final User user, UserDeletedCallback callback);
 
     /**
-     * Callback used for notifying the client when either a user has been successfully added
-     * to the database or an error occurred during the process.
+     * @param user       The user to be added/saved.
+     * @param postCallback A {@link AddCallback} used for notifying clients about the status of the
+     *                     operation.
+     * @author Ushahidi Team <team@ushahidi.com>
      */
-    interface UserAddCallback {
+    void addUser(final User user, AddCallback postCallback);
 
-        void onUserAdded();
+    /**
+     * Callback used for notifying the client when either an entity has been successfully added to
+     * the database or an error occurred during the process.
+     */
+    interface AddCallback {
+
+        void onAdded();
 
         void onError(ErrorWrap error);
     }

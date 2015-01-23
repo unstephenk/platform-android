@@ -21,16 +21,17 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 import com.ushahidi.android.core.entity.UserAccount;
-import com.ushahidi.android.core.respository.IUserAccountRepository;
+import com.ushahidi.android.core.repository.IUserAccountRepository;
+import com.ushahidi.android.data.Constants;
 import com.ushahidi.android.data.entity.UserAccountEntity;
 import com.ushahidi.android.data.entity.mapper.UserAccountEntityMapper;
 import com.ushahidi.android.data.exception.RepositoryError;
 import com.ushahidi.android.data.repository.datasource.account.UserAccountDataSource;
 import com.ushahidi.android.data.repository.datasource.account.UserAccountDataSourceFactory;
-import com.ushahidi.android.data.repository.datasource.user.UserDataSourceFactory;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.os.Bundle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +43,20 @@ import static com.ushahidi.android.data.Constants.USHAHIDI_ACCOUNT_TYPE;
  */
 public class UserAccountDataRepository implements IUserAccountRepository {
 
-    private static UserAccountDataRepository sInstance;
+    public static final String DEPLOYMENT_ID = "user_id";
 
-    private final UserAccountDataSourceFactory mUserAccountDataSourceFactory;
+    private static UserAccountDataRepository sInstance;
 
     private final AccountManager mAccountManager;
 
-    private final UserAccountEntityMapper mUserAccountEntityMapper;
+    private UserAccountDataSourceFactory mUserAccountDataSourceFactory;
+
+    private UserAccountEntityMapper mUserAccountEntityMapper;
+
+    public UserAccountDataRepository(AccountManager accountManager) {
+        mAccountManager = Preconditions.checkNotNull(accountManager,
+                "accountManager cannot be null");
+    }
 
     public UserAccountDataRepository(AccountManager accountManager,
             UserAccountDataSourceFactory userAccountDataSourceFactory,
@@ -81,9 +89,14 @@ public class UserAccountDataRepository implements IUserAccountRepository {
             final Account account = accounts[i];
 
             final String password = mAccountManager.getPassword(account);
+            final String deploymentId = mAccountManager.getUserData(account, DEPLOYMENT_ID);
+            final String accessToken = mAccountManager.peekAuthToken(account, Constants.USHAHIDI_AUTHTOKEN_BEARER_TYPE);
             UserAccount userAccount = new UserAccount();
             userAccount.setAccountName(account.name);
             userAccount.setPassword(password);
+            userAccount.setAuthToken(accessToken);
+            if(deploymentId != null)
+            userAccount.setId(Long.valueOf(deploymentId));
             ushahidiAccounts.add(userAccount);
         }
 
@@ -119,8 +132,9 @@ public class UserAccountDataRepository implements IUserAccountRepository {
                 new UserAccountDataSource.UserAccountEntityLoggedInCallback() {
                     @Override
                     public void onUserAccountEntityLoggedIn(UserAccountEntity userAccountEntity) {
-                        addUserAccount(mUserAccountEntityMapper.map(userAccountEntity));
-                        callback.onUserAccountLoggedIn(userAccount);
+                        final UserAccount account = mUserAccountEntityMapper.map(userAccountEntity);
+                        addUserAccount(account);
+                        callback.onUserAccountLoggedIn(account);
                     }
 
                     @Override
@@ -133,8 +147,8 @@ public class UserAccountDataRepository implements IUserAccountRepository {
     private void addUserAccount(UserAccount userAccount) {
         Account account = new Account(userAccount.getAccountName(), USHAHIDI_ACCOUNT_TYPE);
 
-        mAccountManager.addAccountExplicitly(account, userAccount.getPassword(), null);
-
+        mAccountManager.addAccountExplicitly(account, userAccount.getPassword(),null);
+        mAccountManager.setUserData(account, DEPLOYMENT_ID, String.valueOf(userAccount.getId()));
         mAccountManager.setAuthToken(account, userAccount.getAuthToken(),
                 userAccount.getAuthTokenType());
     }

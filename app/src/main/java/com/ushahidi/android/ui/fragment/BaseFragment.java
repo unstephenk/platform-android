@@ -19,6 +19,7 @@ package com.ushahidi.android.ui.fragment;
 
 import com.andreabaccega.widget.FormAutoCompleteTextView;
 import com.andreabaccega.widget.FormEditText;
+import com.ushahidi.android.state.IDeploymentState;
 import com.ushahidi.android.ui.activity.BaseActivity;
 
 import android.app.Activity;
@@ -32,6 +33,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 

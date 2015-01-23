@@ -20,6 +20,7 @@ package com.ushahidi.android.ui.fragment;
 import com.andreabaccega.widget.FormAutoCompleteTextView;
 import com.andreabaccega.widget.FormEditText;
 import com.ushahidi.android.R;
+import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.data.Constants;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.UserAccountModel;
@@ -28,6 +29,7 @@ import com.ushahidi.android.ui.adapter.DeploymentSpinnerAdapter;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Context;
 import android.util.Patterns;
 import android.view.View;
@@ -87,6 +89,10 @@ public class LoginFragment extends BaseFragment
 
     private DeploymentModel mSelectedDeploymentModel;
 
+    private UserAccountModel mUserAccountModel;
+
+    private LoginListener mLoginListener;
+
     public LoginFragment() {
         super(R.layout.fragment_login, 0);
     }
@@ -94,6 +100,14 @@ public class LoginFragment extends BaseFragment
     public static LoginFragment newInstance() {
         LoginFragment loginFragment = new LoginFragment();
         return loginFragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof LoginListener) {
+            mLoginListener = (LoginListener) activity;
+        }
     }
 
     @Override
@@ -123,6 +137,7 @@ public class LoginFragment extends BaseFragment
     public void onItemSelected(int position) {
         mSelectedDeploymentModel = mDeploymentSpinnerArrayAdapter.getDeploymentModels()
                 .get(position);
+        mLoginPresenter.setSelectedDeployment(mSelectedDeploymentModel);
     }
 
 
@@ -137,7 +152,7 @@ public class LoginFragment extends BaseFragment
                     userAccountModel.setAccountName(mUsername.getText().toString().trim());
                     userAccountModel.setPassword(mPassword.getText().toString().trim());
                     userAccountModel.setAuthTokenType(Constants.USHAHIDI_AUTHTOKEN_PASSWORD_TYPE);
-                    mLoginPresenter.login(userAccountModel, mSelectedDeploymentModel);
+                    mLoginPresenter.performLogin(userAccountModel);
 
                     break;
                 case R.id.radio_btn_register:
@@ -151,10 +166,18 @@ public class LoginFragment extends BaseFragment
     }
 
     @Override
-    public void loggedIn(UserAccountModel userAccountModel) {
-        //UshahidiAccount ushahidiAccount = new UshahidiAccount(userModel.getUsername(), userModel.g);
+    public void fetchUserProfile(UserAccountModel userAccountModel) {
+        mUserAccountModel = userAccountModel;
+        mLoginPresenter.getUserProfile(mUserAccountModel.getAuthToken());
+    }
 
-        //mUshahidiAccountManager.addAccount(ushahidiAccount);
+    @Override
+    public void loggedIn(Long userId) {
+        if (mLoginListener != null && mUserAccountModel != null) {
+            mUserAccountModel.setId(userId);
+            mLoginListener.finish();
+            mLoginListener.setAccountAuthenticatorResult(mUserAccountModel,mSelectedDeploymentModel.getId());
+        }
     }
 
     @Override
@@ -164,7 +187,7 @@ public class LoginFragment extends BaseFragment
         mSpinner.setAdapter(mDeploymentSpinnerArrayAdapter);
 
         // Select active deployment by default
-        mSpinner.setSelection(mLoginPresenter.getActiveDeploymetPosition(deploymentModelList));
+        mSpinner.setSelection(mLoginPresenter.getActiveDeploymentPosition(deploymentModelList));
     }
 
     @Override
@@ -205,7 +228,7 @@ public class LoginFragment extends BaseFragment
                 mEmailAutoComplete.setText(null);
                 mEmailAutoComplete.setVisibility(View.GONE);
 
-                // Set actionbar title to login
+                // Set actionbar title to performLogin
                 getActivity().setTitle(getResources().getString(R.string.login));
                 break;
             case R.id.radio_btn_register:
@@ -227,5 +250,12 @@ public class LoginFragment extends BaseFragment
                 }
                 break;
         }
+    }
+
+    public interface LoginListener {
+
+        void finish();
+
+        void setAccountAuthenticatorResult(UserAccountModel userAccountModel, Long deploymentId);
     }
 }

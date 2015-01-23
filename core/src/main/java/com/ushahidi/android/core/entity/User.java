@@ -35,7 +35,7 @@ public class User extends Entity {
 
     private String mUsername;
 
-    private Role mRole;
+    private transient Role mRole;
 
     private long mDeployment;
 
@@ -128,7 +128,7 @@ public class User extends Entity {
         MEMBER("member"),
         GUEST("guest");
 
-        public final String value;
+        public String value;
 
         Role(String value) {
             this.value = value;

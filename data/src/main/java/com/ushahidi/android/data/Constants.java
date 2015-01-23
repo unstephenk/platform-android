@@ -26,6 +26,8 @@ public class Constants {
 
     public static final String USHAHIDI_AUTHTOKEN_PASSWORD_TYPE = "password";
 
+    public static final String USHAHIDI_AUTHTOKEN_BEARER_TYPE = "Bearer";
+
     public static final String OAUTH_CLIENT_SECRET = "35e7f0bca957836d05ca0492211b0ac707671261";
 
     public static final String OAUTH_CLIENT_ID = "ushahidiui";
@@ -33,4 +35,8 @@ public class Constants {
     public static final String SCOPE = "posts media forms api tags sets users stats layers config messages dataproviders";
 
     public static final String API_PATH = "/api/v2";
+
+    public static final String POSTS = API_PATH + "/posts";
+
+    public static final String USERS_ME = API_PATH + "/users/me";
 }

@@ -77,7 +77,6 @@ dependencies {
         exclude module: 'wagon-http-lightweight'
         exclude module: 'wagon-provider-api'
     }
-    compile project(':core')
 }
 
 apply plugin: 'idea'

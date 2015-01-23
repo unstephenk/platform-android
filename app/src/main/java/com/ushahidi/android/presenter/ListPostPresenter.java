@@ -19,26 +19,22 @@ package com.ushahidi.android.presenter;
 
 import com.google.common.base.Preconditions;
 
-import com.ushahidi.android.Util.ApiServiceUtil;
+import com.squareup.otto.Subscribe;
 import com.ushahidi.android.core.entity.Post;
 import com.ushahidi.android.core.exception.ErrorWrap;
-import com.ushahidi.android.core.respository.IPostRepository;
-import com.ushahidi.android.core.usecase.ISearch;
+import com.ushahidi.android.core.repository.IPostRepository;
 import com.ushahidi.android.core.usecase.Search;
 import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
 import com.ushahidi.android.data.api.service.PostService;
-import com.ushahidi.android.data.database.PostDatabaseHelper;
-import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
-import com.ushahidi.android.data.repository.PostDataRepository;
 import com.ushahidi.android.data.repository.datasource.post.PostDataSourceFactory;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.PostModel;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
+import com.ushahidi.android.state.IDeploymentState;
 import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.view.ILoadViewData;
-
-import android.content.Context;
+import com.ushahidi.android.util.ApiServiceUtil;
 
 import java.util.List;
 
@@ -52,11 +48,9 @@ import javax.inject.Inject;
  */
 public class ListPostPresenter implements IPresenter {
 
-    private final PostEntityMapper mPostEntityMapper;
-
     private final PostModelDataMapper mPostModelDataMapper;
 
-    private final PostDatabaseHelper mPostDatabaseHelper;
+    private final IPostRepository mPostRepository;
 
     private final ListPost mListPost;
 
@@ -68,7 +62,9 @@ public class ListPostPresenter implements IPresenter {
 
     private final ApiServiceUtil mApiServiceUtil;
 
-    private final Context mContext;
+    private final IDeploymentState mDeploymentState;
+
+    PostDataSourceFactory mPostDataSourceFactory;
 
     private final ListPost.Callback mListCallback = new ListPost.Callback() {
 
@@ -126,35 +122,31 @@ public class ListPostPresenter implements IPresenter {
     public ListPostPresenter(ListPost listPost,
             Search<Post> search,
             FetchPost fetchPost,
-            PostModelDataMapper postModelDataMapper, PostEntityMapper postEntityMapper,
-            PostDatabaseHelper postDatabaseHelper,
+            PostModelDataMapper postModelDataMapper,
+            IPostRepository postRepository,
+            PostDataSourceFactory postDataSourceFactory,
             Prefs prefs,
             ApiServiceUtil apiServiceUtil,
-            Context context
+            IDeploymentState deploymentState
     ) {
         mListPost = Preconditions.checkNotNull(listPost, "ListPost cannot be null");
         mSearch = Preconditions.checkNotNull(search, "Search cannot be null");
         mFetchPost = Preconditions.checkNotNull(fetchPost, "Fetch Post listing");
         mPostModelDataMapper = Preconditions
                 .checkNotNull(postModelDataMapper, "PostModelDataMapper cannot be null");
-        mPostEntityMapper = Preconditions.checkNotNull(postEntityMapper,
-                "Post entity mapper cannot be null");
-        mPostDatabaseHelper = Preconditions
-                .checkNotNull(postDatabaseHelper, "Post database helper cannot be null");
+        mPostRepository = Preconditions.checkNotNull(postRepository,
+                "Post repository cannot be null.");
         mPrefs = Preconditions.checkNotNull(prefs, "Preferences cannot be null");
-        mContext = context;
+        mPostDataSourceFactory = Preconditions.checkNotNull(postDataSourceFactory, "Post data source factory cannot be null.");
         mApiServiceUtil = apiServiceUtil;
-        setPostService(createPostService());
+        mDeploymentState = deploymentState;
     }
 
     public void setPostService(PostService postService) {
-        PostDataSourceFactory postDataSourceFactory = new PostDataSourceFactory(mContext,
-                mPostDatabaseHelper, postService);
-        IPostRepository postRepository = PostDataRepository
-                .getInstance(postDataSourceFactory, mPostEntityMapper);
-        mListPost.setPostRepository(postRepository);
-        mFetchPost.setPostRepository(postRepository);
-        mSearch.setRepository(postRepository);
+        mPostDataSourceFactory.setPostService(postService);
+        mListPost.setPostRepository(mPostRepository);
+        mFetchPost.setPostRepository(mPostRepository);
+        mSearch.setRepository(mPostRepository);
     }
 
     public void setView(View view) {
@@ -166,33 +158,37 @@ public class ListPostPresenter implements IPresenter {
 
     public PostService createPostService() {
         return mApiServiceUtil.createService(PostService.class,
-                mPrefs.getActiveDeploymentUrl().get(),
-                mPrefs.getAccessToken().get());
+                mPrefs.getActiveDeploymentUrl().get(), mPrefs.getAccessToken().get());
     }
 
     @Override
     public void resume() {
-        fetchPost();
+        mDeploymentState.registerEvent(this);
+        loadPostListFromLocalCache();
     }
 
     @Override
     public void pause() {
-        // Do nothing
+        mDeploymentState.unregisterEvent(this);
     }
 
     public void init() {
         setPostService(createPostService());
-        loadList();
     }
 
-    private void loadList() {
+    private void loadPostListFromLocalCache() {
         hideViewRetry();
         showViewLoading();
-        getPostList();
+        getPostListFromLocalCache();
+    }
+
+    @Subscribe
+    public void onActivatedDeploymentChanged(IDeploymentState.ActivatedDeploymentChangedEvent event) {
+        fetchPostFromApi();
     }
 
     public void refreshList() {
-        getPostList();
+        fetchPostFromApi();
     }
 
     public void onPostClicked(PostModel postModel) {
@@ -227,11 +223,11 @@ public class ListPostPresenter implements IPresenter {
         mView.renderPostList(postModelsList);
     }
 
-    private void getPostList() {
+    private void getPostListFromLocalCache() {
         mListPost.execute(mListCallback);
     }
 
-    public void fetchPost() {
+    public void fetchPostFromApi() {
         setPostService(createPostService());
         mFetchPost.execute(mCallback);
     }
@@ -239,6 +235,7 @@ public class ListPostPresenter implements IPresenter {
     public void search(String search) {
         mSearch.execute(search,mSearchCallback);
     }
+
     public interface View extends ILoadViewData {
 
         /**
@@ -261,6 +258,5 @@ public class ListPostPresenter implements IPresenter {
          */
         void showEmptySearchResultsInfo();
 
-        void refreshList();
     }
 }

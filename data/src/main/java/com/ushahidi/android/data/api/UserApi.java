@@ -22,6 +22,8 @@ import com.google.common.base.Preconditions;
 import com.ushahidi.android.data.api.auth.AccessToken;
 import com.ushahidi.android.data.api.auth.Payload;
 import com.ushahidi.android.data.api.service.UserService;
+import com.ushahidi.android.data.entity.UserEntity;
+import com.ushahidi.android.data.exception.LoginFailedException;
 import com.ushahidi.android.data.exception.NetworkConnectionException;
 
 import android.content.Context;
@@ -62,12 +64,37 @@ public class UserApi implements IUserApi {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    userAccountLoggedInCallback.onError(error);
+                    if (error.getResponse().getStatus() == 400) {
+                        userAccountLoggedInCallback.onError(new LoginFailedException());
+                    } else {
+                        userAccountLoggedInCallback.onError(error);
+                    }
                 }
             });
 
         } else {
             userAccountLoggedInCallback.onError(new NetworkConnectionException());
+        }
+    }
+
+    @Override
+    public void getUserProfile(final UserProfileCallback userEntityCallback) {
+        Preconditions.checkNotNull(userEntityCallback);
+        //TODO, need a global way to know if the device has an active internet connection.
+        if (isDeviceConnectedToInternet(mContext)) {
+           mUserService.getUser(new Callback<UserEntity>() {
+               @Override
+               public void success(UserEntity userEntity, Response response) {
+                   userEntityCallback.onUserProfileLoaded(userEntity);
+               }
+
+               @Override
+               public void failure(RetrofitError error) {
+                   userEntityCallback.onError(error);
+               }
+           });
+        } else {
+            userEntityCallback.onError(new NetworkConnectionException());
         }
     }
 

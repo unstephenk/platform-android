@@ -17,11 +17,22 @@
 
 package com.ushahidi.android.ui.activity;
 
+import com.google.common.eventbus.Subscribe;
+
+import com.squareup.picasso.Picasso;
 import com.ushahidi.android.R;
 import com.ushahidi.android.UshahidiApplication;
+import com.ushahidi.android.model.UserModel;
 import com.ushahidi.android.module.ActivityModule;
+import com.ushahidi.android.state.ApplicationState;
+import com.ushahidi.android.state.IDeploymentState;
+import com.ushahidi.android.state.IUserState;
 import com.ushahidi.android.ui.widget.NavDrawerItem;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,12 +44,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,16 +104,17 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     protected SwipeRefreshLayout mSwipeRefreshLayout;
 
-    protected TextView mUserLoginTitle;
-
-    protected TextView mFullnameTextView;
-
-    protected TextView mUsernameTextView;
-
-    protected ImageView mAvatarImageView;
-
     @Inject
     ActivityLauncher launcher;
+
+    @Inject
+    IDeploymentState mDeploymentState;
+
+    @Inject
+    IUserState mUserState;
+
+    @Inject
+    ApplicationState mApplicationState;
 
     private ObjectGraph activityScopeGraph;
 
@@ -116,6 +130,13 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     // ViewGroup that habours the navigation drawer items
     private ViewGroup mDrawerItemsContainer;
+
+    private LinearLayout mUserAccountListContainer;
+
+    private ImageView mUserAccountListExpandIndicator;
+
+    private boolean mUserAccountListExpanded = false;
+
 
     public BaseActivity(int layout, int menu, int drawerLayoutId, int drawerItemsContainerId) {
         mLayout = layout;
@@ -143,6 +164,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Method used to resolve dependencies provided by Dagger modules. Inject an object to provide
      * every @Inject annotation contained.
+     *
      *
      * @param object to inject.
      */
@@ -240,7 +262,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         createNavDrawer();
-        setupAndShowLogin();
+        showLogin();
         setupSwipeRefresh();
 
         if (mDrawerToggle != null) {
@@ -268,6 +290,18 @@ public abstract class BaseActivity extends ActionBarActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        mApplicationState.registerEvent(this);
+        super.onResume();
+    }
+
+    @Override
+    protected  void onPause() {
+        mApplicationState.unregisterEvent(this);
+        super.onPause();
     }
 
     @Override
@@ -318,9 +352,16 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
     }
 
-    public void setupAndShowLogin() {
-        mLoginLayout = findViewById(R.id.layout_user_login);
+    protected void setupAndShowLoginOrUserProfile(UserModel profile) {
+
+        if(profile !=null) {
+            showUserProfile(profile);
+        }
+    }
+
+    private void showLogin() {
         mUserProfileLayout = findViewById(R.id.layout_user_profile);
+        mLoginLayout = findViewById(R.id.layout_user_login);
 
         if (mLoginLayout == null) {
             return;
@@ -334,6 +375,145 @@ public abstract class BaseActivity extends ActionBarActivity {
                 closeNavDrawer();
             }
         });
+    }
+
+    private void showUserProfile(UserModel profile) {
+        if(mUserProfileLayout == null) {
+            return;
+        }
+
+        mLoginLayout.setVisibility(GONE);
+        mUserProfileLayout.setVisibility(VISIBLE);
+        mUserProfileLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                closeNavDrawer();
+            }
+        });
+
+        TextView usernameTextView = (TextView) findViewById(R.id.user_username);
+        TextView roleTextView = (TextView) findViewById(R.id.user_role);
+        usernameTextView.setText(profile.getUsername());
+        roleTextView.setText(profile.getRole().value);
+        ImageView avatarImageView = (ImageView) findViewById(R.id.user_profile_image);
+
+        mUserAccountListExpandIndicator = (ImageView) findViewById(R.id.expand_profile_indicator);
+
+        mUserAccountListExpandIndicator.setVisibility(View.VISIBLE);
+        mUserAccountListExpandIndicator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mUserAccountListExpanded = !mUserAccountListExpanded;
+                setupUserAccountListToggle();
+            }
+        });
+
+        setupUserAccountListToggle();
+
+    }
+
+    protected void setUpUserAccountList(List<UserModel> userModels) {
+        if(mUserAccountListContainer !=null) {
+            mUserAccountListContainer.removeAllViews();
+            LayoutInflater layoutInflater = LayoutInflater.from(this);
+            for (UserModel userModel : userModels) {
+                View itemView = layoutInflater.inflate(R.layout.list_item_user_account,
+                        mUserAccountListContainer, false);
+
+                TextView username = (TextView) itemView
+                        .findViewById(R.id.user_account_profile_user_name);
+                username.setText(userModel.getUsername());
+
+                ImageView userProfileImage = (ImageView) itemView
+                        .findViewById(R.id.user_account_profile_image);
+                if (userModel.getEmail() != null) {
+                    Picasso.with(this).load("").into(userProfileImage);
+                }
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //TODO: Implement a login process in the background
+                        mUserAccountListExpanded = false;
+                        setupUserAccountListToggle();
+                        mDrawerLayout.closeDrawer(Gravity.START);
+
+                    }
+                });
+                mUserAccountListContainer.addView(itemView);
+            }
+        }
+    }
+
+    /**
+     */
+    private void setupUserAccountListToggle() {
+        mUserAccountListContainer = (LinearLayout) findViewById(R.id.user_account_list);
+
+        // No user account list
+        if (mUserAccountListContainer == null) {
+            return;
+        }
+
+        mUserAccountListExpandIndicator.setImageResource(mUserAccountListExpanded ? R.drawable.ic_drawer_profile_collapse
+                : R.drawable.ic_drawer_profile_expand);
+        // Credits: http://goo.gl/yHfwZp
+        int hideTranslateY = -mUserAccountListContainer.getHeight() / 4; // last 25% of animation
+        if (mUserAccountListExpanded && mUserAccountListContainer.getTranslationY() == 0) {
+            // initial setup
+            mUserAccountListContainer.setAlpha(0);
+            mUserAccountListContainer.setTranslationY(hideTranslateY);
+        }
+
+        AnimatorSet set = new AnimatorSet();
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mDrawerItemsContainer.setVisibility(mUserAccountListExpanded
+                        ? View.INVISIBLE : View.VISIBLE);
+
+                mUserAccountListContainer.setVisibility(mUserAccountListExpanded
+                        ? View.VISIBLE : View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                onAnimationEnd(animation);
+            }
+        });
+
+        if (mUserAccountListExpanded) {
+            mUserAccountListContainer.setVisibility(View.VISIBLE);
+            animateExpandView(set);
+        } else {
+            mDrawerItemsContainer.setVisibility(View.VISIBLE);
+            animateCollapseView(set, hideTranslateY);
+        }
+
+        set.start();
+
+    }
+
+    private void animateExpandView(AnimatorSet set) {
+        animateExpandOrCollapseView(set, 1, 0, 0);
+    }
+
+    private void animateCollapseView(AnimatorSet set,int hideTranslateY ) {
+        animateExpandOrCollapseView(set, 0, hideTranslateY, 1);
+    }
+
+    private void animateExpandOrCollapseView(AnimatorSet set, int together, int hideTranslateY, int sequentially) {
+        final int ACCOUNT_BOX_EXPAND_ANIM_DURATION = 200;
+        AnimatorSet subSet = new AnimatorSet();
+        subSet.playTogether(
+                ObjectAnimator.ofFloat(mUserAccountListContainer, View.ALPHA, together)
+                        .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION),
+                ObjectAnimator.ofFloat(mUserAccountListContainer, View.TRANSLATION_Y, hideTranslateY)
+                        .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION));
+        set.playSequentially(
+                ObjectAnimator.ofFloat(mDrawerItemsContainer, View.ALPHA, sequentially)
+                        .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION),
+                subSet);
+        set.start();
     }
 
     protected Toolbar getActionBarToolbar() {
@@ -358,7 +538,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    onSwipe();
+                    mApplicationState.onSwipe();
                 }
             });
         }
@@ -374,6 +554,11 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setEnabled(enable);
         }
+    }
+
+    @Subscribe
+    public void onActiveDeploymentChanged(IDeploymentState.ActivatedDeploymentChangedEvent event) {
+        setActionBarTitle(mDeploymentState.getActiveDeployment().getTitle());
     }
 
     @Override
@@ -507,9 +692,5 @@ public abstract class BaseActivity extends ActionBarActivity {
                 .beginTransaction();
         fragmentTransaction.replace(containerViewId, fragment, tag);
         fragmentTransaction.commit();
-    }
-
-    protected void onSwipe() {
-        // Do nothing
     }
 }

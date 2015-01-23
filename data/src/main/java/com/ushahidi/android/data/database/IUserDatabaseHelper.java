@@ -57,6 +57,15 @@ public interface IUserDatabaseHelper {
     public void getUserEntities(final IUserEntitiesCallback callback);
 
     /**
+     * Gets a list of user entities by ID.
+     *
+     * @param deploymentId The deployment ID to retrieve data
+     * @param callback The {@link IUserEntitiesCallback} to notify the client.
+     */
+    public void getUserEntitiesByDeploymentId(Long deploymentId,
+            final IUserEntitiesCallback callback);
+
+    /**
      * Puts list of user entity into the database
      *
      * @param userEntities The list of {@link com.ushahidi.android.data.entity.UserEntity} to be

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 Ushahidi.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under
+  ~ the terms of the GNU Affero General Public License as published by the Free
+  ~ Software Foundation, either version 3 of the License, or (at your option)
+  ~ any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT
+  ~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program in the file LICENSE-AGPL. If not, see
+  ~ https://www.gnu.org/licenses/agpl-3.0.html
+  -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:iosched="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="?android:listPreferredItemHeightSmall"
+             android:background="?android:selectableItemBackground"
+             android:focusable="true"
+             android:clickable="true">
+
+    <com.ushahidi.android.ui.widget.BezelImageView
+            android:id="@+id/user_account_profile_image"
+            android:layout_marginLeft="@dimen/keyline_1"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/user_profile_image_empty"
+            android:scaleType="centerCrop"
+            iosched:maskDrawable="@drawable/circle_mask" />
+
+    <TextView
+            android:id="@+id/user_account_profile_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/keyline_2"
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/body_text_1"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+</FrameLayout>

@@ -15,40 +15,35 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.core.respository;
+package com.ushahidi.android.core.usecase.user;
 
-import com.ushahidi.android.core.Entity;
 import com.ushahidi.android.core.entity.Post;
+import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.core.exception.ErrorWrap;
+import com.ushahidi.android.core.usecase.IInteractor;
 
 import java.util.List;
 
 /**
- * The post repository
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public interface ISearchRepository<E extends Entity> {
-
+public interface IFetchUser extends IInteractor {
 
     /**
-     * Search for a {@link com.ushahidi.android.core.Entity}
+     * Executes this use case.
      *
-     * @param query    The entity to be searched for.
-     * @param callback A {@link SearchCallback} used for notifying clients about the delete
-     *                 status.
+     * @param callback A {@link com.ushahidi.android.core.usecase.post.IListPost.Callback} used to notify the client.
      */
-    void search(String query, SearchCallback<E> callback);
-
+    void execute(Callback callback);
 
     /**
-     * Callback used for notifying the client when either a post has been searched for or failed to be executed.
+     * Notify client when a list of posts are successfully loaded or an error occurred in the
+     * process.
      */
-    interface SearchCallback<E extends Entity> {
+    interface Callback {
 
-        void onSearchResult(List<E> postList);
+        void onUserProfileFetched(User userProfile);
 
         void onError(ErrorWrap error);
     }
-
 }

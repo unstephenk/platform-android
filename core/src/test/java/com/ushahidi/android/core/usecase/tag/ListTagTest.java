@@ -17,7 +17,7 @@
 
 package com.ushahidi.android.core.usecase.tag;
 
-import com.ushahidi.android.core.respository.ITagRepository;
+import com.ushahidi.android.core.repository.ITagRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.IInteractor;

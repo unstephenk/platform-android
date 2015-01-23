@@ -17,8 +17,6 @@
 
 package com.ushahidi.android.data.repository.datasource.user;
 
-import com.ushahidi.android.data.api.auth.AccessToken;
-import com.ushahidi.android.data.entity.UserAccountEntity;
 import com.ushahidi.android.data.entity.UserEntity;
 
 import java.util.List;
@@ -49,13 +47,21 @@ public interface UserDataSource {
     void getUserEntityList(UserEntityListCallback userEntityListCallback);
 
     /**
+     * Get a list of {@link com.ushahidi.android.core.entity.User} by deployment ID.
+     *
+     * @param userEntityListCallback A {@link UserEntityListCallback} used for notifying clients
+     *                               about the status of the operation.
+     */
+    void getUserEntityListByDeploymentId(Long deploymentId, UserEntityListCallback userEntityListCallback);
+
+    /**
      * Get an {@link com.ushahidi.android.data.entity.UserEntity} by id.
      *
      * @param userEntityId              The user id used for retrieving user data.
      * @param userEntityDetailsCallback A {@link UserEntityDetailsCallback} used for notifying
      *                                  clients about the status of the operation.
      */
-    void getUserEntityById(final long userEntityId,
+    void getUserEntityById(long userEntityId,
             UserEntityDetailsCallback userEntityDetailsCallback);
 
     /**
@@ -85,7 +91,7 @@ public interface UserDataSource {
 
         void onUserEntityAdded();
 
-        void onError(Exception e);
+        void onError(Exception exception);
     }
 
     /**
@@ -96,7 +102,7 @@ public interface UserDataSource {
 
         void onUserEntityListLoaded(List<UserEntity> userList);
 
-        void onError(Exception e);
+        void onError(Exception exception);
     }
 
     /**
@@ -107,7 +113,7 @@ public interface UserDataSource {
 
         void onUserEntityLoaded(UserEntity user);
 
-        void onError(Exception e);
+        void onError(Exception exception);
     }
 
     /**
@@ -118,7 +124,7 @@ public interface UserDataSource {
 
         void onUserEntityUpdated();
 
-        void onError(Exception e);
+        void onError(Exception exception);
     }
 
     /**
@@ -129,6 +135,6 @@ public interface UserDataSource {
 
         void onUserEntityDeleted();
 
-        void onError(Exception e);
+        void onError(Exception exception);
     }
 }

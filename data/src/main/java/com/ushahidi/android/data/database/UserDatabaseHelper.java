@@ -130,6 +130,24 @@ public class UserDatabaseHelper extends BaseDatabseHelper implements IUserDataba
     }
 
     @Override
+    public void getUserEntitiesByDeploymentId(final Long deploymentId,
+            final IUserEntitiesCallback callback) {
+        this.asyncRun(new Runnable() {
+            @Override
+            public void run() {
+                final List<UserEntity> userEntities = cupboard().withDatabase(getReadableDatabase()).query(
+                        UserEntity.class).withSelection("mDeployment = ?",
+                        String.valueOf(deploymentId)).list();
+                if (userEntities != null) {
+                    callback.onUserEntitiesLoaded(userEntities);
+                } else {
+                    callback.onError(new UserNotFoundException());
+                }
+            }
+        });
+    }
+
+    @Override
     public synchronized void put(final List<UserEntity> userEntities,
             final IUserEntityPutCallback callback) {
         this.asyncRun(new Runnable() {

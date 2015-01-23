@@ -19,7 +19,7 @@ package com.ushahidi.android.core.usecase.tag;
 
 import com.ushahidi.android.core.entity.Tag;
 import com.ushahidi.android.core.exception.ErrorWrap;
-import com.ushahidi.android.core.respository.ITagRepository;
+import com.ushahidi.android.core.repository.ITagRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 
@@ -57,7 +57,7 @@ public class ListTag implements IListTag {
     /**
      * Constructor.
      *
-     * @param tagRepository       A {@link com.ushahidi.android.core.respository.ITagRepository} as
+     * @param tagRepository       A {@link com.ushahidi.android.core.repository.ITagRepository} as
      *                            a source for retrieving data.
      * @param threadExecutor      {@link com.ushahidi.android.core.task.ThreadExecutor} used to
      *                            execute this use case in a background thread.

@@ -19,7 +19,7 @@ package com.ushahidi.android.core.usecase;
 
 import com.ushahidi.android.core.Entity;
 import com.ushahidi.android.core.exception.ErrorWrap;
-import com.ushahidi.android.core.respository.ISearchRepository;
+import com.ushahidi.android.core.repository.ISearchRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 

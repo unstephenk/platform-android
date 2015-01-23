@@ -19,7 +19,7 @@ package com.ushahidi.android.core.usecase.media;
 
 import com.ushahidi.android.core.entity.Media;
 import com.ushahidi.android.core.exception.ErrorWrap;
-import com.ushahidi.android.core.respository.IMediaRepository;
+import com.ushahidi.android.core.repository.IMediaRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 
@@ -57,7 +57,7 @@ public class ListMedia implements IListMedia {
     /**
      * Constructor.
      *
-     * @param mediaRepository     A {@link com.ushahidi.android.core.respository.IMediaRepository}
+     * @param mediaRepository     A {@link com.ushahidi.android.core.repository.IMediaRepository}
      *                            as a source for retrieving data.
      * @param threadExecutor      {@link ThreadExecutor} used to execute this use case in a
      *                            background thread.
