@@ -17,12 +17,9 @@
 
 package com.ushahidi.android.module;
 
-import com.squareup.otto.Bus;
 import com.ushahidi.android.UshahidiApplication;
 
 import android.content.Context;
-
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;

@@ -48,6 +48,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.inject.Singleton;
 
@@ -74,7 +75,12 @@ public class DataModule {
         File cacheDir = new File(app.getApplicationContext().getCacheDir(),
                     "ushahidi-android-http-cache");
 
-        Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
+        Cache cache = null;
+        try {
+            cache = new Cache(cacheDir, DISK_CACHE_SIZE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         client.setCache(cache);
         return client;

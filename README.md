@@ -46,10 +46,10 @@ do so follow the steps below:
     2. Navigate to and choose the settings.gradle file in this project
     3. Press OK
 
-6. Place the following in `~/.gradle/gradle.properties`:
+6. Place the following in `app/gradle.properties`:
 
    ```
-   FEEDBACK_EMAIL_ADDRESS=<feedback_email_address>
+   feedbackEmail=<feedback_email_address>
    ```
 
 7. Choose Build > Make Project in Android Studio or run the following
@@ -66,5 +66,39 @@ do so follow the steps below:
    ```
     ./gradlew installDebug
    ```
+
+### Release Build
+
+To make a release make sure you have `gradle.properties` in the root of the `app` module with the
+following content.
+
+**gradle.properties**
+```
+releaseKeyStore=<key_store_file>
+releaseKeyPassword=<key_password>
+releaseKeyStorePassword=<key_store_password>
+releaseKeyAlias=key_alias
+feedbackEmail=<feedback_email@example.com>
+gPlaystoreServiceAccountEmailAddress=<playstore_service_account_email>
+gPlaystorePKFile=<google-playstore-pk-file.p12>
+```
+
+A typical `gradle.properties` content should look like this:
+```
+releaseKeyStore=/home/username/.android/debug.keystore
+releaseKeyStorePassword=android
+releaseKeyAlias=androiddebugkey
+releaseKeyPassword=android
+feedbackEmail=feedback-email@example.com
+gPlaystoreServiceAccountEmailAddress=9323892392132-842jajdkdadummy@developer.gserviceaccount.com
+gPlaystorePKFile=/home/username/pdummy-pk-file.p12
+```
+
+Then in the project's root directory, issue:
+
+`./release major milestone alpha`
+
+This should build the app, versioned it, create a tag and push it to the remote repo and publish
+to the Google Playstore's alpha track.
 
 [1]: https://github.com/ushahidi/platform

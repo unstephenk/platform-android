@@ -20,6 +20,8 @@ package com.ushahidi.android.data.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import java.util.Locale;
+
 import nl.qbusict.cupboard.convert.EntityConverter;
 import nl.qbusict.cupboard.convert.FieldConverter;
 
@@ -36,7 +38,8 @@ public class UserEntityFieldConverter <E extends Enum> implements FieldConverter
 
     @Override
     public E fromCursorValue(Cursor cursor, int columnIndex) {
-        return (E) Enum.valueOf(mEnumClass, cursor.getString(columnIndex).toUpperCase());
+        return (E) Enum.valueOf(mEnumClass, cursor.getString(columnIndex).toUpperCase(
+                Locale.getDefault()));
     }
 
     @Override

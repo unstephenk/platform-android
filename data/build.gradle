@@ -48,13 +48,13 @@ dependencies {
     //project dependencies
     compile core
     //library dependencies
-    compile 'nl.qbusict:cupboard:2.+'
-    compile 'com.google.guava:guava:18.+'
+    compile 'nl.qbusict:cupboard:2.1.1'
+    compile 'com.google.guava:guava:18.0'
     compile 'javax.inject:javax.inject:1@jar'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:+'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
     compile 'com.squareup.retrofit:retrofit:1.8.0'
-    compile 'io.reactivex:rxandroid:0.23.0'
+    compile 'io.reactivex:rxandroid:0.24.0'
 
     androidTestCompile 'org.mockito:mockito-core:1.9.5'
     androidTestCompile 'com.squareup.retrofit:retrofit-mock:1.8.0'
