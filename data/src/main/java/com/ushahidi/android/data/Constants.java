@@ -38,5 +38,7 @@ public class Constants {
 
     public static final String POSTS = API_PATH + "/posts";
 
+    public static final String TAGS  = API_PATH + "/tags";
+
     public static final String USERS_ME = API_PATH + "/users/me";
 }

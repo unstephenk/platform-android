@@ -1,31 +1,9 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            name 'Sonatype SNAPSHOTS'
-            url 'https://oss.sonatype.org/content/repositories/snapshots/'
-        }
-    }
-    dependencies {
-        classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.14.2-SNAPSHOT'
-        classpath 'com.github.triplet.gradle:play-publisher:1.0.2'
-        classpath 'org.ajoberstar:gradle-git:1.0.0'
-    }
-}
-
-repositories {
-    mavenCentral()
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots/'
-    }
-}
-
 import org.ajoberstar.grgit.Grgit
 
 apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
 apply plugin: 'org.ajoberstar.release-opinion'
-apply plugin: 'spoon'
+//apply plugin: 'spoon'
 apply plugin: 'play'
 
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
@@ -89,7 +67,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            shrinkResources true
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.releaseSign
         }
@@ -110,12 +88,14 @@ android {
         exclude 'asm-license.txt'
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
+
+
 }
 
-spoon {
+/*spoon {
     // Enable debug output
     debug = true
-}
+}*/
 
 play {
     serviceAccountEmail = getGooglePlaystoreServiceAccountEmail()
@@ -138,7 +118,7 @@ release {
     }
 }
 
-task releaseApp(dependsOn: [clean, assemble, release, 'publishRelease']) {
+task releaseApp(dependsOn: ['clean', 'assemble', 'release', 'publishRelease']) {
     description 'Release a new version of application, increase version and create tag'
     doLast {
         println "${android.defaultConfig.versionName} released"
@@ -182,6 +162,8 @@ dependencies {
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.+'
     androidTestCompile 'com.squareup.spoon:spoon-client:1.1.+'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.2+'
-    androidTestCompile 'com.squareup.assertj:assertj-android:1.0.0'
+    androidTestCompile ('com.squareup.assertj:assertj-android:1.0.0') {
+        exclude module: 'support-annotations'
+    }
 }
 

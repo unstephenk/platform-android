@@ -21,14 +21,14 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import com.ushahidi.android.core.entity.Tag;
+import com.ushahidi.android.core.exception.ErrorWrap;
 import com.ushahidi.android.core.repository.ITagRepository;
-import com.ushahidi.android.data.database.ITagDatabaseHelper;
-import com.ushahidi.android.data.database.TagDatabaseHelper;
 import com.ushahidi.android.data.entity.TagEntity;
 import com.ushahidi.android.data.entity.mapper.TagEntityMapper;
 import com.ushahidi.android.data.exception.RepositoryError;
 import com.ushahidi.android.data.exception.ValidationException;
-import com.ushahidi.android.data.validator.Validator;
+import com.ushahidi.android.data.repository.datasource.tag.TagDataSource;
+import com.ushahidi.android.data.repository.datasource.tag.TagDataSourceFactory;
 
 import java.util.List;
 
@@ -43,28 +43,26 @@ public class TagDataRepository implements ITagRepository {
 
     private final TagEntityMapper mTagEntityMapper;
 
-    private final TagDatabaseHelper mTagDatabaseHelper;
+    private final TagDataSourceFactory mTagDataSourceFactory;
 
-    private final Validator mValidator;
+    protected TagDataRepository(TagDataSourceFactory tagDataSourceFactory,
+            TagEntityMapper entityMapper) {
 
-    protected TagDataRepository(TagDatabaseHelper tagDatabaseHelper,
-            TagEntityMapper entityMapper, Validator validator) {
         if (entityMapper == null) {
             throw new IllegalArgumentException("Invalid null parameter");
         }
-        Preconditions.checkNotNull(tagDatabaseHelper, "DatabaseHelper cannot be null");
+
+        Preconditions.checkNotNull(tagDataSourceFactory, "DataSourceFactory cannot be null");
         Preconditions.checkNotNull(entityMapper, "Entity mapper cannot be null");
-        Preconditions.checkNotNull(validator, "Validator cannot be null");
         mTagEntityMapper = entityMapper;
-        mTagDatabaseHelper = tagDatabaseHelper;
-        mValidator = validator;
+        mTagDataSourceFactory = tagDataSourceFactory;
     }
 
-    public static synchronized TagDataRepository getInstance(TagDatabaseHelper
-            tagDatabaseHelper, TagEntityMapper entityMapper, Validator validator) {
+    public static synchronized TagDataRepository getInstance(
+            TagDataSourceFactory tagDataSourceFactory,
+            TagEntityMapper entityMapper) {
         if (sInstance == null) {
-            sInstance = new TagDataRepository(tagDatabaseHelper,
-                    entityMapper, validator);
+            sInstance = new TagDataRepository(tagDataSourceFactory, entityMapper);
         }
         return sInstance;
     }
@@ -93,11 +91,11 @@ public class TagDataRepository implements ITagRepository {
         }
 
         if (isValid) {
-            mTagDatabaseHelper.put(mTagEntityMapper.unmap(tag),
-                    new ITagDatabaseHelper.ITagEntityPutCallback() {
-
+            final TagDataSource tagDataSource = mTagDataSourceFactory.createTagDatabaseSource();
+            tagDataSource.addTag(mTagEntityMapper.unmap(tag),
+                    new TagDataSource.TagEntityAddCallback() {
                         @Override
-                        public void onTagEntityPut() {
+                        public void onTagEntityAdded() {
                             tagCallback.onTagAdded();
                         }
 
@@ -111,41 +109,59 @@ public class TagDataRepository implements ITagRepository {
 
     @Override
     public void getTagList(final TagListCallback tagListCallback) {
-        mTagDatabaseHelper.getTagEntities(
-                new ITagDatabaseHelper.ITagEntitiesCallback() {
+        final TagDataSource tagDataSource = mTagDataSourceFactory.createTagDatabaseSource();
+        tagDataSource.getTagEntityList(new TagDataSource.TagEntityListCallback() {
+            @Override
+            public void onTagEntityListLoaded(List<TagEntity> tagList) {
+                final List<Tag> tags = mTagEntityMapper
+                        .map(tagList);
+                tagListCallback.onTagListLoaded(tags);
+            }
 
-                    @Override
-                    public void onTagEntitiesLoaded(
-                            List<TagEntity> tagEntities) {
-                        final List<Tag> tags = mTagEntityMapper
-                                .map(tagEntities);
-                        tagListCallback.onTagListLoaded(tags);
-                    }
+            @Override
+            public void onError(Exception exception) {
+                tagListCallback.onError(new RepositoryError(exception));
+            }
+        });
+    }
 
-                    @Override
-                    public void onError(Exception exception) {
-                        tagListCallback.onError(new RepositoryError(exception));
-                    }
-                });
+    @Override
+    public void getTagListViaApi(final TagListCallback tagListCallback) {
+        final TagDataSource tagDataSource = mTagDataSourceFactory.createTagApiSource();
+        tagDataSource.getTagEntityList(new TagDataSource.TagEntityListCallback() {
+            @Override
+            public void onTagEntityListLoaded(List<TagEntity> tagList) {
+                final List<Tag> tags = mTagEntityMapper
+                        .map(tagList);
+                tagListCallback.onTagListLoaded(tags);
+
+                //Cache to local db
+                put(tags);
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                tagListCallback.onError(new RepositoryError(exception));
+            }
+        });
     }
 
     @Override
     public void getTagById(long tagId,
             final TagDetailsCallback tagDetailsCallback) {
-        mTagDatabaseHelper.get(tagId,
-                new ITagDatabaseHelper.ITagEntityCallback() {
+        final TagDataSource dataSource = mTagDataSourceFactory.createTagDatabaseSource();
+        dataSource.getTagEntityById(tagId, new TagDataSource.TagEntityDetailsCallback() {
+            @Override
+            public void onTagEntityLoaded(TagEntity tagEntity) {
+                final Tag tag = mTagEntityMapper.map(tagEntity);
+                tagDetailsCallback.onTagLoaded(tag);
+            }
 
-                    @Override
-                    public void onTagEntityLoaded(TagEntity tagEntity) {
-                        final Tag tag = mTagEntityMapper.map(tagEntity);
-                        tagDetailsCallback.onTagLoaded(tag);
-                    }
-
-                    @Override
-                    public void onError(Exception exception) {
-                        tagDetailsCallback.onError(new RepositoryError(exception));
-                    }
-                });
+            @Override
+            public void onError(Exception exception) {
+                tagDetailsCallback.onError(new RepositoryError(exception));
+            }
+        });
     }
 
     /**
@@ -172,11 +188,11 @@ public class TagDataRepository implements ITagRepository {
         }
 
         if (isValid) {
-            mTagDatabaseHelper.put(mTagEntityMapper.unmap(tag),
-                    new ITagDatabaseHelper.ITagEntityPutCallback() {
-
+            final TagDataSource tagDataSource = mTagDataSourceFactory.createTagDatabaseSource();
+            tagDataSource.updateTagEntity(mTagEntityMapper.unmap(tag),
+                    new TagDataSource.TagEntityUpdateCallback() {
                         @Override
-                        public void onTagEntityPut() {
+                        public void onTagEntityUpdated() {
                             tagCallback.onTagUpdated();
                         }
 
@@ -197,8 +213,9 @@ public class TagDataRepository implements ITagRepository {
     @Override
     public void deleteTag(final Tag tag,
             final TagDeletedCallback callback) {
-        mTagDatabaseHelper.delete(mTagEntityMapper.unmap(tag),
-                new ITagDatabaseHelper.ITagEntityDeletedCallback() {
+        final TagDataSource dataSource = mTagDataSourceFactory.createTagDatabaseSource();
+        dataSource.deleteTagEntity(mTagEntityMapper.unmap(tag),
+                new TagDataSource.TagEntityDeletedCallback() {
                     @Override
                     public void onTagEntityDeleted() {
                         callback.onTagDeleted();
@@ -208,8 +225,23 @@ public class TagDataRepository implements ITagRepository {
                     public void onError(Exception exception) {
                         callback.onError(new RepositoryError(exception));
                     }
-
                 });
+    }
+
+    private void put(List<Tag> tags) {
+        for(Tag tag : tags) {
+            addTag(tag, new TagAddCallback() {
+                @Override
+                public void onTagAdded() {
+                    // Do nothing
+                }
+
+                @Override
+                public void onError(ErrorWrap error) {
+                    // Do nothing
+                }
+            });
+        }
     }
 
 }

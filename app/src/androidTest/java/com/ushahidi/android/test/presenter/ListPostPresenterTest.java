@@ -19,12 +19,15 @@ package com.ushahidi.android.test.presenter;
 
 import com.ushahidi.android.core.entity.Post;
 import com.ushahidi.android.core.repository.IPostRepository;
+import com.ushahidi.android.core.repository.ITagRepository;
 import com.ushahidi.android.core.usecase.Search;
 import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
+import com.ushahidi.android.core.usecase.tag.FetchTag;
 import com.ushahidi.android.data.api.service.PostService;
 import com.ushahidi.android.data.pref.StringPreference;
 import com.ushahidi.android.data.repository.datasource.post.PostDataSourceFactory;
+import com.ushahidi.android.data.repository.datasource.tag.TagDataSourceFactory;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
 import com.ushahidi.android.presenter.ListPostPresenter;
 import com.ushahidi.android.state.IDeploymentState;
@@ -67,6 +70,10 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
     private PostDataSourceFactory mockPostDataSourceFactory;
 
     @Mock
+    private TagDataSourceFactory mMockTagDataSourceFactory;
+
+
+    @Mock
     private Prefs mMockPrefs;
 
     @Mock
@@ -79,10 +86,16 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
     private FetchPost mMockFetchPost;
 
     @Mock
+    private FetchTag mMockFetchTag;
+
+    @Mock
     private Search<Post> mMockSearch;
 
     @Mock
     private IPostRepository mMockPostRepository;
+
+    @Mock
+    private ITagRepository mMockTagRepository;
 
     @Mock
     private PostService mMockPostService;
@@ -99,9 +112,12 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
 
         setupPrefsMock();
         mPostListPresenter = new ListPostPresenter(
-                mMockListPost, mMockSearch, mMockFetchPost, mMockPostModelDataMapper,
+                mMockListPost, mMockFetchTag,
+                mMockSearch, mMockFetchPost, mMockPostModelDataMapper,
                 mMockPostRepository,
+                mMockTagRepository,
                 mockPostDataSourceFactory,
+                mMockTagDataSourceFactory,
                 mMockPrefs,
                 mMockApiServiceUtil,
                 mDeploymentState);
@@ -111,7 +127,7 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
     public void testInitializingPostListPresenterWithNullValues() {
         final String expectedMessage = "ListPost cannot be null";
         try {
-            new ListPostPresenter(null, null, null, null, null, null, null, null, null);
+            new ListPostPresenter(null, null, null, null, null, null, null, null,null,null,null,null);
         } catch (NullPointerException e) {
             assertEquals(expectedMessage, e.getMessage());
         }

@@ -23,6 +23,8 @@ import com.ushahidi.android.core.Entity;
 
 import java.util.Date;
 
+import nl.qbusict.cupboard.annotation.Ignore;
+
 /**
  * Tag entity
  *
@@ -34,7 +36,10 @@ public class TagEntity extends Entity {
     private Long _id;
 
     @SerializedName("parent")
-    private Long mParentId;
+    @Ignore // Make cupboard ignore this field
+    private Parent parent;
+
+    private transient Long mParent;
 
     @SerializedName("tag")
     private String mTag;
@@ -72,11 +77,14 @@ public class TagEntity extends Entity {
     }
 
     public Long getParentId() {
-        return mParentId;
+        return mParent;
     }
 
-    public void setParentId(Long parentId) {
-        mParentId = parentId;
+    public void setParentId(Long parent) {
+        if(this.parent !=null) {
+            mParent = this.parent.getId();
+        }
+        mParent = parent;
     }
 
     public String getTag() {
@@ -139,7 +147,7 @@ public class TagEntity extends Entity {
     public String toString() {
         return "Tag{" +
                 "id=" + _id +
-                ", ParentId=" + mParentId +
+                ", mParent=" + mParent +
                 ", Tag='" + mTag + '\'' +
                 ", Color='" + mColor + '\'' +
                 ", Type='" + mType + '\'' +
@@ -151,7 +159,11 @@ public class TagEntity extends Entity {
     }
 
     public enum Type {
+
+        @SerializedName("category")
         CATEGORY("category"),
+
+        @SerializedName("status")
         STATUS("status");
 
         public final String value;
@@ -163,6 +175,16 @@ public class TagEntity extends Entity {
         @Override
         public String toString() {
             return value;
+        }
+    }
+
+    public static class Parent {
+
+        @SerializedName("id")
+        private Long id;
+
+        public Long getId() {
+            return id;
         }
     }
 }

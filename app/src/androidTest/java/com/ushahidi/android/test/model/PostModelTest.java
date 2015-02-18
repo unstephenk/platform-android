@@ -20,6 +20,7 @@ package com.ushahidi.android.test.model;
 import com.ushahidi.android.core.entity.Tag;
 import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.model.PostModel;
+import com.ushahidi.android.model.TagModel;
 
 import junit.framework.TestCase;
 
@@ -60,6 +61,8 @@ public class PostModelTest extends TestCase {
 
     private static final List<Tag> DUMMY_TAGS = new ArrayList<>();
 
+    private static final List<TagModel> DUMMY_TAG_MODELS = new ArrayList<>();
+
     private static final String DUMMY_POST_TITLE = "post title";
 
     private PostModel mPostModel;
@@ -71,7 +74,6 @@ public class PostModelTest extends TestCase {
 
     public void testCreatePostModel() throws Exception {
         mPostModel.setId(DUMMY_ID);
-        mPostModel.setUser(DUMMY_USER);
         mPostModel.setContent(DUMMY_CONTENT);
         mPostModel.setSlug(DUMMY_SLUG);
         mPostModel.setAuthorEmail(DUMMY_ARTHUR_EMAIL);
@@ -81,12 +83,11 @@ public class PostModelTest extends TestCase {
         mPostModel.setUpdated(DUMMY_UPDATED);
         mPostModel.setParent(DUMMY_PARENT);
         mPostModel.setType(DUMMY_TYPE);
-        mPostModel.setTags(DUMMY_TAGS);
         mPostModel.setTitle(DUMMY_POST_TITLE);
+        mPostModel.setTags(DUMMY_TAG_MODELS);
 
         assertThat(mPostModel).isInstanceOf(PostModel.class);
         assertThat(mPostModel.getId()).isEqualTo(DUMMY_ID);
-        assertThat(mPostModel.getUser()).isEqualTo(DUMMY_USER);
         assertThat(mPostModel.getContent()).isEqualTo(DUMMY_CONTENT);
         assertThat(mPostModel.getUpdated()).isEqualTo(DUMMY_UPDATED);
         assertThat(mPostModel.getSlug()).isEqualTo(DUMMY_SLUG);

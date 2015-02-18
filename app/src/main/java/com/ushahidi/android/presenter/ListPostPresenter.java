@@ -21,13 +21,18 @@ import com.google.common.base.Preconditions;
 
 import com.squareup.otto.Subscribe;
 import com.ushahidi.android.core.entity.Post;
+import com.ushahidi.android.core.entity.Tag;
 import com.ushahidi.android.core.exception.ErrorWrap;
 import com.ushahidi.android.core.repository.IPostRepository;
+import com.ushahidi.android.core.repository.ITagRepository;
 import com.ushahidi.android.core.usecase.Search;
 import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
+import com.ushahidi.android.core.usecase.tag.FetchTag;
 import com.ushahidi.android.data.api.service.PostService;
+import com.ushahidi.android.data.api.service.TagService;
 import com.ushahidi.android.data.repository.datasource.post.PostDataSourceFactory;
+import com.ushahidi.android.data.repository.datasource.tag.TagDataSourceFactory;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.PostModel;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
@@ -52,9 +57,13 @@ public class ListPostPresenter implements IPresenter {
 
     private final IPostRepository mPostRepository;
 
+    private final ITagRepository mTagRepository;
+
     private final ListPost mListPost;
 
     private final FetchPost mFetchPost;
+
+    private final FetchTag mFetchTag;
 
     private final Prefs mPrefs;
 
@@ -64,7 +73,9 @@ public class ListPostPresenter implements IPresenter {
 
     private final IDeploymentState mDeploymentState;
 
-    PostDataSourceFactory mPostDataSourceFactory;
+    private final PostDataSourceFactory mPostDataSourceFactory;
+
+    private final TagDataSourceFactory mTagDataSourceFactory;
 
     private final ListPost.Callback mListCallback = new ListPost.Callback() {
 
@@ -98,6 +109,24 @@ public class ListPostPresenter implements IPresenter {
         }
     };
 
+    private final FetchTag.Callback mFetchTagCallback = new FetchTag.Callback() {
+
+        @Override
+        public void onTagFetched(List<Tag> listTag) {
+
+            //After a successful tag fetch via the API, pull post
+            setPostService(createPostService());
+            mFetchPost.execute(mCallback);
+        }
+
+        @Override
+        public void onError(ErrorWrap error) {
+            hideViewLoading();
+            showErrorMessage(error);
+            showViewRetry();
+        }
+    };
+
     private final Search.Callback<Post> mSearchCallback = new Search.Callback<Post>() {
 
         @Override
@@ -108,7 +137,7 @@ public class ListPostPresenter implements IPresenter {
 
         @Override
         public void onEntityFound(List<Post> entityList) {
-            if(entityList.size() > 0) {
+            if (entityList.size() > 0) {
                 showPostsListInView(entityList);
             } else {
                 mView.showEmptySearchResultsInfo();
@@ -120,33 +149,46 @@ public class ListPostPresenter implements IPresenter {
 
     @Inject
     public ListPostPresenter(ListPost listPost,
+            FetchTag fetchTag,
             Search<Post> search,
             FetchPost fetchPost,
             PostModelDataMapper postModelDataMapper,
             IPostRepository postRepository,
+            ITagRepository tagRepository,
             PostDataSourceFactory postDataSourceFactory,
+            TagDataSourceFactory tagDataSourceFactory,
             Prefs prefs,
             ApiServiceUtil apiServiceUtil,
             IDeploymentState deploymentState
     ) {
         mListPost = Preconditions.checkNotNull(listPost, "ListPost cannot be null");
+        mFetchTag = fetchTag;
         mSearch = Preconditions.checkNotNull(search, "Search cannot be null");
         mFetchPost = Preconditions.checkNotNull(fetchPost, "Fetch Post listing");
         mPostModelDataMapper = Preconditions
                 .checkNotNull(postModelDataMapper, "PostModelDataMapper cannot be null");
         mPostRepository = Preconditions.checkNotNull(postRepository,
                 "Post repository cannot be null.");
+        mTagRepository = Preconditions.checkNotNull(tagRepository, "Tag Repository cannot be null");
         mPrefs = Preconditions.checkNotNull(prefs, "Preferences cannot be null");
-        mPostDataSourceFactory = Preconditions.checkNotNull(postDataSourceFactory, "Post data source factory cannot be null.");
+        mPostDataSourceFactory = Preconditions
+                .checkNotNull(postDataSourceFactory, "Post data source factory cannot be null.");
+        mTagDataSourceFactory = Preconditions
+                .checkNotNull(tagDataSourceFactory, "Tag data source factory cannot be null.");
         mApiServiceUtil = apiServiceUtil;
         mDeploymentState = deploymentState;
     }
 
-    public void setPostService(PostService postService) {
+    private void setPostService(PostService postService) {
         mPostDataSourceFactory.setPostService(postService);
         mListPost.setPostRepository(mPostRepository);
         mFetchPost.setPostRepository(mPostRepository);
         mSearch.setRepository(mPostRepository);
+    }
+
+    public void setTagService(TagService tagService) {
+        mTagDataSourceFactory.setTagService(tagService);
+        mFetchTag.setTagRepository(mTagRepository);
     }
 
     public void setView(View view) {
@@ -156,9 +198,15 @@ public class ListPostPresenter implements IPresenter {
         mView = view;
     }
 
-    public PostService createPostService() {
+    private PostService createPostService() {
         return mApiServiceUtil.createService(PostService.class,
                 mPrefs.getActiveDeploymentUrl().get(), mPrefs.getAccessToken().get());
+    }
+
+    private TagService createTagService() {
+        return mApiServiceUtil
+                .createService(TagService.class, mPrefs.getActiveDeploymentUrl().get(),
+                        mPrefs.getAccessToken().get());
     }
 
     @Override
@@ -173,6 +221,7 @@ public class ListPostPresenter implements IPresenter {
     }
 
     public void init() {
+        setTagService(createTagService());
         setPostService(createPostService());
     }
 
@@ -183,8 +232,9 @@ public class ListPostPresenter implements IPresenter {
     }
 
     @Subscribe
-    public void onActivatedDeploymentChanged(IDeploymentState.ActivatedDeploymentChangedEvent event) {
-        fetchPostFromApi();
+    public void onActivatedDeploymentChanged(
+            IDeploymentState.ActivatedDeploymentChangedEvent event) {
+        loadPostListFromLocalCache();
     }
 
     public void refreshList() {
@@ -228,12 +278,12 @@ public class ListPostPresenter implements IPresenter {
     }
 
     public void fetchPostFromApi() {
-        setPostService(createPostService());
-        mFetchPost.execute(mCallback);
+        setTagService(createTagService());
+        mFetchTag.execute(mFetchTagCallback);
     }
 
     public void search(String search) {
-        mSearch.execute(search,mSearchCallback);
+        mSearch.execute(search, mSearchCallback);
     }
 
     public interface View extends ILoadViewData {

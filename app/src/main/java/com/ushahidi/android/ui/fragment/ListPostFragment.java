@@ -25,6 +25,7 @@ import com.ushahidi.android.ui.adapter.PostAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.widget.TextView;
@@ -51,6 +52,8 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
     TextView mEmptyView;
 
     private PostListListener mPostListListener;
+
+    private RecyclerView.LayoutManager mLayoutManager;
 
     public ListPostFragment() {
         super(PostAdapter.class, R.layout.list_post, 0,
@@ -108,6 +111,8 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
             }
         });
         mRecyclerView.addOnItemTouchListener(this);
+        mLayoutManager = new GridLayoutManager(getContext(), 1);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         setEmptyView();
     }
@@ -133,9 +138,9 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
             mEmptyView.setText(R.string.empty_post_list);
         }
 
-        //if(mPostListPresenter !=null) {
+        if(mPostListPresenter !=null) {
             mPostListPresenter.refreshList();
-        //}
+        }
     }
     @Override
     public void showEmptySearchResultsInfo() {

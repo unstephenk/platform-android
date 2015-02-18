@@ -17,12 +17,13 @@
 
 package com.ushahidi.android.data.entity;
 
-import com.ushahidi.android.core.entity.Tag;
-import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.data.BaseTestCase;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,13 +39,13 @@ import static org.mockito.Mockito.mock;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
+@Config(manifest=Config.NONE)
+@RunWith(RobolectricTestRunner.class)
 public class PostEntityTest extends BaseTestCase {
 
     private PostEntity mPostEntity;
 
     private static final long DUMMY_ID = 1;
-
-    private static final UserEntity DUMMY_USER = mock(UserEntity.class);
 
     private static final String DUMMY_CONTENT = "dummy description";
 
@@ -77,7 +78,6 @@ public class PostEntityTest extends BaseTestCase {
     @Test
     public void shouldCreatePostEntity() throws Exception {
         mPostEntity.setId(DUMMY_ID);
-        mPostEntity.setUser(DUMMY_USER);
         mPostEntity.setContent(DUMMY_CONTENT);
         mPostEntity.setSlug(DUMMY_SLUG);
         mPostEntity.setAuthorEmail(DUMMY_ARTHUR_EMAIL);
@@ -92,7 +92,6 @@ public class PostEntityTest extends BaseTestCase {
 
         assertThat(mPostEntity, is(instanceOf(PostEntity.class)));
         assertThat(mPostEntity.getId(), is(DUMMY_ID));
-        assertThat(mPostEntity.getUser(), is(DUMMY_USER));
         assertThat(mPostEntity.getContent(), is(DUMMY_CONTENT));
         assertThat(mPostEntity.getUpdated(), is(DUMMY_UPDATED));
         assertThat(mPostEntity.getSlug(), is(DUMMY_SLUG));

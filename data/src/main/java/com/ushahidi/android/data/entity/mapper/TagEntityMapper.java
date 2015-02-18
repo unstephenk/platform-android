@@ -87,10 +87,12 @@ public class TagEntityMapper {
     public List<Tag> map(List<TagEntity> tagEntityList) {
         List<Tag> tagList = new ArrayList<>();
         Tag tag;
-        for (TagEntity tagEntity : tagEntityList) {
-            tag = map(tagEntity);
-            if (tag != null) {
-                tagList.add(tag);
+        if(tagEntityList != null) {
+            for (TagEntity tagEntity : tagEntityList) {
+                tag = map(tagEntity);
+                if (tag != null) {
+                    tagList.add(tag);
+                }
             }
         }
 

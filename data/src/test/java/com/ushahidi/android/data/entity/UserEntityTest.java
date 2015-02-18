@@ -22,6 +22,8 @@ import com.ushahidi.android.data.BaseTestCase;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.Date;
 
@@ -32,6 +34,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
+@RunWith(RobolectricTestRunner.class)
 public class UserEntityTest extends BaseTestCase {
 
     private UserEntity mUserEntity;

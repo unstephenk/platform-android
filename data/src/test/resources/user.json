@@ -1,0 +1,15 @@
+{
+    "id": 1,
+    "url": "http: //docker.ushahidi.com: 8000/api/v2/users/1",
+    "email": "robbie@ushahidi.com",
+    "realname": "Robbie Mackay",
+    "username": "robbie",
+    "logins": 0,
+    "failed_attempts": 0,
+    "last_login": null,
+    "last_attempt": null,
+    "created": "1970-01-01T00:00:00+00:00",
+    "updated": null,
+    "role": "user",
+    "allowed_methods": []
+}

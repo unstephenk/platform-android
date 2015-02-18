@@ -17,10 +17,15 @@
 
 package com.ushahidi.android.data.entity;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
+
+import nl.qbusict.cupboard.annotation.Ignore;
 
 /**
  * Post entity
@@ -33,7 +38,10 @@ public class PostEntity extends Entity implements Comparable<PostEntity> {
     private Long _id;
 
     @SerializedName("parent")
-    private long mParent;
+    @Ignore // Make cupboard ignore this field
+    private Parent parent;
+
+    private transient Long mParent;
 
     @SerializedName("user")
     private UserEntity mUser;
@@ -66,10 +74,21 @@ public class PostEntity extends Entity implements Comparable<PostEntity> {
     private Date mUpdated;
 
     @SerializedName("values")
-    private String mValues;
+    private PostValueEntity mValues;
 
     @SerializedName("tags")
+    @Ignore
+    private List<PostTagEntity> mPostTagEntityList;
+
     private transient List<TagEntity> mTags;
+
+    public List<PostTagEntity> getPostTagEntityList() {
+        return mPostTagEntityList;
+    }
+
+    public void setPostTagEntityList(List<PostTagEntity> postTagEntityList) {
+        mPostTagEntityList = postTagEntityList;
+    }
 
     @Override
     public Long getId() {
@@ -81,11 +100,14 @@ public class PostEntity extends Entity implements Comparable<PostEntity> {
         this._id = id;
     }
 
-    public long getParent() {
+    public Long getParent() {
         return mParent;
     }
 
-    public void setParent(long parent) {
+    public void setParent(Long parent) {
+        if(this.parent !=null) {
+            mParent = this.parent.getId();
+        }
         mParent = parent;
     }
 
@@ -170,13 +192,14 @@ public class PostEntity extends Entity implements Comparable<PostEntity> {
     }
 
     // Store the JSON string directly into the db
-    public String getValues() {
+    public PostValueEntity getValues() {
         return mValues;
     }
 
-    public void setValues(String values) {
+    public void setValues(PostValueEntity values) {
         mValues = values;
     }
+
 
     public List<TagEntity> getTags() {
         return mTags;
@@ -209,5 +232,15 @@ public class PostEntity extends Entity implements Comparable<PostEntity> {
     @Override
     public int compareTo(PostEntity another) {
         return getTitle().compareToIgnoreCase(another.getTitle());
+    }
+
+    public static class Parent {
+
+        @SerializedName("id")
+        private Long id;
+
+        public Long getId() {
+            return id;
+        }
     }
 }

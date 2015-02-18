@@ -29,9 +29,7 @@ public class Post extends Entity {
 
     private Long _id;
 
-    private long mParent;
-
-    private User mUser;
+    private Long mParent;
 
     private String mType;
 
@@ -52,8 +50,8 @@ public class Post extends Entity {
     private Date mUpdated;
 
     // Store the raw JSON for this field. This is a dynamic field
-    // can't predict its keys.
-    private String mValues;
+    // and can't predict its keys.
+    private PostValue mValues;
 
     private List<Tag> mTags;
 
@@ -67,20 +65,12 @@ public class Post extends Entity {
         _id = id;
     }
 
-    public long getParent() {
+    public Long getParent() {
         return mParent;
     }
 
-    public void setParent(long parent) {
+    public void setParent(Long parent) {
         mParent = parent;
-    }
-
-    public User getUser() {
-        return mUser;
-    }
-
-    public void setUser(User user) {
-        mUser = user;
     }
 
     public String getType() {
@@ -155,11 +145,11 @@ public class Post extends Entity {
         mUpdated = updated;
     }
 
-    public String getValues() {
+    public PostValue getValues() {
         return mValues;
     }
 
-    public void setValues(String values) {
+    public void setValues(PostValue values) {
         mValues = values;
     }
 
@@ -176,7 +166,6 @@ public class Post extends Entity {
         return "Post{" +
                 "_id=" + _id +
                 ", mParent=" + mParent +
-                ", mUser=" + mUser +
                 ", mType='" + mType + '\'' +
                 ", mTitle='" + mTitle + '\'' +
                 ", mSlug='" + mSlug + '\'' +

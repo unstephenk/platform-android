@@ -72,7 +72,7 @@ public class FetchUser implements IFetchUser {
 
     public void setUserRepository(IUserRepository userRepository) {
         if(userRepository == null) {
-            throw new NullPointerException("You must call setUserRepository(...)");
+            throw new NullPointerException("UserRepository cannot be null");
         }
 
         mUserRepository = userRepository;

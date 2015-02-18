@@ -83,13 +83,14 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        injectDependencies();
         initPresenter();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        injectDependencies();
+
     }
 
     @Override

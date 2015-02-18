@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
-apply plugin: 'robolectric'
 
 android {
+
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
@@ -15,32 +15,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/ASL2.0'
-        exclude 'META-INF/NOTICE'
-        exclude 'LICENSE.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE'
-    }
-
     lintOptions {
         abortOnError false;
         disable 'InvalidPackage' // Some libraries have issues with this
         disable 'OldTargetApi' // Due to Robolectric that modifies the manifest when running tests
     }
 
-    sourceSets {
-        androidTest {
-            setRoot('src/test')
-        }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
-}
-
-robolectric {
-    include '**/*Test.class'
-    exclude '**/espresso/**/*.class'
 }
 
 dependencies {
@@ -56,34 +39,9 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.8.0'
     compile 'io.reactivex:rxandroid:0.24.0'
 
-    androidTestCompile 'org.mockito:mockito-core:1.9.5'
-    androidTestCompile 'com.squareup.retrofit:retrofit-mock:1.8.0'
-    androidTestCompile 'com.squareup.okhttp:mockwebserver:2.1.0'
-    androidTestCompile 'junit:junit:4.11'
-    androidTestCompile('org.robolectric:robolectric:2.3') {
-        exclude module: 'classworlds'
-        exclude module: 'commons-logging'
-        exclude module: 'httpclient'
-        exclude module: 'maven-artifact'
-        exclude module: 'maven-artifact-manager'
-        exclude module: 'maven-error-diagnostics'
-        exclude module: 'maven-model'
-        exclude module: 'maven-project'
-        exclude module: 'maven-settings'
-        exclude module: 'plexus-container-default'
-        exclude module: 'plexus-interpolation'
-        exclude module: 'plexus-utils'
-        exclude module: 'wagon-file'
-        exclude module: 'wagon-http-lightweight'
-        exclude module: 'wagon-provider-api'
-    }
+    testCompile 'org.mockito:mockito-core:1.9.5'
+    testCompile 'com.squareup.retrofit:retrofit-mock:1.8.0'
+    testCompile 'com.squareup.okhttp:mockwebserver:2.1.0'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:3.0-SNAPSHOT'
 }
-
-apply plugin: 'idea'
-
-idea {
-    module {
-        testOutputDir = file('build/test-classes/debug')
-    }
-}
-

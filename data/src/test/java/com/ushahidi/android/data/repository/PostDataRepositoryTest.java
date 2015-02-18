@@ -33,10 +33,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,6 +57,8 @@ import static org.mockito.Mockito.verify;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
+@Config(manifest=Config.NONE)
+@RunWith(RobolectricTestRunner.class)
 public class PostDataRepositoryTest extends BaseTestCase {
 
     private static final long DUMMY_ID = 1;
@@ -123,7 +128,6 @@ public class PostDataRepositoryTest extends BaseTestCase {
 
         mPost = new Post();
         mPost.setId(DUMMY_ID);
-        mPost.setUser(DUMMY_USER);
         mPost.setContent(DUMMY_CONTENT);
         mPost.setSlug(DUMMY_SLUG);
         mPost.setAuthorEmail(DUMMY_ARTHUR_EMAIL);

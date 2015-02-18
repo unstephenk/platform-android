@@ -15,51 +15,92 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:card_view="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <!-- A CardView that contains a TextView -->
-    <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_view"
-            android:layout_gravity="center"
+
+<!-- A CardView that contains a TextView -->
+<android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:padding="@dimen/grid_spacing"
+        android:layout_marginLeft="@dimen/grid_spacing"
+        android:layout_marginRight="@dimen/grid_spacing"
+        android:layout_marginBottom="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbarStyle="outsideOverlay"
+        card_view:cardCornerRadius="4dp">
+
+
+    <ImageView
+            android:id="@+id/post_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            card_view:cardCornerRadius="4dp">
+            android:scaleType="centerCrop"
+            android:visibility="gone"/>
 
-        <ImageView
-                android:id="@+id/post_image"
+        <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"/>
+                android:padding="@dimen/element_spacing_normal">
 
-        <TextView
-                android:id="@+id/post_title"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+            <TextView
+                    android:id="@+id/post_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextHeader"
+                    android:text="Hello there"/>
 
-        <TextView
-                android:id="@+id/post_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        <HorizontalScrollView
-                android:id="@+id/post_tags_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/keyline_2"
-                android:scrollbars="none"
-                android:requiresFadingEdge="horizontal"
-                android:fadingEdgeLength="16dp"
-                android:layout_marginBottom="16dp">
-
-            <LinearLayout
-                    android:id="@+id/post_tags"
-                    android:orientation="horizontal"
+            <TextView
+                    android:id="@+id/post_location"
                     android:layout_width="wrap_content"
-                    android:layout_height="32dp"/>
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/post_title"
+                    android:paddingTop="@dimen/element_spacing_normal"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:visibility="gone"
+                    style="@style/TextHeaderSub.Location"/>
+
+            <TextView
+                    android:id="@+id/post_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4 minutes ago"
+                    android:paddingTop="@dimen/element_spacing_normal"
+                    android:layout_below="@+id/post_title"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    style="@style/TextHeaderSub"/>
+
+            <TextView
+                    android:id="@+id/post_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="What the heck happened"
+                    android:paddingTop="@dimen/element_spacing_normal"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/post_date"
+                    style="@style/TextBody"/>
+
+            <HorizontalScrollView
+                    android:id="@+id/post_tags_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:requiresFadingEdge="horizontal"
+                    android:fadingEdgeLength="16dp"
+                    android:fillViewport="false"
+                    android:layout_below="@+id/post_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:visibility="gone">
+
+                <LinearLayout
+                        android:id="@+id/post_tags"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"/>
         </HorizontalScrollView>
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

@@ -61,10 +61,10 @@
     <dimen name="nav_drawer_user_account_height">140dp</dimen>
     <dimen name="nav_drawer_width">260dp</dimen>
 
-    <!-- cards -->
+
     <!-- Card -->
     <dimen name="card_base_empty_height">72dp</dimen>
-
+    <dimen name="grid_spacing">4dp</dimen>
     <dimen name="card_birth_width">350dp</dimen>
     <dimen name="card_mayknow_margin_top">3dp</dimen>
 
@@ -73,4 +73,7 @@
     <dimen name="card_shadow_start_elevation">2dp</dimen>
     <dimen name="card_shadow_end_elevation">4dp</dimen>
     <dimen name="card_list_padding">8dp</dimen>
+    <dimen name="column_width">100dp</dimen>
+
+    <dimen name="tag_badge_color_size">12dp</dimen>
 </resources>

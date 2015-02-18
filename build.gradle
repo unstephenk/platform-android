@@ -3,11 +3,17 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            name 'Sonatype SNAPSHOTS'
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.1'
+        classpath 'com.android.tools.build:gradle:1.1.0-rc3'
         classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.+'
-        classpath 'org.robolectric:robolectric-gradle-plugin:0.13.+'
+        //classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.14.2-SNAPSHOT'
+        classpath 'com.github.triplet.gradle:play-publisher:1.0.2'
+        classpath 'org.ajoberstar:gradle-git:1.0.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -17,6 +23,10 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven {
+            name 'Sonatype SNAPSHOTS'
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
     }
 
     gradle.projectsEvaluated {
@@ -25,3 +35,9 @@ allprojects {
         }
     }
 }
+
+// Disabling spoon's test for now as the android plugin has broken the spoon plugin. See
+//https://github.com/stanfy/spoon-gradle-plugin/issues/37
+
+// Test resource copy is broken as well. See
+//https://code.google.com/p/android/issues/detail?id=136013

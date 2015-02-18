@@ -24,6 +24,9 @@ import com.ushahidi.android.data.entity.UserEntity;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -34,6 +37,8 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
+@Config(manifest=Config.NONE)
+@RunWith(RobolectricTestRunner.class)
 public class UserEntityMapperTest extends BaseTestCase {
 
     private UserEntityMapper mUserEntityMapper;

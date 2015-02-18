@@ -20,12 +20,15 @@ package com.ushahidi.android.data.database;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.data.BuildConfig;
 import com.ushahidi.android.data.entity.PostEntity;
+import com.ushahidi.android.data.entity.PostTagEntity;
+import com.ushahidi.android.data.entity.TagEntity;
 import com.ushahidi.android.data.exception.PostNotFoundException;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
@@ -78,18 +81,35 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
         this.asyncRun(new Runnable() {
             @Override
             public void run() {
-                if (!isClosed()) {
-                    try {
-                        Log.e("DATA", "Repo " + postEntity.toString());
-                        cupboard().withDatabase(getWritableDatabase()).put(postEntity);
-                        callback.onPostEntityPut();
-                    } catch (Exception e) {
-                        callback.onError(e);
-                    }
-                }
+                puts(postEntity, callback);
             }
         });
 
+    }
+
+    private void puts(final PostEntity postEntity, final IPostEntityPutCallback callback) {
+        SQLiteDatabase db = getReadableDatabase();
+        try {
+            db.beginTransaction();
+
+                Long rows = cupboard().withDatabase(db).put(postEntity);
+                if ((rows > 0) && (postEntity.getPostTagEntityList() != null) && (
+                        postEntity.getPostTagEntityList().size() > 0)) {
+
+                    for (PostTagEntity postTagEntity : postEntity.getPostTagEntityList()) {
+                        postTagEntity.setPostId(postEntity.getId());
+                        cupboard().withDatabase(db).put(postTagEntity);
+                    }
+                }
+            db.setTransactionSuccessful();
+            callback.onPostEntityPut();
+        } catch (Exception e) {
+            callback.onError(e);
+        } finally {
+            if (db != null) {
+                db.endTransaction();
+            }
+        }
     }
 
     @Override
@@ -100,6 +120,8 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
             public void run() {
                 final PostEntity postEntity = get(id);
                 if (postEntity != null) {
+                    List<TagEntity> tags = getTagEntity(postEntity);
+                    postEntity.setTags(tags);
                     callback.onPostEntityLoaded(postEntity);
                 } else {
                     callback.onError(new PostNotFoundException());
@@ -115,8 +137,14 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
             @Override
             public void run() {
                 final List<PostEntity> postEntities = getPosts();
+                final List<PostEntity> postEntityList = new ArrayList<>();
                 if (postEntities != null) {
-                    callback.onPostEntitiesLoaded(postEntities);
+                    for (PostEntity postEntity : postEntities) {
+                        List<TagEntity> tags = getTagEntity(postEntity);
+                        postEntity.setTags(tags);
+                        postEntityList.add(postEntity);
+                    }
+                    callback.onPostEntitiesLoaded(postEntityList);
                 } else {
                     callback.onError(new PostNotFoundException());
                 }
@@ -133,6 +161,22 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
                 .byId(id).get();
     }
 
+    private List<TagEntity> getTagEntity(PostEntity postEntity) {
+        List<TagEntity> tagEntityList = new ArrayList<>();
+
+        // fetch posttag entity
+        List<PostTagEntity> postTagEntityList = cupboard().withDatabase(getReadableDatabase())
+                .query(PostTagEntity.class)
+                .withSelection("mPostId = ?", String.valueOf(postEntity.getId())).list();
+
+        for (PostTagEntity postTagEntity : postTagEntityList) {
+            TagEntity tagEntity = cupboard().withDatabase(getReadableDatabase())
+                    .get(TagEntity.class, postTagEntity.getTagId());
+            tagEntityList.add(tagEntity);
+        }
+
+        return tagEntityList;
+    }
 
     @Override
     public synchronized void put(final List<PostEntity> postEntities,
@@ -140,23 +184,11 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
         this.asyncRun(new Runnable() {
             @Override
             public void run() {
-                SQLiteDatabase db = null;
 
-                try {
-                    db = getWritableDatabase();
-                    db.beginTransaction();
-                    for (PostEntity postEntity : postEntities) {
-                        cupboard().withDatabase(db).put(postEntity);
-                    }
-                    db.setTransactionSuccessful();
-                    callback.onPostEntityPut();
-                } catch (Exception e) {
-                    callback.onError(e);
-                } finally {
-                    if (db != null) {
-                        db.endTransaction();
-                    }
+                for (PostEntity postEntity : postEntities) {
+                    puts(postEntity, callback);
                 }
+
             }
         });
     }

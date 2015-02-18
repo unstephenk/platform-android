@@ -1,0 +1,136 @@
+{
+    "count": 6,
+    "results": [
+        {
+            "id": 1,
+            "url": "http: //ushahidi-platform-api-release.herokuapp.com/api/v2/tags/1 ",
+            "parent ": null,
+            "tag ": "Testtag ",
+            "slug ": "test-tag ",
+            "type ": "category ",
+            "color ": null,
+            "icon ": "tag ",
+            "description ": null,
+            "priority ": 0,
+            "created ": "1970-01-01T00: 00: 00+00: 00 ",
+            "role ": null,
+            "allowed_methods ": [
+                "get ",
+                "post ",
+                "put ",
+                "delete"
+            ]
+        },
+        {
+            "id ": 2,
+            "url ": "http: //ushahidi-platform-api-release.herokuapp.com/api/v2/tags/2 ",
+            "parent ": null,
+            "tag ": "Duplicate ",
+            "slug ": "duplicate ",
+            "type ": "category ",
+            "color ": null,
+            "icon ": "tag ",
+            "description ": null,
+            "priority ": 0,
+            "created ": "1970-01-01T00: 00: 00+00: 00 ",
+            "role ": null,
+            "allowed_methods ": [
+                "get ",
+                "post ",
+                "put ",
+                "delete "
+            ]
+        },
+        {
+            "id ": 3,
+            "url ": "http: //ushahidi-platform-api-release.herokuapp.com/api/v2/tags/3 ",
+            "parent ": null,
+            "tag ": "Disaster ",
+            "slug ": "disaster ",
+            "type ": "category ",
+            "color ": null,
+            "icon ": "tag ",
+            "description ": null,
+            "priority ": 0,
+            "created ": "1970-01-01T00: 00: 00+00: 00 ",
+            "role ": null,
+            "allowed_methods ": [
+                "get ",
+                "post ",
+                "put ",
+                "delete "
+            ]
+        },
+        {
+            "id ": 4,
+            "url ": "http: //ushahidi-platform-api-release.herokuapp.com/api/v2/tags/4 ",
+            "parent ": {
+                "id ": 3,
+                "url ": "http: //ushahidi-platform-api-release.herokuapp.com/api/v2/tags/3"
+            },
+            "tag ": "Explosion ",
+            "slug ": "explosion ",
+            "type ": "category ",
+            "color ": null,
+            "icon ": "tag ",
+            "description ": null,
+            "priority ": 0,
+            "created ": "1970-01-01T00: 00: 00+00: 00 ",
+            "role ": null,
+            "allowed_methods ": [
+                "get ",
+                "post ",
+                "put ",
+                "delete "
+            ]
+        },
+        {
+            "id ": 5,
+            "url ": "http: //ushahidi-platform-api-release.herokuapp.com/api/v2/tags/5 ",
+            "parent ": null,
+            "tag ": "Todo ",
+            "slug ": "todo ",
+            "type ": "status ",
+            "color ": null,
+            "icon ": "tag ",
+            "description ": null,
+            "priority ": 0,
+            "created ": "1970-01-01T00: 00: 00+00: 00 ",
+            "role ": null,
+            "allowed_methods ": [
+                "get ",
+                "post ",
+                "put ",
+                "delete "
+            ]
+        },
+        {
+            "id ": 6,
+            "url ": "http: //ushahidi-platform-api-release.herokuapp.com/api/v2/tags/6 ",
+            "parent ": null,
+            "tag ": "Done ",
+            "slug ": "done ",
+            "type ": "status ",
+            "color ": null,
+            "icon ": "tag ",
+            "description ": null,
+            "priority ": 0,
+            "created ": "1970-01-01T00: 00: 00+00: 00 ",
+            "role ": null,
+            "allowed_methods ": [
+                "get ",
+                "post ",
+                "put ",
+                "delete "
+            ]
+        }
+    ],
+    "limit ": null,
+    "offset ": 0,
+    "order ": "asc ",
+    "orderby ": "id ",
+    "curr ": "http: //ushahidi-platform-api-release.herokuapp.com/api/v2/tags?orderby=id&order=asc&offset=0 ",
+    "next ": "http: //ushahidi-platform-api-release.herokuapp.com/api/v2/tags?orderby=id&order=asc&offset=0 ",
+    "prev ": "http: //ushahidi-platform-api-release.herokuapp.com/api/v2/tags?orderby=id&order=asc&offset=0 ",
+    "total_count ": 6
+}

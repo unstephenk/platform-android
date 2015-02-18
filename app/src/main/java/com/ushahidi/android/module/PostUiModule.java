@@ -19,7 +19,6 @@ package com.ushahidi.android.module;
 
 import com.ushahidi.android.core.entity.Post;
 import com.ushahidi.android.core.repository.IDeploymentRepository;
-import com.ushahidi.android.core.repository.IUserRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.Search;
@@ -28,7 +27,8 @@ import com.ushahidi.android.core.usecase.deployment.GetActiveDeployment;
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.core.usecase.post.FetchPost;
 import com.ushahidi.android.core.usecase.post.ListPost;
-import com.ushahidi.android.core.usecase.user.ListDeploymentUsers;
+import com.ushahidi.android.core.usecase.tag.FetchTag;
+import com.ushahidi.android.core.usecase.tag.ListTag;
 import com.ushahidi.android.ui.activity.PostActivity;
 import com.ushahidi.android.ui.fragment.ListPostFragment;
 
@@ -56,11 +56,22 @@ public final class PostUiModule {
     }
 
     @Provides
+    ListTag providesListTag(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+        return new ListTag(threadExecutor, postExecutionThread);
+    }
+
+    @Provides
     FetchPost providesFetchPost(ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
         return new FetchPost(threadExecutor,
                 postExecutionThread);
 
+    }
+
+    @Provides
+    FetchTag providesFetchTag(ThreadExecutor threadExecutor,
+            PostExecutionThread postExecutionThread) {
+        return new FetchTag(threadExecutor, postExecutionThread);
     }
 
     @Provides

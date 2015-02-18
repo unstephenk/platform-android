@@ -28,6 +28,7 @@ import com.ushahidi.android.state.ApplicationState;
 import com.ushahidi.android.state.IDeploymentState;
 import com.ushahidi.android.state.IUserState;
 import com.ushahidi.android.ui.widget.NavDrawerItem;
+import com.ushahidi.android.util.GravatarUtil;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -62,6 +63,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import dagger.ObjectGraph;
+import timber.log.Timber;
 
 import static android.view.View.GONE;
 import static android.view.View.OnClickListener;
@@ -427,7 +429,7 @@ public abstract class BaseActivity extends ActionBarActivity {
                 ImageView userProfileImage = (ImageView) itemView
                         .findViewById(R.id.user_account_profile_image);
                 if (userModel.getEmail() != null) {
-                    Picasso.with(this).load("").into(userProfileImage);
+                    Picasso.with(this).load(GravatarUtil.url(userModel.getEmail())).into(userProfileImage);
                 }
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

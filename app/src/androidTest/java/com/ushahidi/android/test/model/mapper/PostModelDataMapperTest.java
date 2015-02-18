@@ -75,7 +75,6 @@ public class PostModelDataMapperTest extends CustomAndroidTestCase {
     public void testPostMap() throws Exception {
         Post post = new Post();
         post.setId(DUMMY_ID);
-        post.setUser(DUMMY_USER);
         post.setContent(DUMMY_CONTENT);
         post.setSlug(DUMMY_SLUG);
         post.setAuthorEmail(DUMMY_ARTHUR_EMAIL);
@@ -92,7 +91,6 @@ public class PostModelDataMapperTest extends CustomAndroidTestCase {
 
         assertThat(postModel).isInstanceOf(PostModel.class);
         assertThat(postModel.getId()).isEqualTo(DUMMY_ID);
-        assertThat(postModel.getUser()).isEqualTo(DUMMY_USER);
         assertThat(postModel.getContent()).isEqualTo(DUMMY_CONTENT);
         assertThat(postModel.getUpdated()).isEqualTo(DUMMY_UPDATED);
         assertThat(postModel.getSlug()).isEqualTo(DUMMY_SLUG);
@@ -107,7 +105,6 @@ public class PostModelDataMapperTest extends CustomAndroidTestCase {
 
         PostModel postModel = new PostModel();
         postModel.setId(DUMMY_ID);
-        postModel.setUser(DUMMY_USER);
         postModel.setContent(DUMMY_CONTENT);
         postModel.setSlug(DUMMY_SLUG);
         postModel.setAuthorEmail(DUMMY_ARTHUR_EMAIL);
@@ -117,14 +114,12 @@ public class PostModelDataMapperTest extends CustomAndroidTestCase {
         postModel.setUpdated(DUMMY_UPDATED);
         postModel.setParent(DUMMY_PARENT);
         postModel.setType(DUMMY_TYPE);
-        postModel.setTags(DUMMY_TAGS);
         postModel.setTitle(DUMMY_POST_TITLE);
 
         Post post = mPostModelDataMapper.unmap(postModel);
 
         assertThat(post).isInstanceOf(Post.class);
         assertThat(post.getId()).isEqualTo(DUMMY_ID);
-        assertThat(post.getUser()).isEqualTo(DUMMY_USER);
         assertThat(post.getContent()).isEqualTo(DUMMY_CONTENT);
         assertThat(post.getUpdated()).isEqualTo(DUMMY_UPDATED);
         assertThat(post.getSlug()).isEqualTo(DUMMY_SLUG);

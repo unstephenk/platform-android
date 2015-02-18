@@ -48,6 +48,14 @@ public interface ITagRepository {
     void getTagList(TagListCallback tagListCallback);
 
     /**
+     * Get a list of {@link com.ushahidi.android.core.entity.Tag}.
+     *
+     * @param tagListCallback A {@link TagListCallback} used for notifying clients about the status
+     *                        of the operation.
+     */
+    void getTagListViaApi(TagListCallback tagListCallback);
+
+    /**
      * Get an {@link com.ushahidi.android.core.entity.Tag} by id.
      *
      * @param tagId              The tag id used for retrieving tag data.

@@ -31,10 +31,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -47,6 +50,8 @@ import static org.mockito.Mockito.verify;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
+ @Config(manifest=Config.NONE)
+ @RunWith(RobolectricTestRunner.class)
 public class DeploymentDataRepositoryTest extends BaseTestCase {
 
     @Rule

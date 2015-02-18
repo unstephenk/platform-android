@@ -47,7 +47,7 @@ public class PostApi implements IPostApi {
     @Override
     public void getPostEntityList(final PostEntityListCallback postEntityListCallback) {
         Preconditions.checkNotNull(postEntityListCallback);
-        if (ApiUtil.isDeviceConnectedToInternet(mContext)) {
+        if (isDeviceConnectedToInternet(mContext)) {
             mPostService.posts(new Callback<Posts>() {
 
                 @Override

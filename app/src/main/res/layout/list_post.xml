@@ -22,9 +22,12 @@
 
     <android.support.v7.widget.RecyclerView
             android:id="@id/android:list"
+            android:padding="@dimen/grid_spacing"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:columnWidth="@dimen/column_width"
+            android:clipToPadding="false"/>
 
     <TextView
             android:id="@id/android:empty"
@@ -48,7 +51,6 @@
                 fab:fab_colorNormal="@color/fab_color_primary"
                 fab:fab_colorPressed="@color/fab_color_pressed"
                 fab:fab_colorRipple="@color/flat_button_hover_color"
-                android:visibility="gone"
                 android:layout_marginBottom="16dp"/>
 
     </FrameLayout>

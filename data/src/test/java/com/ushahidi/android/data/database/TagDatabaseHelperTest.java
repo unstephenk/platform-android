@@ -25,14 +25,19 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 /**
  * Tests {@link com.ushahidi.android.data.database.TagDatabaseHelper}
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
+@Config(manifest=Config.NONE)
+@RunWith(RobolectricTestRunner.class)
 public class TagDatabaseHelperTest extends BaseTestCase {
 
     @Rule

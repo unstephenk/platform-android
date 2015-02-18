@@ -21,6 +21,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import com.ushahidi.android.core.entity.Post;
+import com.ushahidi.android.core.exception.ErrorWrap;
 import com.ushahidi.android.core.repository.IPostRepository;
 import com.ushahidi.android.data.entity.PostEntity;
 import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
@@ -142,6 +143,8 @@ public class PostDataRepository implements IPostRepository {
                 final List<Post> posts = mPostEntityMapper
                         .map(postEntityList);
                 postListCallback.onPostListLoaded(posts);
+                //cache to local db
+                put(posts);
             }
 
             @Override
@@ -209,5 +212,23 @@ public class PostDataRepository implements IPostRepository {
                 callback.onError(new RepositoryError(exception));
             }
         });
+    }
+
+    private void put(List<Post> posts) {
+
+        for(Post post : posts) {
+            putPost(post, new PostAddCallback(){
+
+                @Override
+                public void onPostAdded() {
+
+                }
+
+                @Override
+                public void onError(ErrorWrap error) {
+
+                }
+            } );
+        }
     }
 }

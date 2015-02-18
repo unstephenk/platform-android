@@ -17,29 +17,32 @@
 
 package com.ushahidi.android.data.api;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
+import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.ushahidi.android.data.BaseTestCase;
 
 import org.junit.Before;
+import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
 import java.util.concurrent.Executor;
+
+import static org.mockito.Mockito.spy;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public abstract class BaseApiTestCase extends BaseTestCase {
 
-    protected Gson mGson;
+    protected MockWebServer mMockWebServer;
+
+    protected Executor httpExecutor = spy(new SynchronousExecutor());
+
+    protected Executor callbackExecutor = spy(new SynchronousExecutor());
 
     @Before
-    public void setUp() throws IOException {
-        GsonBuilder builder = new GsonBuilder();
-        builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-        builder.registerTypeAdapter(Date.class, new DateDeserializer());
-        mGson = builder.create();
+    public void setUp() throws Exception {
+        super.setUp();
+        MockitoAnnotations.initMocks(this);
+        mMockWebServer = new MockWebServer();
     }
 
     public class SynchronousExecutor implements Executor {

@@ -98,7 +98,7 @@ Then in the project's root directory, issue:
 
 `./release major milestone alpha`
 
-This should build the app, versioned it, create a tag and push it to the remote repo and publish
+This should build the app, version it, create a tag and push it to the remote repo and publish
 to the Google Playstore's alpha track.
 
 [1]: https://github.com/ushahidi/platform

@@ -25,15 +25,21 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 /**
  * Tests {@link com.ushahidi.android.data.database.BaseDatabseHelper}
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
+@Config(manifest=Config.NONE)
+@RunWith(RobolectricTestRunner.class)
 public class DeploymentDatabaseHelperTest extends BaseTestCase {
 
     @Rule
@@ -56,7 +62,7 @@ public class DeploymentDatabaseHelperTest extends BaseTestCase {
         MockitoAnnotations.initMocks(this);
         clearSingleton(DeploymentDatabaseHelper.class);
         mBaseDatabseHelper = DeploymentDatabaseHelper
-                .getInstance(Robolectric.application, mMockThreadExecutor);
+                .getInstance(RuntimeEnvironment.application, mMockThreadExecutor);
     }
 
     @Test

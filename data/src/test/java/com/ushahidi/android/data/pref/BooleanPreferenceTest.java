@@ -21,7 +21,11 @@ import com.ushahidi.android.data.BaseTestCase;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -34,6 +38,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
+@Config(manifest=Config.NONE)
+@RunWith(RobolectricTestRunner.class)
 public class BooleanPreferenceTest extends BaseTestCase {
 
     private SharedPreferences mSharedPreferences;
@@ -43,7 +49,7 @@ public class BooleanPreferenceTest extends BaseTestCase {
     @Before
     public void setup() {
         mSharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(Robolectric.application);
+                .getDefaultSharedPreferences(RuntimeEnvironment.application);
     }
 
     @Test

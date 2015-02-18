@@ -18,6 +18,7 @@
 package com.ushahidi.android.util;
 
 import java.util.Collection;
+import java.util.Locale;
 
 /**
  * Generic Utilities for the application
@@ -32,5 +33,15 @@ public class Util {
 
     public static int collectionSize(Collection<?> collection) {
         return collection != null ? collection.size() : 0;
+    }
+
+    public static String capitalizeFirstLetter(String text) {
+        if (text.length() == 0) {
+            return text;
+        }
+
+        return text.substring(0, 1).toUpperCase(Locale.getDefault())
+                + text.substring(1).toLowerCase(Locale.getDefault());
+
     }
 }

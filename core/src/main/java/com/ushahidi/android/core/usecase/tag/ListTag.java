@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class ListTag implements IListTag {
 
-    private final ITagRepository mITagRepository;
+    private ITagRepository mTagRepository;
 
     private final ThreadExecutor mThreadExecutor;
 
@@ -57,21 +57,27 @@ public class ListTag implements IListTag {
     /**
      * Constructor.
      *
-     * @param tagRepository       A {@link com.ushahidi.android.core.repository.ITagRepository} as
-     *                            a source for retrieving data.
      * @param threadExecutor      {@link com.ushahidi.android.core.task.ThreadExecutor} used to
      *                            execute this use case in a background thread.
      * @param postExecutionThread {@link com.ushahidi.android.core.task.PostExecutionThread} used to
      *                            post updates when the use case has been executed.
      */
-    public ListTag(ITagRepository tagRepository, ThreadExecutor threadExecutor,
+    public ListTag(ThreadExecutor threadExecutor,
             PostExecutionThread postExecutionThread) {
-        if (tagRepository == null || threadExecutor == null || postExecutionThread == null) {
+        if ( threadExecutor == null || postExecutionThread == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
         }
-        mITagRepository = tagRepository;
+
         mThreadExecutor = threadExecutor;
         mPostExecutionThread = postExecutionThread;
+    }
+
+    public void setTagRepository(ITagRepository tagRepository) {
+        if(tagRepository == null) {
+            throw new IllegalArgumentException("ITagRepository cannot be null");
+        }
+
+        mTagRepository = tagRepository;
     }
 
     @Override
@@ -85,7 +91,7 @@ public class ListTag implements IListTag {
 
     @Override
     public void run() {
-        mITagRepository.getTagList(mRepositoryCallback);
+        mTagRepository.getTagList(mRepositoryCallback);
     }
 
     private void notifySuccess(final List<Tag> tagList) {

@@ -21,21 +21,26 @@ import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.ushahidi.android.core.repository.IDeploymentRepository;
 import com.ushahidi.android.core.repository.IPostRepository;
+import com.ushahidi.android.core.repository.ITagRepository;
 import com.ushahidi.android.core.repository.IUserRepository;
 import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.core.usecase.user.ListDeploymentUsers;
 import com.ushahidi.android.data.database.DeploymentDatabaseHelper;
 import com.ushahidi.android.data.database.PostDatabaseHelper;
+import com.ushahidi.android.data.database.TagDatabaseHelper;
 import com.ushahidi.android.data.database.UserDatabaseHelper;
 import com.ushahidi.android.data.entity.mapper.DeploymentEntityMapper;
 import com.ushahidi.android.data.entity.mapper.PostEntityMapper;
+import com.ushahidi.android.data.entity.mapper.TagEntityMapper;
 import com.ushahidi.android.data.entity.mapper.UserAccountEntityMapper;
 import com.ushahidi.android.data.entity.mapper.UserEntityMapper;
 import com.ushahidi.android.data.repository.DeploymentDataRepository;
 import com.ushahidi.android.data.repository.PostDataRepository;
+import com.ushahidi.android.data.repository.TagDataRepository;
 import com.ushahidi.android.data.repository.UserDataRepository;
 import com.ushahidi.android.data.repository.datasource.post.PostDataSourceFactory;
+import com.ushahidi.android.data.repository.datasource.tag.TagDataSourceFactory;
 import com.ushahidi.android.data.repository.datasource.user.UserDataSourceFactory;
 import com.ushahidi.android.data.validator.UrlValidator;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
@@ -140,14 +145,28 @@ public class DataModule {
     }
 
     @Provides
+    @Singleton
     IPostRepository providePostRepository(PostDataSourceFactory postDataSourceFactory, PostEntityMapper entityMapper) {
         return PostDataRepository.getInstance(postDataSourceFactory, entityMapper);
     }
 
     @Provides
     @Singleton
+    ITagRepository provideTagRepository(TagDataSourceFactory tagDataSourceFactory,
+            TagEntityMapper entityMapper) {
+        return TagDataRepository.getInstance(tagDataSourceFactory, entityMapper);
+    }
+
+    @Provides
+    @Singleton
     PostEntityMapper providesPostEntityMapper() {
         return new PostEntityMapper();
+    }
+
+    @Provides
+    @Singleton
+    TagEntityMapper providesTagEntityMapper() {
+        return new TagEntityMapper();
     }
 
     @Provides
@@ -194,6 +213,12 @@ public class DataModule {
 
     @Provides
     @Singleton
+    TagDatabaseHelper provideTagDatabaseHelper(Context context, ThreadExecutor threadExecutor) {
+        return TagDatabaseHelper.getInstance(context,threadExecutor);
+    }
+
+    @Provides
+    @Singleton
     public AccountManager provideAccountManager(Context context) {
         return AccountManager.get(context);
     }
@@ -208,6 +233,13 @@ public class DataModule {
     @Singleton
     public PostDataSourceFactory providePostDataSourceFactory(Context context, PostDatabaseHelper postDatabaseHelper) {
         return  new PostDataSourceFactory(context, postDatabaseHelper);
+    }
+
+    @Provides
+    @Singleton
+    public TagDataSourceFactory provideTagDataSourceFactory(Context context,
+            TagDatabaseHelper tagDatabaseHelper) {
+        return new TagDataSourceFactory(context, tagDatabaseHelper);
     }
 
     @Provides

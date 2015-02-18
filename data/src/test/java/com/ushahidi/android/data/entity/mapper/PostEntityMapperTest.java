@@ -27,6 +27,9 @@ import com.ushahidi.android.data.entity.UserEntity;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +45,8 @@ import static org.mockito.Mockito.mock;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
+@Config(manifest=Config.NONE)
+@RunWith(RobolectricTestRunner.class)
 public class PostEntityMapperTest extends BaseTestCase {
 
     private static final long DUMMY_ID = 1;
@@ -106,7 +111,6 @@ public class PostEntityMapperTest extends BaseTestCase {
     public void shouldMapPostEntityToPost() throws Exception {
         mPostEntity = new PostEntity();
         mPostEntity.setId(DUMMY_ID);
-        mPostEntity.setUser(DUMMY_USER_ENTITY);
         mPostEntity.setContent(DUMMY_CONTENT);
         mPostEntity.setSlug(DUMMY_SLUG);
         mPostEntity.setAuthorEmail(DUMMY_ARTHUR_EMAIL);
@@ -123,7 +127,6 @@ public class PostEntityMapperTest extends BaseTestCase {
 
         assertThat(post, is(instanceOf(Post.class)));
         assertThat(post.getId(), is(DUMMY_ID));
-        assertThat(post.getUser(), is(instanceOf(User.class)));
         assertThat(post.getContent(), is(DUMMY_CONTENT));
         assertThat(post.getUpdated(), is(DUMMY_UPDATED));
         assertThat(post.getSlug(), is(DUMMY_SLUG));
@@ -138,7 +141,6 @@ public class PostEntityMapperTest extends BaseTestCase {
     public void shouldUnMapFromPostToPostEntity() throws Exception {
         mPost = new Post();
         mPost.setId(DUMMY_ID);
-        mPost.setUser(DUMMY_USER);
         mPost.setContent(DUMMY_CONTENT);
         mPost.setSlug(DUMMY_SLUG);
         mPost.setAuthorEmail(DUMMY_ARTHUR_EMAIL);
@@ -155,7 +157,6 @@ public class PostEntityMapperTest extends BaseTestCase {
 
         assertThat(postEntity, is(instanceOf(PostEntity.class)));
         assertThat(postEntity.getId(), is(DUMMY_ID));
-        assertThat(postEntity.getUser(), is(instanceOf(UserEntity.class)));
         assertThat(postEntity.getContent(), is(DUMMY_CONTENT));
         assertThat(postEntity.getUpdated(), is(DUMMY_UPDATED));
         assertThat(postEntity.getSlug(), is(DUMMY_SLUG));

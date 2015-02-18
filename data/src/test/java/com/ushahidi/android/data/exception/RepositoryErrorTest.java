@@ -21,8 +21,11 @@ import com.ushahidi.android.data.BaseTestCase;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.mockito.Mockito.verify;
 
@@ -31,6 +34,8 @@ import static org.mockito.Mockito.verify;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
+@Config(manifest=Config.NONE)
+@RunWith(RobolectricTestRunner.class)
 public class RepositoryErrorTest extends BaseTestCase {
 
     private RepositoryError mRepositoryError;
@@ -39,7 +44,7 @@ public class RepositoryErrorTest extends BaseTestCase {
     private Exception mMockException;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mRepositoryError = new RepositoryError(mMockException);
     }

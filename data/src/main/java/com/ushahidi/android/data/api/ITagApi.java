@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2015 Ushahidi.
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program in the file LICENSE-AGPL. If not, see
+ * https://www.gnu.org/licenses/agpl-3.0.html
+ */
+
+package com.ushahidi.android.data.api;
+
+import com.ushahidi.android.data.entity.TagEntity;
+
+import java.util.List;
+
+/**
+ * Callback for Tag service
+ *
+ * @author Ushahidi Team <team@ushahidi.com>
+ */
+public interface ITagApi {
+
+    /**
+     * Get a list of {@link com.ushahidi.android.core.entity.Post}.
+     *
+     * @param getEntityListCallback A {@link TagEntityListCallback} used for notifying clients about
+     *                              the status of the operation.
+     */
+    void getTagEntityList(TagEntityListCallback getEntityListCallback);
+
+    /**
+     * Callback used for notifying the client when either a post list has been loaded successfully
+     * or an error occurred during the process.
+     */
+    interface TagEntityListCallback {
+
+        void onTagEntityListLoaded(List<TagEntity> tagEntityList);
+
+        void onError(Exception e);
+    }
+}

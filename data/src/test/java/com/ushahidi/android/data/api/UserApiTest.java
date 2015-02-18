@@ -23,18 +23,20 @@ import com.ushahidi.android.data.api.auth.Payload;
 import com.ushahidi.android.data.api.service.UserService;
 import com.ushahidi.android.data.entity.UserEntity;
 import com.ushahidi.android.data.exception.NetworkConnectionException;
-import com.ushahidi.android.data.repository.datasource.user.UserDataSource;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import android.content.Context;
 
@@ -53,6 +55,8 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
+@Config(manifest=Config.NONE)
+@RunWith(RobolectricTestRunner.class)
 public class UserApiTest extends BaseTestCase {
 
     @Rule
@@ -85,9 +89,9 @@ public class UserApiTest extends BaseTestCase {
 
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mMockContext = Robolectric.application.getBaseContext();
+        mMockContext = RuntimeEnvironment.application.getBaseContext();
         mUserApi = spy(new UserApi(mMockContext, mMockUserService));
         mSpyPayload = spy(new Payload("", "", "", "", "", ""));
     }

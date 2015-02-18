@@ -65,7 +65,6 @@ public class PostEntityMapper {
             post.setAuthorRealname(postEntity.getAuthorRealname());
             post.setContent(postEntity.getContent());
             post.setStatus(postEntity.getStatus());
-            post.setUser(mUserEntityMapper.map(postEntity.getUser()));
 
         }
 
@@ -89,7 +88,6 @@ public class PostEntityMapper {
             postEntity.setAuthorRealname(post.getAuthorRealname());
             postEntity.setContent(post.getContent());
             postEntity.setStatus(post.getStatus());
-            postEntity.setUser(mUserEntityMapper.unmap(post.getUser()));
         }
         return postEntity;
     }

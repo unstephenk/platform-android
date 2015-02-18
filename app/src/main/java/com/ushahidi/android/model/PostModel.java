@@ -17,9 +17,6 @@
 
 package com.ushahidi.android.model;
 
-import com.ushahidi.android.core.entity.Tag;
-import com.ushahidi.android.core.entity.User;
-
 import java.util.Date;
 import java.util.List;
 
@@ -31,8 +28,6 @@ import java.util.List;
 public class PostModel extends Model {
 
     private long mParent;
-
-    private User mUser;
 
     private String mType;
 
@@ -54,7 +49,7 @@ public class PostModel extends Model {
 
     private String mValues;
 
-    private List<Tag> mTags;
+    private List<TagModel> mTags;
 
     public long getParent() {
         return mParent;
@@ -62,14 +57,6 @@ public class PostModel extends Model {
 
     public void setParent(long parent) {
         mParent = parent;
-    }
-
-    public User getUser() {
-        return mUser;
-    }
-
-    public void setUser(User user) {
-        mUser = user;
     }
 
     public String getType() {
@@ -153,11 +140,11 @@ public class PostModel extends Model {
         mValues = values;
     }
 
-    public List<Tag> getTags() {
+    public List<TagModel> getTags() {
         return mTags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(List<TagModel> tags) {
         mTags = tags;
     }
 
@@ -166,7 +153,6 @@ public class PostModel extends Model {
         return "PostEntity{" +
                 "_id=" + _id +
                 ", mParent=" + mParent +
-                ", mUser=" + mUser +
                 ", mType='" + mType + '\'' +
                 ", mTitle='" + mTitle + '\'' +
                 ", mSlug='" + mSlug + '\'' +

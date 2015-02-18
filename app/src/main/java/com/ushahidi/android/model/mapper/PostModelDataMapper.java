@@ -20,6 +20,7 @@ package com.ushahidi.android.model.mapper;
 import com.google.common.base.Preconditions;
 
 import com.ushahidi.android.core.entity.Post;
+import com.ushahidi.android.data.entity.mapper.TagEntityMapper;
 import com.ushahidi.android.model.PostModel;
 
 import java.util.ArrayList;
@@ -33,8 +34,10 @@ import java.util.List;
  */
 public class PostModelDataMapper {
 
+    private TagModelDataMapper mTagModelDataMapper;
+
     public PostModelDataMapper() {
-        // Do nothing
+        mTagModelDataMapper = new TagModelDataMapper();
     }
 
     /**
@@ -46,7 +49,6 @@ public class PostModelDataMapper {
      */
     public PostModel map(Post post) {
         Preconditions.checkNotNull(post, "Post cannot be null");
-
         PostModel postModel = new PostModel();
         postModel.setId(post.getId());
         postModel.setStatus(post.getStatus());
@@ -55,12 +57,11 @@ public class PostModelDataMapper {
         postModel.setUpdated(post.getUpdated());
         postModel.setType(post.getType());
         postModel.setSlug(post.getSlug());
-        postModel.setTags(post.getTags());
+        postModel.setTags(mTagModelDataMapper.map(post.getTags()));
         postModel.setAuthorEmail(post.getAuthorEmail());
         postModel.setAuthorRealname(post.getAuthorRealname());
         postModel.setContent(post.getContent());
         postModel.setStatus(post.getStatus());
-        postModel.setUser(post.getUser());
 
         return postModel;
     }
@@ -76,12 +77,11 @@ public class PostModelDataMapper {
         post.setUpdated(postModel.getUpdated());
         post.setType(postModel.getType());
         post.setSlug(postModel.getSlug());
-        post.setTags(postModel.getTags());
+        post.setTags(mTagModelDataMapper.unmap(postModel.getTags()));
         post.setAuthorEmail(postModel.getAuthorEmail());
         post.setAuthorRealname(postModel.getAuthorRealname());
         post.setContent(postModel.getContent());
         post.setStatus(postModel.getStatus());
-        post.setUser(postModel.getUser());
 
         return post;
     }

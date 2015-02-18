@@ -56,8 +56,9 @@ public class ListTagTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        mListTag = new ListTag(mMockTagRepository, mMockThreadExecutor,
+        mListTag = new ListTag(mMockThreadExecutor,
                 mPostExecutionThread);
+        mListTag.setTagRepository(mMockTagRepository);
 
     }
 

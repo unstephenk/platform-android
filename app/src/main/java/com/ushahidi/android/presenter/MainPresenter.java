@@ -123,6 +123,7 @@ public class MainPresenter implements IPresenter {
 
         }
     }
+
     @Subscribe
     public void onActiveUserChanged(IUserState.AccountChangedEvent event) {
         mUserAccountModel = mUserState.getActiveUserAccount();

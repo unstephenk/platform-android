@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Ushahidi.
+ * Copyright (c) 2015 Ushahidi.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License as published by the Free
@@ -15,32 +15,30 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.core.entity;
+package com.ushahidi.android.data;
 
-import com.ushahidi.android.core.Entity;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * Value Entity
- *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class Value extends Entity {
+public class TestHelper {
 
-    private Location mLocation;
+    public static String getResource(String resourceName) throws  IOException {
+        InputStream inputStream = TestHelper.class.getResourceAsStream("/"+resourceName);
 
-    public Value() {
-        // Default constructor
+        assert(inputStream != null);
+        int n;
+        byte[] buffer = new byte[81992];
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while ((n = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, n);
+        }
+
+        return new String(bos.toByteArray());
     }
-
-    @Override
-    public Long getId() {
-        return null;
-    }
-
-    @Override
-    public void setId(Long id) {
-
-    }
-
-
 }

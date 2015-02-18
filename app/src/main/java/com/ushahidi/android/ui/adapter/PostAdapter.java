@@ -19,7 +19,14 @@ package com.ushahidi.android.ui.adapter;
 
 import com.ushahidi.android.R;
 import com.ushahidi.android.model.PostModel;
+import com.ushahidi.android.model.TagModel;
+import com.ushahidi.android.util.Util;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -43,14 +51,20 @@ public class PostAdapter extends BaseRecyclerViewAdapter<PostModel> implements
     RecyclerviewViewHolder mRecyclerviewViewHolder = new RecyclerviewViewHolder() {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-            ((Widgets) viewHolder).title.setText(getItem(position).getTitle());
+            ((Widgets) viewHolder).title.setText(Util.capitalizeFirstLetter(
+                    getItem(position).getTitle()));
             ((Widgets) viewHolder).content.setText(getItem(position).getContent());
+            if(!Util.isCollectionEmpty(getItem(position).getTags())) {
+                for(TagModel tagModel : getItem(position).getTags()) {
+                    ((Widgets) viewHolder).tagContainer.setVisibility(View.VISIBLE);
+                    ((Widgets) viewHolder).renderTagBadge(tagModel.getTag(), tagModel.getIcon());
+                }
+            }
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            return new Widgets(LayoutInflater.from(
-                    viewGroup.getContext())
+            return new Widgets(viewGroup.getContext(), LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.list_post_item, viewGroup, false));
         }
 
@@ -112,11 +126,39 @@ public class PostAdapter extends BaseRecyclerViewAdapter<PostModel> implements
 
         ImageView post;
 
-        public Widgets(View convertView) {
+        TextView tagBadge;
+
+        LinearLayout tag;
+
+        ViewGroup tagContainer;
+
+        Context context;
+
+        int tagColorSize;
+
+        public Widgets(Context ctxt, View convertView) {
             super(convertView);
+            this.context = ctxt;
+            tagColorSize = this.context.getResources().getDimensionPixelSize(R.dimen.tag_badge_color_size);
             title = (TextView) convertView.findViewById(R.id.post_title);
             content = (TextView) convertView.findViewById(R.id.post_content);
             post = (ImageView) convertView.findViewById(R.id.post_image);
+            tag = (LinearLayout) convertView.findViewById(R.id.post_tags);
+            tagContainer = (ViewGroup) convertView.findViewById(R.id.post_tags_container);
+        }
+
+        public void renderTagBadge(String label, String color) {
+            tagBadge = (TextView) LayoutInflater.from(context).inflate(R.layout.include_tag_badge, tag, false);
+            tagBadge.setText(label);
+            ShapeDrawable colorDrawable = new ShapeDrawable(new OvalShape());
+            colorDrawable.setIntrinsicWidth(tagColorSize);
+            colorDrawable.setIntrinsicHeight(tagColorSize);
+            colorDrawable.getPaint().setStyle(Paint.Style.FILL);
+            tagBadge.setCompoundDrawablesWithIntrinsicBounds(colorDrawable,
+                    null, null, null);
+            colorDrawable.getPaint().setColor(Color.parseColor(color));
+            tag.setBackgroundColor(Color.parseColor(color));
+            tag.addView(tagBadge);
         }
     }
 }

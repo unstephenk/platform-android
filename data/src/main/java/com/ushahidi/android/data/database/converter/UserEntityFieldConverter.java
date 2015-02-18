@@ -15,7 +15,7 @@
  * https://www.gnu.org/licenses/agpl-3.0.html
  */
 
-package com.ushahidi.android.data.database;
+package com.ushahidi.android.data.database.converter;
 
 import android.content.ContentValues;
 import android.database.Cursor;

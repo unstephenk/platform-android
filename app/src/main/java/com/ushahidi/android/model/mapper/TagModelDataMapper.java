@@ -91,4 +91,21 @@ public class TagModelDataMapper extends Model {
         }
         return tagModelList;
     }
+
+    /**
+     * Maps a list {@link com.ushahidi.android.core.entity.Tag} into a list of {@link com.ushahidi.android.model.TagModel}.
+     *
+     * @param tagList List to be mapped.
+     * @return {@link Tag}
+     */
+    public List<Tag> unmap(List<TagModel> tagList) {
+        List<Tag> tagModelList = new ArrayList<>();
+        if (tagList != null && !tagList.isEmpty()) {
+            for (TagModel tag : tagList) {
+                tagModelList.add(unmap(tag));
+
+            }
+        }
+        return tagModelList;
+    }
 }
