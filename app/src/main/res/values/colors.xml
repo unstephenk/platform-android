@@ -64,4 +64,7 @@
     <color name="refresh_progress_center">@color/theme_accent_1</color>
     <color name="refresh_progress_end">@color/theme_primary</color>
 
+    <!-- Swipe -->
+    <color name="swipe_item_neutral_color">#ffffffff</color>
+    <color name="swipe_item_right_color">#66999999</color>
 </resources>

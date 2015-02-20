@@ -30,9 +30,7 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:orientation="vertical">
-
         <include layout="@layout/toolbar_actionbar"/>
-
         <com.ushahidi.android.ui.widget.SlidingTabLayout
                 android:id="@+id/tabs"
                 ushApp:indicatorHeight="2dp"

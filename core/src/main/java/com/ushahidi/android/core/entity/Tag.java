@@ -28,8 +28,6 @@ import java.util.Date;
  */
 public class Tag extends Entity {
 
-    private Long _id;
-
     private Long mParentId;
 
     private String mTag;
@@ -45,16 +43,6 @@ public class Tag extends Entity {
     private int mPriority;
 
     private Date mCreated;
-
-    @Override
-    public Long getId() {
-        return _id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this._id = id;
-    }
 
     public Long getParentId() {
         return mParentId;
@@ -123,7 +111,7 @@ public class Tag extends Entity {
     @Override
     public String toString() {
         return "Tag{" +
-                "id=" + _id +
+                "id=" + getId() +
                 ", ParentId=" + mParentId +
                 ", Tag='" + mTag + '\'' +
                 ", Slug='" + mSlug + '\'' +

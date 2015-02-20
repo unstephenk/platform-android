@@ -26,8 +26,6 @@ import java.util.Date;
  */
 public class Media extends Entity {
 
-    private Long _id;
-
     private User mUser;
 
     private String mCaption;
@@ -42,16 +40,6 @@ public class Media extends Entity {
 
     public Media() {
         // Do nothing
-    }
-
-    @Override
-    public Long getId() {
-        return this._id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this._id = id;
     }
 
     public User getUser() {
@@ -105,7 +93,7 @@ public class Media extends Entity {
     @Override
     public String toString() {
         return "Media{" +
-                "id=" + _id +
+                "id=" + getId() +
                 ", User=" + mUser.toString() +
                 ", Caption='" + mCaption + '\'' +
                 ", Mime='" + mMime + '\'' +

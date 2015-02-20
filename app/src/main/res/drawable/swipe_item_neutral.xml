@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2014 Ushahidi.
+  ~ Copyright (c) 2015 Ushahidi.
   ~
   ~ This program is free software: you can redistribute it and/or modify it under
   ~ the terms of the GNU Affero General Public License as published by the Free
@@ -15,17 +15,6 @@
   ~ along with this program in the file LICENSE-AGPL. If not, see
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
-<resources>
-    <!-- Use original material design theme -->
-    <style name="Theme" parent="BaseTheme"/>
-
-    <style name="Theme.Ushahidi" parent="Theme.Ushahidi.Base">
-        <item name="android:navigationBarColor">@android:color/black</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-    </style>
-
-    <style name="Ushahidi.Widget.Spinner" parent="Ushahidi.Widget.Spinner.Base">
-        <item name="android:theme">@style/ActionBarThemeOverlay</item>
-    </style>
-</resources>
+<color
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:color="@color/swipe_item_neutral_color"/>

@@ -21,8 +21,8 @@ android {
         disable 'OldTargetApi' // Due to Robolectric that modifies the manifest when running tests
     }
 
-    testOptions {
-        unitTests.returnDefaultValues = true
+    sourceSets{
+        test.setRoot('/src/test')
     }
 }
 
@@ -45,3 +45,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.0-SNAPSHOT'
 }
+
+apply from: 'resources.gradle'

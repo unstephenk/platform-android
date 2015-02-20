@@ -18,7 +18,10 @@
 package com.ushahidi.android.ui.fragment;
 
 
-import com.melnykov.fab.FloatingActionButton;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.listeners.ActionClickListener;
+import com.nispok.snackbar.listeners.EventListener;
 import com.ushahidi.android.R;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
@@ -28,19 +31,17 @@ import com.ushahidi.android.ui.listener.SwipeDismissRecyclerViewTouchListener;
 import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.widget.DeploymentRecyclerView;
 import com.ushahidi.android.ui.widget.DeploymentRecyclerView.DeploymentParcelable;
-import com.ushahidi.android.ui.widget.InteractiveToast;
+import com.ushahidi.android.ui.widget.MovableFab;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -61,19 +62,14 @@ public class ListDeploymentFragment
         ListDeploymentPresenter.View, DeleteDeploymentPresenter.View,
         RecyclerView.OnItemTouchListener {
 
-    private static final String INTERACTIVE_TOAST_BUNDLE_KEY = "selected_items";
-
     @Inject
     ListDeploymentPresenter mDeploymentListPresenter;
 
     @Inject
     DeleteDeploymentPresenter mDeleteDeploymentPresenter;
 
-    @InjectView(R.id.interactive_toast)
-    LinearLayout mInteractiveToastContainer; // Layout container for InteractiveToast
-
     @InjectView(R.id.fab)
-    FloatingActionButton mFab;
+    MovableFab mFab;
 
     @InjectView(android.R.id.empty)
     TextView mEmptyView;
@@ -86,8 +82,6 @@ public class ListDeploymentFragment
     private DeploymentRecyclerView mDeploymentRecyclerView;
 
     private boolean isDismissToDelete = false;
-
-    private InteractiveToast mInteractiveToast;
 
     private GestureDetectorCompat mGestureDetector;
 
@@ -104,7 +98,6 @@ public class ListDeploymentFragment
         mDeploymentListPresenter.init();
         mDeploymentRecyclerView = (DeploymentRecyclerView) mRecyclerView;
         mDeploymentRecyclerView.setDeleteDeploymentPresenter(mDeleteDeploymentPresenter);
-        mInteractiveToast = new InteractiveToast(mInteractiveToastContainer);
 
         swipeToDeleteUndo();
         if (mFab != null) {
@@ -176,7 +169,7 @@ public class ListDeploymentFragment
         mDeploymentRecyclerView.addOnItemTouchListener(this);
         mGestureDetector =
                 new GestureDetectorCompat(getActivity(), new RecyclerViewOnGestureListener());
-        mDeploymentRecyclerView.setInteractiveToast(mInteractiveToast);
+        mDeploymentRecyclerView.setMovableFab(mFab);
         mDeploymentRecyclerView.setAdapter(mRecyclerViewAdapter);
         setEmptyView();
     }
@@ -273,62 +266,7 @@ public class ListDeploymentFragment
                             public void onDismiss(RecyclerView listView,
                                     int[] reverseSortedPositions) {
                                 isDismissToDelete = true;
-                                mInteractiveToast
-                                        .setInteractiveToastListener(
-                                                new InteractiveToast.InteractiveToastListener() {
-                                                    @Override
-                                                    public void onPressed(Parcelable token) {
-
-                                                        Bundle b = (Bundle) token;
-                                                        final ArrayList<DeploymentRecyclerView.DeploymentParcelable>
-                                                                items
-                                                                = b
-                                                                .getParcelableArrayList(
-                                                                        INTERACTIVE_TOAST_BUNDLE_KEY);
-
-                                                        if (!items.isEmpty()) {
-
-                                                            for (DeploymentRecyclerView.DeploymentParcelable deploymentModel : items) {
-                                                                mRecyclerViewAdapter.addItem(
-                                                                        deploymentModel
-                                                                                .getDeploymentModel(),
-                                                                        deploymentModel
-                                                                                .getPosition());
-                                                            }
-                                                            items.clear();
-                                                        }
-
-                                                    }
-                                                });
-
-                                mInteractiveToast
-                                        .setOnHideListener(new InteractiveToast.OnHideListener() {
-                                            @Override
-                                            public void onHide(Parcelable token) {
-
-                                                Bundle b = (Bundle) token;
-                                                final ArrayList<DeploymentParcelable> items = b
-                                                        .getParcelableArrayList(
-                                                                INTERACTIVE_TOAST_BUNDLE_KEY);
-                                                if (!items.isEmpty()) {
-
-                                                    for (DeploymentParcelable deploymentModel : items) {
-                                                        if (deploymentModel.getDeploymentModel()
-                                                                .getStatus() ==
-                                                                DeploymentModel.Status.ACTIVATED) {
-                                                            mPrefs.getActiveDeploymentUrl()
-                                                                    .delete();
-                                                        }
-                                                        mDeleteDeploymentPresenter
-                                                                .deleteDeployment(deploymentModel
-                                                                        .getDeploymentModel());
-                                                    }
-                                                    items.clear();
-                                                }
-
-                                            }
-                                        });
-                                ArrayList<DeploymentParcelable> items = new ArrayList<>();
+                                final ArrayList<DeploymentParcelable> items = new ArrayList<>();
 
                                 if (reverseSortedPositions.length > 0) {
 
@@ -343,15 +281,84 @@ public class ListDeploymentFragment
 
                                 }
 
-                                // Stores the selected models into a bundle for later reuse.
-                                Bundle b = new Bundle();
-                                b.putParcelableArrayList(INTERACTIVE_TOAST_BUNDLE_KEY, items);
+                                SnackbarManager.show(
+                                        Snackbar.with(getActivity().getApplicationContext())
+                                                .text(getContext()
+                                                        .getString(R.string.items_deleted,
+                                                                items.size()))
+                                                .actionLabel(
+                                                        getContext().getString(R.string.undo))
+                                                .attachToRecyclerView(mDeploymentRecyclerView)
+                                                .actionListener(new ActionClickListener() {
+                                                    @Override
+                                                    public void onActionClicked(
+                                                            Snackbar snackbar) {
+                                                        if (!items.isEmpty()) {
 
-                                mInteractiveToast
-                                        .show(getString(R.string.items_deleted,
-                                                        reverseSortedPositions.length),
-                                                getString(R.string.undo),
-                                                R.drawable.ic_undo, b);
+                                                            for (DeploymentRecyclerView.DeploymentParcelable deploymentModel : items) {
+                                                                mRecyclerViewAdapter.addItem(
+                                                                        deploymentModel
+                                                                                .getDeploymentModel(),
+                                                                        deploymentModel
+                                                                                .getPosition());
+                                                            }
+                                                            items.clear();
+                                                        }
+
+                                                    }
+                                                })
+                                                .eventListener(new EventListener() {
+                                                    @Override
+                                                    public void onShow(Snackbar snackbar) {
+                                                        mFab.moveUp(snackbar.getHeight() + 80);
+                                                    }
+
+                                                    @Override
+                                                    public void onShowByReplace(
+                                                            Snackbar snackbar) {
+                                                        // Do nothing
+                                                    }
+
+                                                    @Override
+                                                    public void onShown(Snackbar snackbar) {
+                                                        // Do nothing
+                                                    }
+
+                                                    @Override
+                                                    public void onDismiss(
+                                                            Snackbar snackbar) {
+                                                        mFab.moveDown(snackbar.getHeight() + 80);
+                                                    }
+
+                                                    @Override
+                                                    public void onDismissByReplace(
+                                                            Snackbar snackbar) {
+                                                        // Do nothing
+                                                    }
+
+                                                    @Override
+                                                    public void onDismissed(
+                                                            Snackbar snackbar) {
+                                                        if (!items.isEmpty()) {
+
+                                                            for (DeploymentParcelable deploymentModel : items) {
+                                                                if (deploymentModel
+                                                                        .getDeploymentModel()
+                                                                        .getStatus() ==
+                                                                        DeploymentModel.Status.ACTIVATED) {
+                                                                    mPrefs.getActiveDeploymentUrl()
+                                                                            .delete();
+                                                                }
+                                                                mDeleteDeploymentPresenter
+                                                                        .deleteDeployment(
+                                                                                deploymentModel
+                                                                                        .getDeploymentModel());
+                                                            }
+                                                            items.clear();
+                                                        }
+                                                    }
+                                                }), getActivity());
+
 
                             }
                         });

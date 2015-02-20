@@ -26,25 +26,12 @@ import com.ushahidi.android.core.Entity;
  */
 public class Location extends Entity {
 
-    private Long _id;
-
     private double mLongitude;
 
     private double mLatitude;
 
     public Location() {
         // Do nothing
-    }
-
-
-    @Override
-    public Long getId() {
-        return _id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this._id = id;
     }
 
     public double getLongitude() {
@@ -66,7 +53,7 @@ public class Location extends Entity {
     @Override
     public String toString() {
         return "Location{" +
-                "_id=" + _id +
+                "_id=" + getId() +
                 ", Longitude=" + mLongitude +
                 ", Latitude=" + mLatitude +
                 '}';

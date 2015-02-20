@@ -50,7 +50,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 @Config(manifest = Config.NONE)
-//@RunWith(RobolectricTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class UserServiceTest extends BaseApiTestCase {
 
     final SimpleDateFormat PARSER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale
@@ -63,7 +63,7 @@ public class UserServiceTest extends BaseApiTestCase {
         super.setUp();
     }
 
-    //@Test
+    @Test
     public void shouldSuccessfullyAuthenticateUserAccount() throws IOException {
         mMockWebServer.play();
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -95,7 +95,7 @@ public class UserServiceTest extends BaseApiTestCase {
         mMockWebServer.shutdown();
     }
 
-    //@Test
+    @Test
     public void shouldFailToAuthenticateUserAccount() throws IOException {
         mMockWebServer.play();
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -130,7 +130,7 @@ public class UserServiceTest extends BaseApiTestCase {
         mMockWebServer.shutdown();
     }
 
-    //@Test
+    @Test
     public void shouldSuccessfullyFetchUser() throws IOException {
         mMockWebServer.play();
         RestAdapter restAdapter = new RestAdapter.Builder()

@@ -38,6 +38,12 @@ import java.util.List;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
+
+/**
+ * Manages list of deployments
+ *
+ * @author Ushahidi Team <team@ushahidi.com>
+ */
 public class DeploymentAdapter extends BaseRecyclerViewAdapter<DeploymentModel> implements
         Filterable {
 

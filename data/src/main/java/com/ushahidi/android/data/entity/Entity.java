@@ -17,6 +17,8 @@
 
 package com.ushahidi.android.data.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Entity base class
  *
@@ -24,6 +26,7 @@ package com.ushahidi.android.data.entity;
  */
 public abstract class Entity {
 
+    @SerializedName("id")
     private Long _id;
 
     public Long getId() {

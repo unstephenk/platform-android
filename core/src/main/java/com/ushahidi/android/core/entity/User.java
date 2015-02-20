@@ -27,8 +27,6 @@ import java.util.Date;
  */
 public class User extends Entity {
 
-    private Long _id;
-
     private String mEmail;
 
     private String mRealName;
@@ -42,14 +40,6 @@ public class User extends Entity {
     private Date mCreated;
 
     private Date mUpdated;
-
-    public Long getId() {
-        return _id;
-    }
-
-    public void setId(Long id) {
-        _id = id;
-    }
 
     public String getEmail() {
         return mEmail;
@@ -110,7 +100,7 @@ public class User extends Entity {
     @Override
     public String toString() {
         return "User{" +
-                "_id=" + _id +
+                "_id=" + getId() +
                 ", mEmail='" + mEmail + '\'' +
                 ", mRealName='" + mRealName + '\'' +
                 ", mUsername='" + mUsername + '\'' +

@@ -29,9 +29,6 @@ import java.util.Date;
  */
 public class MediaEntity extends Entity {
 
-    @SerializedName("id")
-    private Long _id;
-
     @SerializedName("user")
     private UserEntity mUser;
 
@@ -52,16 +49,6 @@ public class MediaEntity extends Entity {
 
     public MediaEntity() {
         // Do nothing
-    }
-
-    @Override
-    public Long getId() {
-        return this._id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this._id = id;
     }
 
     public UserEntity getUser() {
@@ -115,7 +102,7 @@ public class MediaEntity extends Entity {
     @Override
     public String toString() {
         return "Media{" +
-                "id=" + _id +
+                "id=" + getId() +
                 ", User=" + mUser.toString() +
                 ", Caption='" + mCaption + '\'' +
                 ", Mime='" + mMime + '\'' +

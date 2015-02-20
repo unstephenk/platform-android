@@ -19,6 +19,7 @@ package com.ushahidi.android.util;
 
 import java.util.Collection;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Generic Utilities for the application
@@ -43,5 +44,11 @@ public class Util {
         return text.substring(0, 1).toUpperCase(Locale.getDefault())
                 + text.substring(1).toLowerCase(Locale.getDefault());
 
+    }
+
+    public static boolean validateHexColor(String hexColor) {
+        
+        final String HEX_PATTERN = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+        return Pattern.compile(HEX_PATTERN).matcher(hexColor).matches();
     }
 }

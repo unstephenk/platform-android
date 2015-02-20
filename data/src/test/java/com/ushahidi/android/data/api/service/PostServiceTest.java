@@ -46,7 +46,7 @@ import static org.junit.Assert.assertNotNull;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 @Config(manifest=Config.NONE)
-//@RunWith(RobolectricTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class PostServiceTest extends BaseApiTestCase {
 
     @Before
@@ -54,7 +54,7 @@ public class PostServiceTest extends BaseApiTestCase {
         super.setUp();
     }
 
-   //@Test
+   @Test
     public void shouldSuccessfullyFetchPost() throws IOException {
         mMockWebServer.play();
         RestAdapter restAdapter = new RestAdapter.Builder()

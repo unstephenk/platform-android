@@ -156,9 +156,11 @@ public class PostAdapter extends BaseRecyclerViewAdapter<PostModel> implements
             colorDrawable.getPaint().setStyle(Paint.Style.FILL);
             tagBadge.setCompoundDrawablesWithIntrinsicBounds(colorDrawable,
                     null, null, null);
-            colorDrawable.getPaint().setColor(Color.parseColor(color));
-            tag.setBackgroundColor(Color.parseColor(color));
-            tag.addView(tagBadge);
+            if(Util.validateHexColor(color)) {
+                colorDrawable.getPaint().setColor(Color.parseColor(color));
+                tag.setBackgroundColor(Color.parseColor(color));
+                tag.addView(tagBadge);
+            }
         }
     }
 }

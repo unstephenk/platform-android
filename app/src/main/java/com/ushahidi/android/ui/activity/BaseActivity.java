@@ -63,7 +63,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import dagger.ObjectGraph;
-import timber.log.Timber;
 
 import static android.view.View.GONE;
 import static android.view.View.OnClickListener;
@@ -76,6 +75,7 @@ import static android.view.View.VISIBLE;
  */
 public abstract class BaseActivity extends ActionBarActivity {
 
+    private static final int ACCOUNT_BOX_EXPAND_ANIM_DURATION = 200;
     /**
      * Layout resource id
      */
@@ -166,7 +166,6 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Method used to resolve dependencies provided by Dagger modules. Inject an object to provide
      * every @Inject annotation contained.
-     *
      *
      * @param object to inject.
      */
@@ -301,7 +300,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     @Override
-    protected  void onPause() {
+    protected void onPause() {
         mApplicationState.unregisterEvent(this);
         super.onPause();
     }
@@ -356,7 +355,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     protected void setupAndShowLoginOrUserProfile(UserModel profile) {
 
-        if(profile !=null) {
+        if (profile != null) {
             showUserProfile(profile);
         }
     }
@@ -380,7 +379,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     private void showUserProfile(UserModel profile) {
-        if(mUserProfileLayout == null) {
+        if (mUserProfileLayout == null) {
             return;
         }
 
@@ -399,10 +398,15 @@ public abstract class BaseActivity extends ActionBarActivity {
         roleTextView.setText(profile.getRole().value);
         ImageView avatarImageView = (ImageView) findViewById(R.id.user_profile_image);
 
+        if (profile.getEmail() != null) {
+            Picasso.with(this).load(GravatarUtil.url(profile.getEmail())).into(avatarImageView);
+        }
         mUserAccountListExpandIndicator = (ImageView) findViewById(R.id.expand_profile_indicator);
 
+        final View chosenAccountView = findViewById(R.id.chosen_account_content_view);
+
         mUserAccountListExpandIndicator.setVisibility(View.VISIBLE);
-        mUserAccountListExpandIndicator.setOnClickListener(new View.OnClickListener() {
+        chosenAccountView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mUserAccountListExpanded = !mUserAccountListExpanded;
@@ -415,7 +419,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     protected void setUpUserAccountList(List<UserModel> userModels) {
-        if(mUserAccountListContainer !=null) {
+        if (mUserAccountListContainer != null) {
             mUserAccountListContainer.removeAllViews();
             LayoutInflater layoutInflater = LayoutInflater.from(this);
             for (UserModel userModel : userModels) {
@@ -429,7 +433,8 @@ public abstract class BaseActivity extends ActionBarActivity {
                 ImageView userProfileImage = (ImageView) itemView
                         .findViewById(R.id.user_account_profile_image);
                 if (userModel.getEmail() != null) {
-                    Picasso.with(this).load(GravatarUtil.url(userModel.getEmail())).into(userProfileImage);
+                    Picasso.with(this).load(GravatarUtil.url(userModel.getEmail()))
+                            .into(userProfileImage);
                 }
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -456,10 +461,12 @@ public abstract class BaseActivity extends ActionBarActivity {
             return;
         }
 
-        mUserAccountListExpandIndicator.setImageResource(mUserAccountListExpanded ? R.drawable.ic_drawer_profile_collapse
-                : R.drawable.ic_drawer_profile_expand);
+        mUserAccountListExpandIndicator.setImageResource(mUserAccountListExpanded ?
+                R.drawable.ic_drawer_profile_collapse : R.drawable.ic_drawer_profile_expand);
+
         // Credits: http://goo.gl/yHfwZp
         int hideTranslateY = -mUserAccountListContainer.getHeight() / 4; // last 25% of animation
+
         if (mUserAccountListExpanded && mUserAccountListContainer.getTranslationY() == 0) {
             // initial setup
             mUserAccountListContainer.setAlpha(0);
@@ -470,11 +477,12 @@ public abstract class BaseActivity extends ActionBarActivity {
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                mDrawerItemsContainer.setVisibility(mUserAccountListExpanded
-                        ? View.INVISIBLE : View.VISIBLE);
 
                 mUserAccountListContainer.setVisibility(mUserAccountListExpanded
                         ? View.VISIBLE : View.INVISIBLE);
+
+                mDrawerItemsContainer.setVisibility(mUserAccountListExpanded
+                        ? View.INVISIBLE : View.VISIBLE);
             }
 
             @Override
@@ -496,26 +504,34 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     private void animateExpandView(AnimatorSet set) {
-        animateExpandOrCollapseView(set, 1, 0, 0);
+        AnimatorSet subSet = animateExpandOrCollapseView(1, 0);
+        set.playSequentially(
+                ObjectAnimator.ofFloat(mUserAccountListContainer, View.ALPHA, 0)
+                        .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION),
+                subSet);
+        set.start();
     }
 
-    private void animateCollapseView(AnimatorSet set,int hideTranslateY ) {
-        animateExpandOrCollapseView(set, 0, hideTranslateY, 1);
+    private void animateCollapseView(AnimatorSet set, int hideTranslateY) {
+        AnimatorSet subSet =animateExpandOrCollapseView(0, hideTranslateY);
+        set.playSequentially(
+                subSet,
+                ObjectAnimator.ofFloat(mDrawerItemsContainer, View.ALPHA, 1)
+                        .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION));
+        set.start();
     }
 
-    private void animateExpandOrCollapseView(AnimatorSet set, int together, int hideTranslateY, int sequentially) {
+    private AnimatorSet animateExpandOrCollapseView(int together, int hideTranslateY) {
         final int ACCOUNT_BOX_EXPAND_ANIM_DURATION = 200;
         AnimatorSet subSet = new AnimatorSet();
         subSet.playTogether(
                 ObjectAnimator.ofFloat(mUserAccountListContainer, View.ALPHA, together)
                         .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION),
-                ObjectAnimator.ofFloat(mUserAccountListContainer, View.TRANSLATION_Y, hideTranslateY)
+                ObjectAnimator
+                        .ofFloat(mUserAccountListContainer, View.TRANSLATION_Y, hideTranslateY)
                         .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION));
-        set.playSequentially(
-                ObjectAnimator.ofFloat(mDrawerItemsContainer, View.ALPHA, sequentially)
-                        .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION),
-                subSet);
-        set.start();
+        return subSet;
+
     }
 
     protected Toolbar getActionBarToolbar() {

@@ -44,7 +44,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 @Config(manifest=Config.NONE)
-//@RunWith(RobolectricTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class TagServiceTest extends BaseApiTestCase {
 
     private TagService mTagService;
@@ -54,7 +54,7 @@ public class TagServiceTest extends BaseApiTestCase {
         super.setUp();
     }
 
-    //@Test
+    @Test
     public void shouldSuccessfullyFetchTags() throws IOException {
         final String tagsJson = getResource("tags.json");
         mMockWebServer.play();

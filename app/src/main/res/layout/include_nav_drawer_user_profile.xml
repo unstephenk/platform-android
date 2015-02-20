@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/keyline_1"
             android:paddingRight="@dimen/keyline_1"
-            android:paddingTop="@dimen/keyline_1"
+            android:paddingTop="@dimen/profile_pic_top_padding"
             android:id="@+id/chosen_account_content_view">
 
         <com.ushahidi.android.ui.widget.BezelImageView

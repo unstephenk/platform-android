@@ -45,8 +45,6 @@
         <item name="android:dropDownListViewStyle">@style/ActionbarDropdown.ListView.DropDown</item>
         <item name="android:textAppearanceLargePopupMenu">@style/TextAppearance.LargePopupMenu
         </item>
-        <item name="drawerArrowStyle">@style/Ushahidi.Widget.DrawerArrow</item>
-        <item name="searchViewStyle">@style/Ushahidi.SearchBar.Widget</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
     </style>

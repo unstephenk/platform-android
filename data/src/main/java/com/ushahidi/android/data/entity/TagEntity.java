@@ -32,9 +32,6 @@ import nl.qbusict.cupboard.annotation.Ignore;
  */
 public class TagEntity extends Entity {
 
-    @SerializedName("id")
-    private Long _id;
-
     @SerializedName("parent")
     @Ignore // Make cupboard ignore this field
     private Parent parent;
@@ -64,16 +61,6 @@ public class TagEntity extends Entity {
 
     public TagEntity() {
         // Do nothing
-    }
-
-    @Override
-    public Long getId() {
-        return _id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this._id = id;
     }
 
     public Long getParentId() {
@@ -146,7 +133,7 @@ public class TagEntity extends Entity {
     @Override
     public String toString() {
         return "Tag{" +
-                "id=" + _id +
+                "id=" + getId() +
                 ", mParent=" + mParent +
                 ", Tag='" + mTag + '\'' +
                 ", Color='" + mColor + '\'' +

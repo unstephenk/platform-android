@@ -28,9 +28,6 @@ import java.util.Date;
  */
 public class UserEntity extends Entity {
 
-    @SerializedName("id")
-    private Long _id;
-
     @SerializedName("email")
     private String mEmail;
 
@@ -51,13 +48,6 @@ public class UserEntity extends Entity {
     @SerializedName("updated")
     private Date mUpdated;
 
-    public Long getId() {
-        return _id;
-    }
-
-    public void setId(Long id) {
-        _id = id;
-    }
 
     public String getEmail() {
         return mEmail;
@@ -118,7 +108,7 @@ public class UserEntity extends Entity {
     @Override
     public String toString() {
         return "UserEntity {" +
-                "_id=" + _id +
+                "_id=" + getId() +
                 ", mEmail='" + mEmail + '\'' +
                 ", mRealName='" + mRealName + '\'' +
                 ", mUsername='" + mUsername + '\'' +

@@ -42,6 +42,7 @@ import com.ushahidi.android.data.repository.UserDataRepository;
 import com.ushahidi.android.data.repository.datasource.post.PostDataSourceFactory;
 import com.ushahidi.android.data.repository.datasource.tag.TagDataSourceFactory;
 import com.ushahidi.android.data.repository.datasource.user.UserDataSourceFactory;
+import com.ushahidi.android.data.validator.EmailValidator;
 import com.ushahidi.android.data.validator.UrlValidator;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.model.mapper.PostModelDataMapper;
@@ -112,6 +113,12 @@ public class DataModule {
 
     @Provides
     @Singleton
+    EmailValidator providesEmailValidator() {
+        return new EmailValidator();
+    }
+
+    @Provides
+    @Singleton
     DeploymentEntityMapper providesDeploymentEntityMapper() {
         return new DeploymentEntityMapper();
     }
@@ -140,8 +147,8 @@ public class DataModule {
     @Provides
     IUserRepository providesUserRepository(
             UserDataSourceFactory userDataSourceFactory, UserEntityMapper entityMapper,
-            UrlValidator urlValidator) {
-        return UserDataRepository.getInstance(userDataSourceFactory, entityMapper, urlValidator);
+            EmailValidator emailValidator) {
+        return UserDataRepository.getInstance(userDataSourceFactory, entityMapper, emailValidator);
     }
 
     @Provides

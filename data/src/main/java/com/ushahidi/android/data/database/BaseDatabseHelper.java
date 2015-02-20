@@ -18,8 +18,8 @@
 package com.ushahidi.android.data.database;
 
 import com.ushahidi.android.data.BuildConfig;
+import com.ushahidi.android.data.database.converter.EnumEntityFieldConverter;
 import com.ushahidi.android.data.database.converter.PostEntityConverter;
-import com.ushahidi.android.data.database.converter.UserEntityFieldConverter;
 import com.ushahidi.android.data.entity.DeploymentEntity;
 import com.ushahidi.android.data.entity.MediaEntity;
 import com.ushahidi.android.data.entity.PostEntity;
@@ -68,7 +68,9 @@ public abstract class BaseDatabseHelper extends SQLiteOpenHelper {
         };
         CupboardFactory.setCupboard(new CupboardBuilder()
                 .registerFieldConverter(UserEntity.Role.class,
-                        new UserEntityFieldConverter<>(UserEntity.Role.class))
+                        new EnumEntityFieldConverter<>(UserEntity.Role.class))
+                .registerFieldConverter(TagEntity.Type.class,
+                        new EnumEntityFieldConverter<>(TagEntity.Type.class))
                 .registerEntityConverterFactory(factory).useAnnotations().build());
 
         // Register our entities

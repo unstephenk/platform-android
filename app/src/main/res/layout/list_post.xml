@@ -41,16 +41,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
 
-        <com.melnykov.fab.FloatingActionButton
+        <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/post_fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
                 android:gravity="bottom|right"
-                android:src="@drawable/ic_action_add"
+                fab:fab_icon="@drawable/ic_action_add"
                 fab:fab_colorNormal="@color/fab_color_primary"
                 fab:fab_colorPressed="@color/fab_color_pressed"
-                fab:fab_colorRipple="@color/flat_button_hover_color"
                 android:layout_marginBottom="16dp"/>
 
     </FrameLayout>

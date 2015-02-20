@@ -27,8 +27,6 @@ import java.util.List;
  */
 public class Post extends Entity {
 
-    private Long _id;
-
     private Long mParent;
 
     private String mType;
@@ -54,16 +52,6 @@ public class Post extends Entity {
     private PostValue mValues;
 
     private List<Tag> mTags;
-
-    @Override
-    public Long getId() {
-        return this._id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        _id = id;
-    }
 
     public Long getParent() {
         return mParent;
@@ -164,7 +152,7 @@ public class Post extends Entity {
     @Override
     public String toString() {
         return "Post{" +
-                "_id=" + _id +
+                "_id=" + getId() +
                 ", mParent=" + mParent +
                 ", mType='" + mType + '\'' +
                 ", mTitle='" + mTitle + '\'' +

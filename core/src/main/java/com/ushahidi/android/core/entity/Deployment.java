@@ -25,8 +25,6 @@ import com.ushahidi.android.core.Entity;
  */
 public class Deployment extends Entity {
 
-    private Long _id;
-
     private String mTitle;
 
     private Status mStatus;
@@ -35,16 +33,6 @@ public class Deployment extends Entity {
 
     public Deployment() {
         mStatus = Status.DEACTIVATED;
-    }
-
-    @Override
-    public Long getId() {
-        return _id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        _id = id;
     }
 
     public String getTitle() {
@@ -74,7 +62,7 @@ public class Deployment extends Entity {
     @Override
     public String toString() {
         return "Deployment{" +
-                "_id=" + _id +
+                "_id=" + getStatus() +
                 ", mTitle='" + mTitle + '\'' +
                 ", mStatus='" + mStatus + '\'' +
                 ", mUrl='" + mUrl + '\'' +

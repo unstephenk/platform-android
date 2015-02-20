@@ -34,9 +34,6 @@ import nl.qbusict.cupboard.annotation.Ignore;
  */
 public class PostEntity extends Entity implements Comparable<PostEntity> {
 
-    @SerializedName("id")
-    private Long _id;
-
     @SerializedName("parent")
     @Ignore // Make cupboard ignore this field
     private Parent parent;
@@ -90,15 +87,6 @@ public class PostEntity extends Entity implements Comparable<PostEntity> {
         mPostTagEntityList = postTagEntityList;
     }
 
-    @Override
-    public Long getId() {
-        return this._id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this._id = id;
-    }
 
     public Long getParent() {
         return mParent;
@@ -212,7 +200,7 @@ public class PostEntity extends Entity implements Comparable<PostEntity> {
     @Override
     public String toString() {
         return "PostEntity{" +
-                "_id=" + _id +
+                "_id=" + getId() +
                 ", mParent=" + mParent +
                 ", mUser=" + mUser +
                 ", mType='" + mType + '\'' +

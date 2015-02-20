@@ -17,6 +17,10 @@
 
 package com.ushahidi.android.ui.widget;
 
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.listeners.ActionClickListener;
+import com.nispok.snackbar.listeners.EventListener;
 import com.ushahidi.android.R;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
@@ -25,7 +29,6 @@ import com.ushahidi.android.ui.adapter.DeploymentAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
@@ -51,8 +54,6 @@ public class DeploymentRecyclerView extends RecyclerView {
 
     public static final int INVALID_POSITION = -1;
 
-    private static final String BUNDLE_KEY = "selected";
-
     private Activity mActivity;
 
     private boolean mSelectionMode = false;
@@ -69,7 +70,7 @@ public class DeploymentRecyclerView extends RecyclerView {
 
     private Map<Integer, DeploymentModel> mDeploymentModels;
 
-    private InteractiveToast mInteractiveToast;
+    private MovableFab mMovableFab;
 
     public DeploymentRecyclerView(Context context) {
         this(context, null, 0);
@@ -178,12 +179,12 @@ public class DeploymentRecyclerView extends RecyclerView {
     }
 
     /**
-     * Shows a toast like message giving the user a feedback of the action taken.
+     * Set this so FAB can be moved up or down when snackbar shows up.
      *
-     * @param interactiveToast The {@link InteractiveToast}
+     * @param movableFab The {@link com.ushahidi.android.ui.widget.MovableFab}
      */
-    public void setInteractiveToast(InteractiveToast interactiveToast) {
-        mInteractiveToast = interactiveToast;
+    public void setMovableFab(MovableFab movableFab) {
+        mMovableFab = movableFab;
     }
 
     /**
@@ -232,52 +233,9 @@ public class DeploymentRecyclerView extends RecyclerView {
      * Deletes selected {@link com.ushahidi.android.model.DeploymentModel} from the database.
      */
     private void performDelete() {
-
-        mInteractiveToast
-                .setInteractiveToastListener(new InteractiveToast.InteractiveToastListener() {
-                    @Override
-                    public void onPressed(Parcelable token) {
-
-                        // Gets all the selected items from the bundle
-                        Bundle b = (Bundle) token;
-                        final ArrayList<DeploymentParcelable> items = b
-                                .getParcelableArrayList(BUNDLE_KEY);
-
-                        if (!items.isEmpty()) {
-                            mNumberOfItemsDeleted = items.size();
-                            for (DeploymentParcelable deploymentModel : items) {
-
-                                // Restores all the removed DeploymentModels from the list view's adapter
-                                // back and in their original position.
-                                mDeploymentAdapter.addItem(deploymentModel.mDeploymentModel,
-                                        deploymentModel.mPosition);
-                            }
-
-                            // Clear
-                            items.clear();
-                        }
-                        // Clears all selected items
-                        clearItems();
-                    }
-                });
-
-        mInteractiveToast.setOnHideListener(new InteractiveToast.OnHideListener() {
-            @Override
-            public void onHide(Parcelable token) {
-
-                // On hide, retrieve the selected items and perform the actual deletion from the database
-                Bundle b = (Bundle) token;
-                final ArrayList<DeploymentParcelable> items = b
-                        .getParcelableArrayList(BUNDLE_KEY);
-
-                // Delete items
-                performDeletion(items);
-            }
-        });
-
         // Pass the selected DeploymentModels as a parcelable objects to be used by
         // the InteractiveToast callback functions
-        ArrayList<DeploymentParcelable> items = new ArrayList<>();
+        final ArrayList<DeploymentParcelable> items = new ArrayList<>();
 
         if (!mDeploymentModels.isEmpty()) {
             mNumberOfItemsDeleted = mDeploymentModels.size();
@@ -297,12 +255,63 @@ public class DeploymentRecyclerView extends RecyclerView {
 
         }
 
-        // Stores the selected models into a bundle for later reuse.
-        Bundle b = new Bundle();
-        b.putParcelableArrayList(BUNDLE_KEY, items);
-        mInteractiveToast
-                .show(mActivity.getString(R.string.items_deleted, mDeploymentModels.size()),
-                        mActivity.getString(R.string.undo), R.drawable.ic_undo, b);
+        SnackbarManager.show(
+                Snackbar.with(mActivity.getApplicationContext())
+                        .text(mActivity.getString(R.string.items_deleted, mDeploymentModels.size()))
+                        .actionLabel(mActivity.getString(R.string.undo))
+                        .attachToRecyclerView(this)
+                        .actionListener(new ActionClickListener() {
+                            @Override
+                            public void onActionClicked(Snackbar snackbar) {
+                                if (!items.isEmpty()) {
+                                    mNumberOfItemsDeleted = items.size();
+                                    for (DeploymentParcelable deploymentModel : items) {
+
+                                        // Restores all the removed DeploymentModels from the list view's adapter
+                                        // back and in their original position.
+                                        mDeploymentAdapter.addItem(deploymentModel.mDeploymentModel,
+                                                deploymentModel.mPosition);
+                                    }
+
+                                    // Clear
+                                    items.clear();
+                                }
+                                // Clears all selected items
+                                clearItems();
+                            }
+                        })
+                        .eventListener(new EventListener() {
+                            @Override
+                            public void onShow(Snackbar snackbar) {
+                                mMovableFab.moveUp(snackbar.getHeight() + 80);
+                            }
+
+                            @Override
+                            public void onShowByReplace(Snackbar snackbar) {
+                                // Do nothing
+                            }
+
+                            @Override
+                            public void onShown(Snackbar snackbar) {
+                                // Do nothing
+                            }
+
+                            @Override
+                            public void onDismiss(Snackbar snackbar) {
+                                mMovableFab.moveDown(snackbar.getHeight() + 80);
+                            }
+
+                            @Override
+                            public void onDismissByReplace(Snackbar snackbar) {
+                                // Do nothing
+                            }
+
+                            @Override
+                            public void onDismissed(Snackbar snackbar) {
+                                // Delete items
+                                performDeletion(items);
+                            }
+                        }), mActivity);
     }
 
     /**

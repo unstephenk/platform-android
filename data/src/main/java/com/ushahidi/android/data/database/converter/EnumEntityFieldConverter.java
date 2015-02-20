@@ -28,11 +28,11 @@ import nl.qbusict.cupboard.convert.FieldConverter;
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class UserEntityFieldConverter <E extends Enum> implements FieldConverter<E> {
+public class EnumEntityFieldConverter<E extends Enum> implements FieldConverter<E> {
 
     private final Class<E> mEnumClass;
 
-    public UserEntityFieldConverter(Class<E> enumClass) {
+    public EnumEntityFieldConverter(Class<E> enumClass) {
         this.mEnumClass = enumClass;
     }
 

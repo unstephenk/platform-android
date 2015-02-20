@@ -21,7 +21,7 @@ import com.ushahidi.android.data.BaseTestCase;
 import com.ushahidi.android.data.api.model.Posts;
 import com.ushahidi.android.data.api.model.Tags;
 import com.ushahidi.android.data.database.converter.PostEntityConverter;
-import com.ushahidi.android.data.database.converter.UserEntityFieldConverter;
+import com.ushahidi.android.data.database.converter.EnumEntityFieldConverter;
 import com.ushahidi.android.data.entity.PostEntity;
 import com.ushahidi.android.data.entity.PostTagEntity;
 import com.ushahidi.android.data.entity.TagEntity;
@@ -70,7 +70,7 @@ public class PostDatabaseTest extends BaseTestCase {
         };
         CupboardFactory.setCupboard(new CupboardBuilder()
                 .registerFieldConverter(UserEntity.Role.class,
-                        new UserEntityFieldConverter<>(UserEntity.Role.class))
+                        new EnumEntityFieldConverter<>(UserEntity.Role.class))
                 .registerEntityConverterFactory(factory).useAnnotations().build());
 
         // Register our entities
