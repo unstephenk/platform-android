@@ -4,7 +4,7 @@
 if [[ $# -lt 3 ]]
 then
   echo "Usage: release.sh [Scope; valid are major,minor,patch] [Stage; valid are final, milestone, dev] [Track; valid are alpha, production, beta]"
-  echo "Eg. command ./release minor milesone alpha"
+  echo "Eg. command ./release minor milestone alpha"
   exit
 fi
 
@@ -14,6 +14,6 @@ TRACK=$3
 
 echo "Releasing..."
 
-./gradlew clean releaseApp -Prelease.scope=$SCOPE -Prelease.stage=$STAGE -PuploadTrack=$TRACK
+./gradlew release -Prelease.scope=$SCOPE -Prelease.stage=$STAGE -PuploadTrack=$TRACK
 
 echo "Done!"

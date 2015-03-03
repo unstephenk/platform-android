@@ -40,7 +40,8 @@ def getGooglePlaystoreServiceAccountEmail() {
 }
 
 def getGooglePlaystoreServicepk12File() {
-    // Set to home directory
+    // Set to home directory if property not set because play plugin doesn't allow empty or null
+    // value for the pk file
     return project.hasProperty('gPlaystorePKFile') ? gPlaystorePKFile : '~/'
 }
 
@@ -61,20 +62,23 @@ def trackProperty() {
 }
 
 android {
-    compileSdkVersion 21
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               buildToolsVersion "21.1.2"
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+
+    compileSdkVersion globalConfiguration.getAt("androidCompileSdkVersion")
+    buildToolsVersion globalConfiguration.getAt("androidBuildToolsVersion")
 
     defaultConfig {
-        applicationId "com.ushahidi.android"
-        minSdkVersion 14
-        targetSdkVersion 21
+        minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
+        targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
+        applicationId globalConfiguration.getAt("androidApplicationId")
+        versionCode globalConfiguration.getAt("androidVersionCode")
+        versionName globalConfiguration.getAt("androidVersionName")
+        testInstrumentationRunner globalConfiguration.getAt("testInstrumentationRunner")
 
         buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
         buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
-
         buildConfigField "String", "FEEDBACK_EMAIL_ADDRESS", "\"${getFeedbackEmailAddress()}\""
 
-        testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
 
     compileOptions {
@@ -88,6 +92,7 @@ android {
 
     buildTypes {
         release {
+            zipAlignEnabled true
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -135,16 +140,11 @@ release {
     android.defaultConfig.versionCode = buildVersionCode().toInteger()
 
     tagStrategy {
-        generateMessage = { version -> "Release of $version.version $tagMessage" }
+        generateMessage = { version -> "\n\nRelease of $version.version\n$tagMessage" }
     }
 }
 
-task releaseApp(dependsOn: ['clean', 'assemble', 'release', 'publishRelease']) {
-    description 'Release a new version of application, increase version and create tag'
-    doLast {
-        println "${android.defaultConfig.versionName} released"
-    }
-}
+tasks.release.dependsOn(['build', 'publishRelease'])
 
 if (project.hasProperty('releaseKeyStore') &&
         project.hasProperty('releaseKeyPassword') &&
