@@ -145,6 +145,15 @@
         <item name="android:lineSpacingMultiplier">1.1</item>
     </style>
 
+    <style name="ListTextHeader" parent="TextHeader">
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="ListTextBody" parent="TextBody">
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <!-- ListView -->
     <style name="ListView" parent="android:Widget.Holo.Light.ListView">
         <item name="android:layout_width">match_parent</item>

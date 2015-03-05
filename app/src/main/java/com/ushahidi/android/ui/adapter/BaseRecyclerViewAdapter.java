@@ -74,6 +74,7 @@ public abstract class BaseRecyclerViewAdapter<M extends Model>
     }
 
     public void addItem(M item, int position) {
+
         mItems.add(position, item);
         notifyItemInserted(position);
     }

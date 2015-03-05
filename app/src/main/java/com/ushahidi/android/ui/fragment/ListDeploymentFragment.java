@@ -28,9 +28,10 @@ import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
 import com.ushahidi.android.presenter.ListDeploymentPresenter;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
 import com.ushahidi.android.ui.listener.SwipeDismissRecyclerViewTouchListener;
+import com.ushahidi.android.ui.listener.SwipeToDismissTouchListener;
 import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.widget.DeploymentRecyclerView;
-import com.ushahidi.android.ui.widget.DeploymentRecyclerView.DeploymentParcelable;
+//import com.ushahidi.android.ui.widget.DeploymentRecyclerView.DeploymentParcelable;
 import com.ushahidi.android.ui.widget.MovableFab;
 
 import android.app.Activity;
@@ -74,9 +75,6 @@ public class ListDeploymentFragment
     @InjectView(android.R.id.empty)
     TextView mEmptyView;
 
-    @Inject
-    Prefs mPrefs;
-
     private DeploymentListListener mDeploymentListListener;
 
     private DeploymentRecyclerView mDeploymentRecyclerView;
@@ -85,7 +83,7 @@ public class ListDeploymentFragment
 
     private GestureDetectorCompat mGestureDetector;
 
-    private SwipeDismissRecyclerViewTouchListener mListViewTouchListener;
+    private SwipeToDismissTouchListener mSwipeToDismissTouchListener;
 
     public ListDeploymentFragment() {
         super(DeploymentAdapter.class, R.layout.list_deployment, 0,
@@ -99,7 +97,7 @@ public class ListDeploymentFragment
         mDeploymentRecyclerView = (DeploymentRecyclerView) mRecyclerView;
         mDeploymentRecyclerView.setDeleteDeploymentPresenter(mDeleteDeploymentPresenter);
 
-        swipeToDeleteUndo();
+
         if (mFab != null) {
             setViewGone(mFab, false);
             mFab.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +156,7 @@ public class ListDeploymentFragment
     }
 
     private void initRecyclerView() {
-        mDeploymentRecyclerView.setOnTouchListener(mListViewTouchListener);
+
         mRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -171,6 +169,7 @@ public class ListDeploymentFragment
                 new GestureDetectorCompat(getActivity(), new RecyclerViewOnGestureListener());
         mDeploymentRecyclerView.setMovableFab(mFab);
         mDeploymentRecyclerView.setAdapter(mRecyclerViewAdapter);
+        swipeToDeleteUndo();
         setEmptyView();
     }
 
@@ -253,115 +252,32 @@ public class ListDeploymentFragment
     }
 
     private void swipeToDeleteUndo() {
-        mListViewTouchListener =
-                new SwipeDismissRecyclerViewTouchListener(mDeploymentRecyclerView,
-                        new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
 
-                            @Override
-                            public boolean canDismiss(int position) {
-                                return true;
-                            }
+        mDeploymentRecyclerView.initAdapter(mRecyclerViewAdapter);
 
-                            @Override
-                            public void onDismiss(RecyclerView listView,
-                                    int[] reverseSortedPositions) {
-                                isDismissToDelete = true;
-                                final ArrayList<DeploymentParcelable> items = new ArrayList<>();
+        mSwipeToDismissTouchListener = new SwipeToDismissTouchListener(mRecyclerView,
+                new SwipeToDismissTouchListener.DismissCallbacks() {
 
-                                if (reverseSortedPositions.length > 0) {
+                    @Override
+                    public SwipeToDismissTouchListener.SwipeDirection canDismiss(int position) {
+                        return SwipeToDismissTouchListener.SwipeDirection.BOTH;
+                    }
 
-                                    for (int i : reverseSortedPositions) {
-                                        DeploymentParcelable parcelable = new DeploymentParcelable(
-                                                mRecyclerViewAdapter.getItem(i),
-                                                i);
-                                        items.add(parcelable);
-                                        mRecyclerViewAdapter
-                                                .removeItem(mRecyclerViewAdapter.getItem(i));
-                                    }
+                    @Override
+                    public void onDismiss(RecyclerView view,
+                            List<SwipeToDismissTouchListener.PendingDismissData> dismissData) {
 
-                                }
-
-                                SnackbarManager.show(
-                                        Snackbar.with(getActivity().getApplicationContext())
-                                                .text(getContext()
-                                                        .getString(R.string.items_deleted,
-                                                                items.size()))
-                                                .actionLabel(
-                                                        getContext().getString(R.string.undo))
-                                                .attachToRecyclerView(mDeploymentRecyclerView)
-                                                .actionListener(new ActionClickListener() {
-                                                    @Override
-                                                    public void onActionClicked(
-                                                            Snackbar snackbar) {
-                                                        if (!items.isEmpty()) {
-
-                                                            for (DeploymentRecyclerView.DeploymentParcelable deploymentModel : items) {
-                                                                mRecyclerViewAdapter.addItem(
-                                                                        deploymentModel
-                                                                                .getDeploymentModel(),
-                                                                        deploymentModel
-                                                                                .getPosition());
-                                                            }
-                                                            items.clear();
-                                                        }
-
-                                                    }
-                                                })
-                                                .eventListener(new EventListener() {
-                                                    @Override
-                                                    public void onShow(Snackbar snackbar) {
-                                                        mFab.moveUp(snackbar.getHeight() + 80);
-                                                    }
-
-                                                    @Override
-                                                    public void onShowByReplace(
-                                                            Snackbar snackbar) {
-                                                        // Do nothing
-                                                    }
-
-                                                    @Override
-                                                    public void onShown(Snackbar snackbar) {
-                                                        // Do nothing
-                                                    }
-
-                                                    @Override
-                                                    public void onDismiss(
-                                                            Snackbar snackbar) {
-                                                        mFab.moveDown(snackbar.getHeight() + 80);
-                                                    }
-
-                                                    @Override
-                                                    public void onDismissByReplace(
-                                                            Snackbar snackbar) {
-                                                        // Do nothing
-                                                    }
-
-                                                    @Override
-                                                    public void onDismissed(
-                                                            Snackbar snackbar) {
-                                                        if (!items.isEmpty()) {
-
-                                                            for (DeploymentParcelable deploymentModel : items) {
-                                                                if (deploymentModel
-                                                                        .getDeploymentModel()
-                                                                        .getStatus() ==
-                                                                        DeploymentModel.Status.ACTIVATED) {
-                                                                    mPrefs.getActiveDeploymentUrl()
-                                                                            .delete();
-                                                                }
-                                                                mDeleteDeploymentPresenter
-                                                                        .deleteDeployment(
-                                                                                deploymentModel
-                                                                                        .getDeploymentModel());
-                                                            }
-                                                            items.clear();
-                                                        }
-                                                    }
-                                                }), getActivity());
-
-
-                            }
-                        });
+                        for (SwipeToDismissTouchListener.PendingDismissData data : dismissData) {
+                            mDeploymentRecyclerView.mPendingDeletedDeployments.add(
+                                    new DeploymentRecyclerView.PendingDeletedDeployment(data.position
+                                            , mRecyclerViewAdapter.getItem(data.position)));
+                            mRecyclerViewAdapter.removeItem(
+                                    mRecyclerViewAdapter.getItem(data.position));
+                        }
+                        mDeploymentRecyclerView.deleteItems();
+                    }
+                });
+        mDeploymentRecyclerView.addOnItemTouchListener(mSwipeToDismissTouchListener);
     }
 
     @Override

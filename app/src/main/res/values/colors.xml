@@ -67,4 +67,6 @@
     <!-- Swipe -->
     <color name="swipe_item_neutral_color">#ffffffff</color>
     <color name="swipe_item_right_color">#66999999</color>
+
+    <color name="undo_text_color">#FF5722</color>
 </resources>

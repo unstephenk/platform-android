@@ -22,6 +22,7 @@ import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 import com.ushahidi.android.R;
+import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
@@ -29,8 +30,6 @@ import com.ushahidi.android.ui.adapter.DeploymentAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.ActionMode;
@@ -40,10 +39,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import timber.log.Timber;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Custom ListView to handle CAB events for deployments list
@@ -53,6 +51,8 @@ import timber.log.Timber;
 public class DeploymentRecyclerView extends RecyclerView {
 
     public static final int INVALID_POSITION = -1;
+
+    public List<PendingDeletedDeployment> mPendingDeletedDeployments;
 
     private Activity mActivity;
 
@@ -68,8 +68,6 @@ public class DeploymentRecyclerView extends RecyclerView {
 
     private DeleteDeploymentPresenter mDeleteDeploymentPresenter;
 
-    private Map<Integer, DeploymentModel> mDeploymentModels;
-
     private MovableFab mMovableFab;
 
     public DeploymentRecyclerView(Context context) {
@@ -83,7 +81,8 @@ public class DeploymentRecyclerView extends RecyclerView {
     public DeploymentRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mActivity = (Activity) context;
-        mDeploymentModels = new LinkedHashMap();
+        mPendingDeletedDeployments = new ArrayList<>();
+        mDeploymentAdapter = (DeploymentAdapter) getAdapter();
     }
 
 
@@ -154,7 +153,6 @@ public class DeploymentRecyclerView extends RecyclerView {
 
     public void setItemChecked(int position) {
         mDeploymentAdapter = (DeploymentAdapter) getAdapter();
-
         mDeploymentAdapter.toggleSelection(position);
 
         int checkedCount = mDeploymentAdapter.getSelectedItemCount();
@@ -170,7 +168,9 @@ public class DeploymentRecyclerView extends RecyclerView {
         }
 
         if (mDeploymentAdapter != null) {
-            mDeploymentModels.put(position, mDeploymentAdapter.getItem(position));
+            mPendingDeletedDeployments.add(new PendingDeletedDeployment(position,
+                    mDeploymentAdapter.getItem(position)));
+
         }
 
         // Set the CAB title with the number of selected items
@@ -187,20 +187,19 @@ public class DeploymentRecyclerView extends RecyclerView {
         mMovableFab = movableFab;
     }
 
-    /**
-     * Clear all checked items in the list.
-     */
-    private void clearSelectedItems() {
 
-        mDeploymentAdapter.clearSelections();
+    public void initAdapter(DeploymentAdapter deploymentAdapter) {
+        mDeploymentAdapter = deploymentAdapter;
     }
 
     /**
      * Clear all checked items in the list and the selected {@link com.ushahidi.android.model.DeploymentModel}
      */
-    public void clearItems() {
-        clearSelectedItems();
-        mDeploymentModels.clear();
+    private void clearItems() {
+        mDeploymentAdapter.clearSelections();
+        if(mPendingDeletedDeployments!=null) {
+            mPendingDeletedDeployments.clear();
+        }
     }
 
     public void setDeleteDeploymentPresenter(DeleteDeploymentPresenter deleteDeploymentPresenter) {
@@ -211,169 +210,96 @@ public class DeploymentRecyclerView extends RecyclerView {
         return mNumberOfItemsDeleted;
     }
 
-    private void performDeletion(ArrayList<DeploymentParcelable> items) {
-        if (mDeleteDeploymentPresenter != null) {
+    private void setItemsForDeletion() {
 
-            if (!items.isEmpty()) {
-                mNumberOfItemsDeleted = items.size();
-                for (DeploymentParcelable deploymentModel : items) {
-                    Timber.i("Deleting deployments...");
-                    mDeleteDeploymentPresenter
-                            .deleteDeployment(deploymentModel.mDeploymentModel);
-                }
-
-                items.clear();
-            }
-
-            clearItems();
+        for (PendingDeletedDeployment pendingDeletedDeployment : mPendingDeletedDeployments) {
+            mDeploymentAdapter.removeItem(pendingDeletedDeployment.deploymentModel);
         }
+
+        deleteItems();
     }
 
-    /**
-     * Deletes selected {@link com.ushahidi.android.model.DeploymentModel} from the database.
-     */
-    private void performDelete() {
-        // Pass the selected DeploymentModels as a parcelable objects to be used by
-        // the InteractiveToast callback functions
-        final ArrayList<DeploymentParcelable> items = new ArrayList<>();
+    public void deleteItems() {
 
-        if (!mDeploymentModels.isEmpty()) {
-            mNumberOfItemsDeleted = mDeploymentModels.size();
-            for (Map.Entry<Integer, DeploymentModel> entry : mDeploymentModels.entrySet()) {
+        //Sort in ascending order for restoring deleted items
+        Comparator cmp = Collections.reverseOrder();
+        Collections.sort(mPendingDeletedDeployments, cmp);
 
-                // Initializes the DeploymentParcelable with the DeploymentModel and it's position in the list view.
+        SnackbarManager.show(Snackbar.with(getContext())
+                .text(mActivity
+                        .getString(R.string.items_deleted, mPendingDeletedDeployments.size()))
+                .actionLabel(getContext().getString(R.string.undo))
+                .actionColorResource(R.color.undo_text_color)
+                .attachToRecyclerView(this)
+                .actionListener(new ActionClickListener() {
+                    @Override
+                    public void onActionClicked(Snackbar snackbar) {
+                        // Restore items
+                        for (DeploymentRecyclerView.PendingDeletedDeployment pendingDeletedDeployment : mPendingDeletedDeployments) {
+                            mDeploymentAdapter.addItem(pendingDeletedDeployment.deploymentModel,
+                                    pendingDeletedDeployment.position);
+                        }
+                        clearItems();
+                    }
+                })
+                .eventListener(new EventListener() {
+                    @Override
+                    public void onShow(Snackbar snackbar) {
+                        mMovableFab.moveUp(snackbar.getHeight() + 80);
+                    }
 
-                // Storing the position helps in restoring the deleted DeploymentModel to it's original
-                // position.
-                DeploymentParcelable parcelable = new DeploymentParcelable(entry.getValue(),
-                        entry.getKey());
-                items.add(parcelable);
+                    @Override
+                    public void onShowByReplace(Snackbar snackbar) {
 
-                // Removes the selected DeploymentModel from the list view's adapter.
-                mDeploymentAdapter.removeItem(entry.getValue());
-            }
+                    }
 
-        }
+                    @Override
+                    public void onShown(Snackbar snackbar) {
 
-        SnackbarManager.show(
-                Snackbar.with(mActivity.getApplicationContext())
-                        .text(mActivity.getString(R.string.items_deleted, mDeploymentModels.size()))
-                        .actionLabel(mActivity.getString(R.string.undo))
-                        .attachToRecyclerView(this)
-                        .actionListener(new ActionClickListener() {
-                            @Override
-                            public void onActionClicked(Snackbar snackbar) {
-                                if (!items.isEmpty()) {
-                                    mNumberOfItemsDeleted = items.size();
-                                    for (DeploymentParcelable deploymentModel : items) {
+                    }
 
-                                        // Restores all the removed DeploymentModels from the list view's adapter
-                                        // back and in their original position.
-                                        mDeploymentAdapter.addItem(deploymentModel.mDeploymentModel,
-                                                deploymentModel.mPosition);
-                                    }
-
-                                    // Clear
-                                    items.clear();
+                    @Override
+                    public void onDismiss(Snackbar snackbar) {
+                        mMovableFab.moveDown(snackbar.getHeight() + 80);
+                        if (!snackbar.isActionClicked()) {
+                            if (mPendingDeletedDeployments.size() > 0) {
+                                mNumberOfItemsDeleted = mPendingDeletedDeployments.size();
+                                for (PendingDeletedDeployment pendingDeletedDeployment : mPendingDeletedDeployments) {
+                                    mDeleteDeploymentPresenter
+                                            .deleteDeployment(
+                                                    pendingDeletedDeployment.deploymentModel);
                                 }
-                                // Clears all selected items
                                 clearItems();
                             }
-                        })
-                        .eventListener(new EventListener() {
-                            @Override
-                            public void onShow(Snackbar snackbar) {
-                                mMovableFab.moveUp(snackbar.getHeight() + 80);
-                            }
+                        }
+                    }
 
-                            @Override
-                            public void onShowByReplace(Snackbar snackbar) {
-                                // Do nothing
-                            }
+                    @Override
+                    public void onDismissByReplace(Snackbar snackbar) {
+                    }
 
-                            @Override
-                            public void onShown(Snackbar snackbar) {
-                                // Do nothing
-                            }
+                    @Override
+                    public void onDismissed(Snackbar snackbar) {
 
-                            @Override
-                            public void onDismiss(Snackbar snackbar) {
-                                mMovableFab.moveDown(snackbar.getHeight() + 80);
-                            }
-
-                            @Override
-                            public void onDismissByReplace(Snackbar snackbar) {
-                                // Do nothing
-                            }
-
-                            @Override
-                            public void onDismissed(Snackbar snackbar) {
-                                // Delete items
-                                performDeletion(items);
-                            }
-                        }), mActivity);
+                    }
+                }));
     }
 
-    /**
-     * Facilitates in passing the {@link com.ushahidi.android.model.DeploymentModel} as a {@link
-     * android.os.Parcelable} object.
-     */
-    public static class DeploymentParcelable implements Parcelable {
+    public static class PendingDeletedDeployment implements Comparable<PendingDeletedDeployment> {
 
-        public static final Creator<DeploymentParcelable> CREATOR
-                = new Creator<DeploymentParcelable>() {
-            public DeploymentParcelable createFromParcel(Parcel in) {
-                return new DeploymentParcelable(in);
-            }
+        public int position;
 
-            public DeploymentParcelable[] newArray(int size) {
-                return new DeploymentParcelable[size];
-            }
-        };
+        public DeploymentModel deploymentModel;
 
-        private DeploymentModel mDeploymentModel;
-
-        private int mPosition;
-
-        public DeploymentParcelable(DeploymentModel deploymentModel, int position) {
-            mDeploymentModel = deploymentModel;
-            mPosition = position;
-        }
-
-        public DeploymentParcelable(Parcel parcel) {
-            mPosition = parcel.readInt();
-
-            // Makes sure the object to be retrieved is retrieved as a
-            // DeploymentModel object.
-            mDeploymentModel = (DeploymentModel) parcel
-                    .readValue(DeploymentModel.class.getClassLoader());
-        }
-
-        public DeploymentModel getDeploymentModel() {
-            return mDeploymentModel;
-        }
-
-        public int getPosition() {
-            return mPosition;
+        public PendingDeletedDeployment(int position, DeploymentModel deploymentModel) {
+            this.position = position;
+            this.deploymentModel = deploymentModel;
         }
 
         @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeInt(mPosition);
-            parcel.writeValue(mDeploymentModel);
-        }
-
-        @Override
-        public String toString() {
-            return "DeploymentParcelable{" +
-                    "mDeploymentModel=" + mDeploymentModel +
-                    ", mPosition=" + mPosition +
-                    '}';
+        public int compareTo(PendingDeletedDeployment other) {
+            // Sort by descending position
+            return other.position - position;
         }
     }
 
@@ -398,7 +324,7 @@ public class DeploymentRecyclerView extends RecyclerView {
             boolean result = false;
 
             if (menuItem.getItemId() == R.id.list_deployment_delete) {
-                performDelete();
+                setItemsForDeletion();
                 result = true;
             }
 
@@ -410,7 +336,6 @@ public class DeploymentRecyclerView extends RecyclerView {
 
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
-            clearItems();
             mActionMode = null;
         }
     }

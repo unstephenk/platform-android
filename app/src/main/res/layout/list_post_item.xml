@@ -44,44 +44,42 @@
                 android:padding="@dimen/element_spacing_normal">
 
             <TextView
-                    android:id="@+id/post_title"
-                    android:layout_width="match_parent"
+                    android:id="@+id/post_date"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/TextHeader"
-                    android:text="Hello there"/>
+                    android:paddingTop="@dimen/element_spacing_normal"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    style="@style/TextHeaderSub"/>
 
             <TextView
                     android:id="@+id/post_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/post_title"
                     android:paddingTop="@dimen/element_spacing_normal"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:visibility="gone"
                     style="@style/TextHeaderSub.Location"/>
 
             <TextView
-                    android:id="@+id/post_date"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/post_title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="4 minutes ago"
-                    android:paddingTop="@dimen/element_spacing_normal"
-                    android:layout_below="@+id/post_title"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    style="@style/TextHeaderSub"/>
+                    android:layout_below="@+id/post_location"
+                    style="@style/ListTextHeader"/>
 
             <TextView
                     android:id="@+id/post_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="What the heck happened"
+                    style="@style/ListTextBody"
                     android:paddingTop="@dimen/element_spacing_normal"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/post_date"
-                    style="@style/TextBody"/>
+                    android:maxLines="2"
+                    />
 
             <HorizontalScrollView
                     android:id="@+id/post_tags_container"

@@ -58,7 +58,6 @@ public class MovableFab extends FloatingActionButton {
     }
 
     private void move(int level) {
-        Timber.d("Level " + level);
         animate().setInterpolator(mInterpolator)
                 .setDuration(TRANSLATE_DURATION_MILLIS)
                 .translationYBy(level);
