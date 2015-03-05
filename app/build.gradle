@@ -100,6 +100,23 @@ android {
         }
     }
 
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def newName = outputFile.name.replace(".apk",
+                        "-v" + defaultConfig.versionName + "-" + variant.buildType.name.toUpperCase() +
+                                ".apk");
+
+                output.outputFile = file("$project.buildDir/apk/" + newName);
+                if (output.zipAlign) {
+                    output.zipAlign.outputFile =
+                            file("$project.buildDir/apk/" + newName.replace("-unaligned", ""));
+                }
+            }
+        }
+    }
+
     lintOptions {
         abortOnError = false
         lintConfig file("src/main/lint.xml")
