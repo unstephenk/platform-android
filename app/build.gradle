@@ -31,6 +31,8 @@ def isTravis = "true".equals(System.getenv("TRAVIS"))
 
 def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
 
+def codeVersion = 20100;
+
 def getFeedbackEmailAddress() {
 
     return project.hasProperty('feedbackEmail') ? feedbackEmail : ''
@@ -107,7 +109,7 @@ android {
 
         release {
             resValue "string", "google_maps_api_key", "\"${readGoogleMapsReleaseApiKey()}\""
-
+            android.versionCode = codeVersion
             zipAlignEnabled true
             minifyEnabled false
             shrinkResources false
