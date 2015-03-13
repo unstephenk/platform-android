@@ -109,7 +109,6 @@ android {
 
         release {
             resValue "string", "google_maps_api_key", "\"${readGoogleMapsReleaseApiKey()}\""
-            android.defaultConfig.versionCode = codeVersion
             zipAlignEnabled true
             minifyEnabled false
             shrinkResources false
@@ -174,7 +173,7 @@ release {
 
     android.defaultConfig.versionName = project.version.toString()
 
-    android.defaultConfig.versionCode = buildVersionCode().toInteger()
+    android.defaultConfig.versionCode = codeVersion
 
     tagStrategy {
         generateMessage = { version -> "\n\nRelease of $version.version\n$tagMessage" }
