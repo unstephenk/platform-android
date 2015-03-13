@@ -17,10 +17,7 @@
 
 package com.ushahidi.android.data.entity;
 
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-
-import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
@@ -32,7 +29,7 @@ import nl.qbusict.cupboard.annotation.Ignore;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class PostEntity extends Entity implements Comparable<PostEntity> {
+public class PostEntity extends Entity {
 
     @SerializedName("parent")
     @Ignore // Make cupboard ignore this field
@@ -215,11 +212,6 @@ public class PostEntity extends Entity implements Comparable<PostEntity> {
                 ", mValues='" + mValues + '\'' +
                 ", mTags=" + mTags +
                 '}';
-    }
-
-    @Override
-    public int compareTo(PostEntity another) {
-        return getTitle().compareToIgnoreCase(another.getTitle());
     }
 
     public static class Parent {

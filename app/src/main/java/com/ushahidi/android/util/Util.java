@@ -17,6 +17,10 @@
 
 package com.ushahidi.android.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -42,13 +46,46 @@ public class Util {
         }
 
         return text.substring(0, 1).toUpperCase(Locale.getDefault())
-                + text.substring(1).toLowerCase(Locale.getDefault());
+            + text.substring(1).toLowerCase(Locale.getDefault());
 
     }
 
     public static boolean validateHexColor(String hexColor) {
-        
+
         final String HEX_PATTERN = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
         return Pattern.compile(HEX_PATTERN).matcher(hexColor).matches();
     }
+
+    public static void writeDbToSDCard() {
+        File f = new File("/data/data/com.ushahidi.android/databases/ushahidi.db");
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+
+        try {
+            fis = new FileInputStream(f);
+            fos = new FileOutputStream("/mnt/sdcard/ush_dump.db");
+            while (true) {
+                int i = fis.read();
+                if (i != -1) {
+                    fos.write(i);
+                } else {
+                    break;
+                }
+            }
+            fos.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(fos !=null) {
+                    fos.close();
+                }
+                if(fis !=null) {
+                    fis.close();
+                }
+            } catch (IOException ioe) {
+            }
+        }
+    }
+
 }

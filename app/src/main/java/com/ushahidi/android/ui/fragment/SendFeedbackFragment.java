@@ -72,7 +72,7 @@ public class SendFeedbackFragment extends BaseFragment implements SendFeedbackPr
     }
 
     @Override
-    public Context getContext() {
+    public Context getAppContext() {
         return getActivity();
     }
 }

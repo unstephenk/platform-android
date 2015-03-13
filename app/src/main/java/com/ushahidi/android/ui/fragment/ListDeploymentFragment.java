@@ -18,20 +18,13 @@
 package com.ushahidi.android.ui.fragment;
 
 
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.SnackbarManager;
-import com.nispok.snackbar.listeners.ActionClickListener;
-import com.nispok.snackbar.listeners.EventListener;
 import com.ushahidi.android.R;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
 import com.ushahidi.android.presenter.ListDeploymentPresenter;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
-import com.ushahidi.android.ui.listener.SwipeDismissRecyclerViewTouchListener;
 import com.ushahidi.android.ui.listener.SwipeToDismissTouchListener;
-import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.widget.DeploymentRecyclerView;
-//import com.ushahidi.android.ui.widget.DeploymentRecyclerView.DeploymentParcelable;
 import com.ushahidi.android.ui.widget.MovableFab;
 
 import android.app.Activity;
@@ -45,7 +38,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -96,7 +88,6 @@ public class ListDeploymentFragment
         mDeploymentListPresenter.init();
         mDeploymentRecyclerView = (DeploymentRecyclerView) mRecyclerView;
         mDeploymentRecyclerView.setDeleteDeploymentPresenter(mDeleteDeploymentPresenter);
-
 
         if (mFab != null) {
             setViewGone(mFab, false);
@@ -174,8 +165,8 @@ public class ListDeploymentFragment
     }
 
     @Override
-    public Context getContext() {
-        return getActivity().getApplicationContext();
+    public Context getAppContext() {
+        return getActivity();
     }
 
     @Override
@@ -269,7 +260,8 @@ public class ListDeploymentFragment
 
                         for (SwipeToDismissTouchListener.PendingDismissData data : dismissData) {
                             mDeploymentRecyclerView.mPendingDeletedDeployments.add(
-                                    new DeploymentRecyclerView.PendingDeletedDeployment(data.position
+                                    new DeploymentRecyclerView.PendingDeletedDeployment(
+                                            data.position
                                             , mRecyclerViewAdapter.getItem(data.position)));
                             mRecyclerViewAdapter.removeItem(
                                     mRecyclerViewAdapter.getItem(data.position));

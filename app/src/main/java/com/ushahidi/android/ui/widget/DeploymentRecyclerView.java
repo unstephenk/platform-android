@@ -22,7 +22,6 @@ import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 import com.ushahidi.android.R;
-import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
 import com.ushahidi.android.ui.adapter.DeploymentAdapter;
@@ -197,7 +196,7 @@ public class DeploymentRecyclerView extends RecyclerView {
      */
     private void clearItems() {
         mDeploymentAdapter.clearSelections();
-        if(mPendingDeletedDeployments!=null) {
+        if (mPendingDeletedDeployments != null) {
             mPendingDeletedDeployments.clear();
         }
     }

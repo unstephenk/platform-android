@@ -138,7 +138,7 @@ public class DeploymentActivity extends BaseActivity
 
         mSearchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
-        mSearchView.setIconified(false);
+        mSearchView.clearFocus();
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {

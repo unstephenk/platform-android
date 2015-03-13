@@ -91,7 +91,7 @@ public class AddDeploymentPresenterTest extends CustomAndroidTestCase {
         doNothing().when(mMockAddDeployment)
                 .execute(any(Deployment.class), any(AddDeployment.Callback.class));
 
-        given(mView.getContext()).willReturn(mMockContext);
+        given(mView.getAppContext()).willReturn(mMockContext);
 
         mAddDeploymentPresenter.addDeployment(mDeploymentModel);
 

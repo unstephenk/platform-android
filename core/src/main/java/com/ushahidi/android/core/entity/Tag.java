@@ -34,6 +34,8 @@ public class Tag extends Entity {
 
     private String mSlug;
 
+    private String mColor;
+
     private Type mType;
 
     private String mIcon;
@@ -111,16 +113,25 @@ public class Tag extends Entity {
     @Override
     public String toString() {
         return "Tag{" +
-                "id=" + getId() +
-                ", ParentId=" + mParentId +
-                ", Tag='" + mTag + '\'' +
-                ", Slug='" + mSlug + '\'' +
-                ", Type='" + mType + '\'' +
-                ", Icon='" + mIcon + '\'' +
-                ", Description='" + mDescription + '\'' +
-                ", Priority=" + mPriority +
-                ", Created=" + mCreated +
-                '}';
+            " id="+super.getId()+
+            ", mParentId=" + mParentId +
+            ", mTag='" + mTag + '\'' +
+            ", mSlug='" + mSlug + '\'' +
+            ", mColor='" + mColor + '\'' +
+            ", mType=" + mType +
+            ", mIcon='" + mIcon + '\'' +
+            ", mDescription='" + mDescription + '\'' +
+            ", mPriority=" + mPriority +
+            ", mCreated=" + mCreated +
+            '}';
+    }
+
+    public String getColor() {
+        return mColor;
+    }
+
+    public void setColor(String mColor) {
+        this.mColor = mColor;
     }
 
     public enum Type {

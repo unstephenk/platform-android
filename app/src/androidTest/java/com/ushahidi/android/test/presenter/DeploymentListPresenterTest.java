@@ -77,7 +77,7 @@ public class DeploymentListPresenterTest extends CustomAndroidTestCase {
         doNothing().when(mMockListDeployment)
                 .execute(any(ListDeployment.Callback.class));
 
-        given(mMockView.getContext()).willReturn(mMockContext);
+        given(mMockView.getAppContext()).willReturn(mMockContext);
 
         mDeploymentListPresenter.init();
 

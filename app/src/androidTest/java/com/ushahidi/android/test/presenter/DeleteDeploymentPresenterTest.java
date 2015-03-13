@@ -94,7 +94,7 @@ public class DeleteDeploymentPresenterTest extends CustomAndroidTestCase {
         doNothing().when(mMockDeleteDeployment)
                 .execute(any(Deployment.class), any(DeleteDeployment.Callback.class));
 
-        given(mMockView.getContext()).willReturn(mMockContext);
+        given(mMockView.getAppContext()).willReturn(mMockContext);
 
         mDeleteDeploymentPresenter.deleteDeployment(mDeploymentModel);
 

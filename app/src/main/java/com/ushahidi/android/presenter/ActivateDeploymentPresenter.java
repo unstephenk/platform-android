@@ -87,7 +87,7 @@ public class ActivateDeploymentPresenter implements IPresenter {
     }
 
     private void showErrorMessage(ErrorWrap errorWrap) {
-        String errorMessage = ErrorMessageFactory.create(mView.getContext(),
+        String errorMessage = ErrorMessageFactory.create(mView.getAppContext(),
                 errorWrap.getException());
         mView.showError(errorMessage);
     }

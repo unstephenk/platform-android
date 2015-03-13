@@ -19,17 +19,25 @@ package com.ushahidi.android.data.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-import com.ushahidi.android.core.Entity;
-
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class PostTagEntity extends Entity {
+public class PostTagEntity {
 
     private Long mPostId;
 
     @SerializedName("id")
     private Long mTagId;
+
+    private Long _id;
+
+    public Long getId() {
+        return _id;
+    }
+
+    public void setId(Long id) {
+        _id = id;
+    }
 
     public Long getPostId() {
         return mPostId;

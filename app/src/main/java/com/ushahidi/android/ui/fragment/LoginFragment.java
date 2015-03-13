@@ -20,7 +20,6 @@ package com.ushahidi.android.ui.fragment;
 import com.andreabaccega.widget.FormAutoCompleteTextView;
 import com.andreabaccega.widget.FormEditText;
 import com.ushahidi.android.R;
-import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.data.Constants;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.UserAccountModel;
@@ -176,13 +175,14 @@ public class LoginFragment extends BaseFragment
         if (mLoginListener != null && mUserAccountModel != null) {
             mUserAccountModel.setId(userId);
             mLoginListener.finish();
-            mLoginListener.setAccountAuthenticatorResult(mUserAccountModel,mSelectedDeploymentModel.getId());
+            mLoginListener.setAccountAuthenticatorResult(mUserAccountModel,
+                    mSelectedDeploymentModel.getId());
         }
     }
 
     @Override
     public void deploymentList(List<DeploymentModel> deploymentModelList) {
-        mDeploymentSpinnerArrayAdapter = new DeploymentSpinnerAdapter(getContext(),
+        mDeploymentSpinnerArrayAdapter = new DeploymentSpinnerAdapter(getAppContext(),
                 deploymentModelList);
         mSpinner.setAdapter(mDeploymentSpinnerArrayAdapter);
 
@@ -216,8 +216,8 @@ public class LoginFragment extends BaseFragment
     }
 
     @Override
-    public Context getContext() {
-        return getActivity().getApplicationContext();
+    public Context getAppContext() {
+        return getActivity();
     }
 
     @Override

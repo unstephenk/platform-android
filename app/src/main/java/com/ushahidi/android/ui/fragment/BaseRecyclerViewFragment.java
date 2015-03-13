@@ -17,13 +17,14 @@
 
 package com.ushahidi.android.ui.fragment;
 
-import com.ushahidi.android.model.Model;
-import com.ushahidi.android.ui.adapter.BaseRecyclerViewAdapter;
-
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.InflateException;
+import android.view.View;
+
+import com.ushahidi.android.model.Model;
+import com.ushahidi.android.ui.adapter.BaseRecyclerViewAdapter;
 
 import butterknife.InjectView;
 import timber.log.Timber;
@@ -34,7 +35,7 @@ import timber.log.Timber;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public abstract class BaseRecyclerViewFragment<M extends Model, L extends BaseRecyclerViewAdapter>
-        extends BaseFragment {
+    extends BaseFragment {
 
     private static String TAG = BaseRecyclerViewFragment.class.getSimpleName();
 
@@ -60,7 +61,7 @@ public abstract class BaseRecyclerViewFragment<M extends Model, L extends BaseRe
     protected RecyclerView mRecyclerView;
 
     protected BaseRecyclerViewFragment(Class<L> adapterClass, int layout, int menu,
-            int recyclerViewId) {
+                                       int recyclerViewId) {
         super(layout, menu);
         mRecyclerViewAdapterClass = adapterClass;
         mRecyclerViewId = recyclerViewId;
@@ -83,7 +84,7 @@ public abstract class BaseRecyclerViewFragment<M extends Model, L extends BaseRe
             Timber.e(TAG, "SecurityException", e);
             for (StackTraceElement exception : e.getStackTrace()) {
                 Timber.e(TAG,
-                        String.format("%s", exception.toString()));
+                    String.format("%s", exception.toString()));
             }
         } catch (InflateException e) {
             Timber.e(TAG, "InflateException", e);
@@ -97,15 +98,20 @@ public abstract class BaseRecyclerViewFragment<M extends Model, L extends BaseRe
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
 
+
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         if (mRecyclerViewId != 0) {
             mRecyclerViewAdapter = BaseRecyclerViewFragment
-                    .createInstance(mRecyclerViewAdapterClass);
+                .createInstance(mRecyclerViewAdapterClass);
             mRecyclerView.setFocusable(true);
             mRecyclerView.setFocusableInTouchMode(true);
             mRecyclerView.setAdapter(mRecyclerViewAdapter);
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
-
     }
 }

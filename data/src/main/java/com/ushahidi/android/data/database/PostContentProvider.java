@@ -114,7 +114,6 @@ public class PostContentProvider extends SearchRecentSuggestionsProvider {
         if (!TextUtils.isEmpty(query)) {
             query = query.toLowerCase(Locale.ENGLISH);
             postEntities = mPostDatabaseHelper.search(query);
-            Collections.sort(postEntities);
         }
         return postEntities;
     }

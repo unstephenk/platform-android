@@ -149,32 +149,32 @@ public class ListPostPresenter implements IPresenter {
 
     @Inject
     public ListPostPresenter(ListPost listPost,
-            FetchTag fetchTag,
-            Search<Post> search,
-            FetchPost fetchPost,
-            PostModelDataMapper postModelDataMapper,
-            IPostRepository postRepository,
-            ITagRepository tagRepository,
-            PostDataSourceFactory postDataSourceFactory,
-            TagDataSourceFactory tagDataSourceFactory,
-            Prefs prefs,
-            ApiServiceUtil apiServiceUtil,
-            IDeploymentState deploymentState
+                             FetchTag fetchTag,
+                             Search<Post> search,
+                             FetchPost fetchPost,
+                             PostModelDataMapper postModelDataMapper,
+                             IPostRepository postRepository,
+                             ITagRepository tagRepository,
+                             PostDataSourceFactory postDataSourceFactory,
+                             TagDataSourceFactory tagDataSourceFactory,
+                             Prefs prefs,
+                             ApiServiceUtil apiServiceUtil,
+                             IDeploymentState deploymentState
     ) {
         mListPost = Preconditions.checkNotNull(listPost, "ListPost cannot be null");
         mFetchTag = fetchTag;
         mSearch = Preconditions.checkNotNull(search, "Search cannot be null");
         mFetchPost = Preconditions.checkNotNull(fetchPost, "Fetch Post listing");
         mPostModelDataMapper = Preconditions
-                .checkNotNull(postModelDataMapper, "PostModelDataMapper cannot be null");
+            .checkNotNull(postModelDataMapper, "PostModelDataMapper cannot be null");
         mPostRepository = Preconditions.checkNotNull(postRepository,
-                "Post repository cannot be null.");
+            "Post repository cannot be null.");
         mTagRepository = Preconditions.checkNotNull(tagRepository, "Tag Repository cannot be null");
         mPrefs = Preconditions.checkNotNull(prefs, "Preferences cannot be null");
         mPostDataSourceFactory = Preconditions
-                .checkNotNull(postDataSourceFactory, "Post data source factory cannot be null.");
+            .checkNotNull(postDataSourceFactory, "Post data source factory cannot be null.");
         mTagDataSourceFactory = Preconditions
-                .checkNotNull(tagDataSourceFactory, "Tag data source factory cannot be null.");
+            .checkNotNull(tagDataSourceFactory, "Tag data source factory cannot be null.");
         mApiServiceUtil = apiServiceUtil;
         mDeploymentState = deploymentState;
     }
@@ -200,13 +200,13 @@ public class ListPostPresenter implements IPresenter {
 
     private PostService createPostService() {
         return mApiServiceUtil.createService(PostService.class,
-                mPrefs.getActiveDeploymentUrl().get(), mPrefs.getAccessToken().get());
+            mPrefs.getActiveDeploymentUrl().get(), mPrefs.getAccessToken().get());
     }
 
     private TagService createTagService() {
         return mApiServiceUtil
-                .createService(TagService.class, mPrefs.getActiveDeploymentUrl().get(),
-                        mPrefs.getAccessToken().get());
+            .createService(TagService.class, mPrefs.getActiveDeploymentUrl().get(),
+                mPrefs.getAccessToken().get());
     }
 
     @Override
@@ -230,15 +230,19 @@ public class ListPostPresenter implements IPresenter {
         showViewLoading();
         getPostListFromLocalCache();
     }
-
+    
     @Subscribe
     public void onActivatedDeploymentChanged(
-            IDeploymentState.ActivatedDeploymentChangedEvent event) {
+        IDeploymentState.ActivatedDeploymentChangedEvent event) {
         loadPostListFromLocalCache();
     }
 
     public void refreshList() {
         fetchPostFromApi();
+    }
+
+    public void loadfromLocalCache() {
+        loadPostListFromLocalCache();
     }
 
     public void onPostClicked(PostModel postModel) {
@@ -262,14 +266,16 @@ public class ListPostPresenter implements IPresenter {
     }
 
     private void showErrorMessage(ErrorWrap errorWrap) {
-        String errorMessage = ErrorMessageFactory.create(mView.getContext(),
+        if (mView.getAppContext() != null) {
+            String errorMessage = ErrorMessageFactory.create(mView.getAppContext(),
                 errorWrap.getException());
-        mView.showError(errorMessage);
+                mView.showError(errorMessage);
+        }
     }
 
     private void showPostsListInView(List<Post> listPosts) {
         final List<PostModel> postModelsList =
-                mPostModelDataMapper.map(listPosts);
+            mPostModelDataMapper.map(listPosts);
         mView.renderPostList(postModelsList);
     }
 

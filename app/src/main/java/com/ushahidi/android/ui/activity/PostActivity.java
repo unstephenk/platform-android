@@ -18,6 +18,19 @@
 package com.ushahidi.android.ui.activity;
 
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import com.squareup.otto.Subscribe;
 import com.ushahidi.android.R;
 import com.ushahidi.android.model.DeploymentModel;
@@ -31,21 +44,10 @@ import com.ushahidi.android.state.ApplicationState;
 import com.ushahidi.android.state.IDeploymentState;
 import com.ushahidi.android.state.IUserState;
 import com.ushahidi.android.ui.fragment.ListPostFragment;
+import com.ushahidi.android.ui.fragment.MapPostFragment;
 import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.widget.NavDrawerItem;
 import com.ushahidi.android.ui.widget.SlidingTabLayout;
-
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.SearchView;
-import android.text.TextUtils;
-import android.view.Menu;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -59,11 +61,11 @@ import javax.inject.Inject;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawerItemListener,
-        NavDrawerItem.NavDeploymentItemListener,
-        MainPresenter.View,
-        DeploymentNavPresenter.View,
-        ListPostFragment.PostListListener,
-        ActivateDeploymentPresenter.View  {
+    NavDrawerItem.NavDeploymentItemListener,
+    MainPresenter.View,
+    DeploymentNavPresenter.View,
+    ListPostFragment.PostListListener,
+    ActivateDeploymentPresenter.View {
 
     private static final String SELECTED_TAB = "selected_tab";
 
@@ -79,6 +81,10 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     @Inject
     MainPresenter mMainPresenter;
 
+    private SearchView mSearchView = null;
+
+    private String mQuery = "";
+
     private SlidingTabLayout mSlidingTabStrip;
 
     private ViewPager mViewPager;
@@ -88,10 +94,6 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     private int mCurrentItem;
 
     private List<String> mTabTitle;
-
-    private SearchView mSearchView = null;
-
-    private String mQuery = "";
 
     private ListPostFragment mListPostFragment;
 
@@ -104,6 +106,10 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
         mMainPresenter.setView(this);
         mActivateDeploymentPresenter.setView(this);
         mDeploymentNavPresenter.setView(this);
+
+        mListPostFragment = ListPostFragment.newInstance();
+
+        // Set up tabs
         mTabTitle = new ArrayList<>();
         mTabTitle.add(getString(R.string.list));
         mTabTitle.add(getString(R.string.map));
@@ -115,13 +121,19 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
         mViewPager.setAdapter(mAdapter);
         mViewPager.setPageMargin(
-                getResources().getDimensionPixelSize(R.dimen.element_spacing_normal));
+            getResources().getDimensionPixelSize(R.dimen.element_spacing_normal));
 
         mSlidingTabStrip.setViewPager(mViewPager);
         mSlidingTabStrip.setTabListener(new SlidingTabLayout.TabListener() {
             @Override
-            public void onTabSelected(int pos) {
-                // NO-OP
+            public void onTabSelected(int position) {
+                // Disable swipe to refresh if map tab is selected
+                if (position == 1) {
+                    mSwipeRefreshLayout.setEnabled(false);
+                    mSwipeRefreshLayout.setRefreshing(false);
+                } else {
+                    mSwipeRefreshLayout.setEnabled(true);
+                }
             }
 
             @Override
@@ -150,7 +162,6 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
             performQuery(query);
             if (mSearchView != null) {
                 mSearchView.setQuery(query, false);
-
             }
         }
     }
@@ -160,18 +171,44 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
         super.onCreateOptionsMenu(menu);
 
         mSearchView =
-                (SearchView) menu.findItem(R.id.menu_search_post).getActionView();
+            (SearchView) menu.findItem(R.id.menu_search_post).getActionView();
         initSearchView();
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.menu_refresh_post) {
+            enableSwipeRefresh();
+            return true;
+        } else if (id == R.id.menu_sort_by_title) {
+            if (mListPostFragment != null) {
+                mListPostFragment.sortByTitle();
+            }
+            return true;
+        } else if (id == R.id.menu_sort_by_date) {
+            if (mListPostFragment != null) {
+                mListPostFragment.sortByDate();
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
     private void initSearchView() {
         final SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
         mSearchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
-        mSearchView.setIconified(false);
+            searchManager.getSearchableInfo(getComponentName()));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -183,7 +220,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
             @Override
             public boolean onQueryTextChange(String s) {
                 if (TextUtils.isEmpty(s)) {
-                    refresh();
+                    mListPostFragment.refreshFromCache();
                 } else {
                     performQuery(s);
                 }
@@ -204,14 +241,14 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
             mSearchView.setQuery(mQuery, false);
         }
         SearchView.SearchAutoComplete searchAutoComplete
-                = (SearchView.SearchAutoComplete) mSearchView
-                .findViewById(android.support.v7.appcompat.R.id.search_src_text);
+            = (SearchView.SearchAutoComplete) mSearchView
+            .findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchAutoComplete.setHintTextColor(getResources().getColor(android.R.color.white));
         searchAutoComplete.setTextSize(14);
     }
 
     private void performQuery(String query) {
-        if(mListPostFragment != null) {
+        if (mListPostFragment != null) {
             mListPostFragment.search(query);
         }
     }
@@ -255,19 +292,20 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     protected void initNavDrawerItems() {
 
         mNavDrawerItemViews
-                .add(setNavDrawerItem(R.string.manage_deployments, R.drawable.ic_action_map, 1,
-                        DeploymentActivity.getIntent(this)));
+            .add(setNavDrawerItem(R.string.manage_deployments, R.drawable.ic_action_map, 1,
+                DeploymentActivity.getIntent(this)));
 
         mNavDrawerItemViews
-                .add(setNavDrawerItem(R.string.settings, R.drawable.ic_action_settings, 2,
-                        SettingsActivity.getIntent(this)));
+            .add(setNavDrawerItem(R.string.settings, R.drawable.ic_action_settings, 2,
+                SettingsActivity.getIntent(this)));
 
         mNavDrawerItemViews.add(setNavDrawerItem(R.string.about, R.drawable.ic_action_info, 3,
-                AboutActivity.getIntent(this)));
+            AboutActivity.getIntent(this)));
 
         mNavDrawerItemViews
-                .add(setNavDrawerItem(R.string.send_feedback, R.drawable.ic_action_help, 4,
-                        SendFeedbackActivity.getIntent(this)));
+            .add(setNavDrawerItem(R.string.send_feedback, R.drawable.ic_action_help, 4,
+                SendFeedbackActivity.getIntent(this)));
+
         setFragments();
 
     }
@@ -276,43 +314,23 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
         List<Fragment> fragments = new ArrayList<>();
 
-        if(mListPostFragment == null) {
-            mListPostFragment = new ListPostFragment();
-        }
+        mListPostFragment = ListPostFragment.newInstance();
 
         fragments.add(mListPostFragment);
-        fragments.add(createTabFragments(PostTab.MAP));
+        fragments.add(MapPostFragment.newInstance());
 
         mAdapter.setFragments(fragments);
         mSlidingTabStrip.notifyDataSetChanged();
-        mViewPager.setCurrentItem(mCurrentItem);
-    }
-
-    private Fragment createTabFragments(PostTab tab) {
-        switch (tab) {
-            case LIST:
-                return new ListPostFragment();
-            case MAP:
-                return new ListPostFragment();
-        }
-        return null;
-    }
-
-    private NavDrawerItem setNavDrawerItem(int titleResId, int iconId, int position) {
-        NavDrawerItem navDrawerItem = new NavDrawerItem(this, getResources().getString(titleResId),
-                iconId, position);
-        navDrawerItem.setOnClickListener(this);
-        return navDrawerItem;
     }
 
     private NavDrawerItem setNavDrawerItem(int titleResId, int iconId, int position,
-            Intent intent) {
+                                           Intent intent) {
         return setNavDrawerItem(getResources().getString(titleResId), iconId, position, intent);
     }
 
     private NavDrawerItem setNavDrawerItem(String title, int iconId, int position, Intent intent) {
         NavDrawerItem navDrawerItem = new NavDrawerItem(this, title,
-                iconId, position, intent);
+            iconId, position, intent);
         navDrawerItem.setOnClickListener(this);
         return navDrawerItem;
     }
@@ -336,7 +354,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
         if (deploymentModels.get(position).getStatus() == DeploymentModel.Status.DEACTIVATED) {
             mActivateDeploymentPresenter.activateDeployment(deploymentModels,
-                    navDrawerItem.getPosition());
+                navDrawerItem.getPosition());
         }
     }
 
@@ -345,7 +363,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
         mNavDrawerItemViews.clear();
         for (int i = 0; i < listDeploymentModel.size(); i++) {
             NavDrawerItem navDrawerItem = setNavDrawerItem(listDeploymentModel.get(i).getTitle(),
-                    R.drawable.ic_action_globe, i, null);
+                R.drawable.ic_action_globe, i, null);
             navDrawerItem.setNavDrawerItemId(listDeploymentModel.get(i).getId());
             navDrawerItem.setStatus(listDeploymentModel.get(i).getStatus());
             navDrawerItem.setOnDeploymentClickListener(this);
@@ -370,7 +388,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     }
 
     @Override
-    public Context getContext() {
+    public Context getAppContext() {
         return getApplicationContext();
     }
 
@@ -403,7 +421,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
     @Override
     public void onPostClicked(final PostModel postModel) {
-
+        showToast(postModel.getTitle());
     }
 
     @Override
@@ -417,7 +435,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     }
 
     @Subscribe
-    public void onUnthorizied(IUserState.UnauthorizedAccessEvent event) {
+    public void onUnauthorized(IUserState.UnauthorizedAccessEvent event) {
         launcher.launchLogin();
     }
 
@@ -427,13 +445,14 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     }
 
     private void refresh() {
-        if(mListPostFragment !=null) {
+        if (mListPostFragment != null) {
             mListPostFragment.refreshLists();
         }
     }
 
-    private static enum PostTab {
-        LIST, MAP
+    @Override
+    public boolean canSwipeRefreshChildScrollUp() {
+        return mListPostFragment.canCollectionViewScrollUp();
     }
 
     private class TabPagerAdapter extends FragmentPagerAdapter {
@@ -450,6 +469,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
             mFragments.clear();
             mFragments.addAll(fragments);
             notifyDataSetChanged();
+            mViewPager.setCurrentItem(mCurrentItem);
         }
 
         @Override

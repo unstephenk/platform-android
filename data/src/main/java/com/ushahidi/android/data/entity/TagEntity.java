@@ -19,8 +19,6 @@ package com.ushahidi.android.data.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-import com.ushahidi.android.core.Entity;
-
 import java.util.Date;
 
 import nl.qbusict.cupboard.annotation.Ignore;

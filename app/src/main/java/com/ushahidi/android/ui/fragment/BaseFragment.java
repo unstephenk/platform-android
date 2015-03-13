@@ -19,7 +19,6 @@ package com.ushahidi.android.ui.fragment;
 
 import com.andreabaccega.widget.FormAutoCompleteTextView;
 import com.andreabaccega.widget.FormEditText;
-import com.ushahidi.android.state.IDeploymentState;
 import com.ushahidi.android.ui.activity.BaseActivity;
 
 import android.app.Activity;
@@ -33,8 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
@@ -77,20 +74,19 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        injectDependencies();
-        initPresenter();
+
+        //initPresenter();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        injectDependencies();
     }
 
     @Override
@@ -100,6 +96,7 @@ public abstract class BaseFragment extends Fragment {
         if (mLayout != 0) {
             root = inflater.inflate(mLayout, container, false);
         }
+
         return root;
     }
 
@@ -107,6 +104,7 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         injectViews(view);
+        initPresenter();
     }
 
     @Override

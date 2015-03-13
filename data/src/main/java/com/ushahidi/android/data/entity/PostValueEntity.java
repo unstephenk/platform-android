@@ -17,10 +17,6 @@
 
 package com.ushahidi.android.data.entity;
 
-import com.ushahidi.android.core.Entity;
-
-import java.util.Map;
-
 /**
  * Value Entity
  *

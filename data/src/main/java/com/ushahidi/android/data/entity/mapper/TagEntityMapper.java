@@ -52,7 +52,7 @@ public class TagEntityMapper {
             tag.setCreated(tagEntity.getCreated());
             tag.setIcon(tagEntity.getIcon());
             tag.setParentId(tagEntity.getParentId());
-            tag.setSlug(tagEntity.getColor());
+            tag.setColor(tagEntity.getColor());
             tag.setType(Tag.Type.valueOf(tagEntity.getType().name()));
             tag.setTag(tagEntity.getTag());
         }

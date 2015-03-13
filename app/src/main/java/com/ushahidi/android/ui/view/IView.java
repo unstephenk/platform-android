@@ -34,5 +34,5 @@ public interface IView {
     /**
      * Gets a {@link android.content.Context}.
      */
-    public Context getContext();
+    public Context getAppContext();
 }

@@ -47,6 +47,7 @@
         </item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="Theme.Ushahidi" parent="Theme.Ushahidi.Base"/>

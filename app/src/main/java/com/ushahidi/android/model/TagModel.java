@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2014 Ushahidi.
+ *  Copyright (c) 2015 Ushahidi.
  *
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Affero General Public License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option)
- * any later version.
+ *   This program is free software: you can redistribute it and/or modify it under
+ *   the terms of the GNU Affero General Public License as published by the Free
+ *   Software Foundation, either version 3 of the License, or (at your option)
+ *   any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+ *   This program is distributed in the hope that it will be useful, but WITHOUT
+ *   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ *   FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program in the file LICENSE-AGPL. If not, see
- * https://www.gnu.org/licenses/agpl-3.0.html
+ *   You should have received a copy of the GNU Affero General Public License
+ *   along with this program in the file LICENSE-AGPL. If not, see
+ *   https://www.gnu.org/licenses/agpl-3.0.html
+ *
  */
 
 package com.ushahidi.android.model;
@@ -41,6 +42,8 @@ public class TagModel extends Model {
     private int mPriority;
 
     private Date mCreated;
+
+    private String mColor;
 
     public Long getParentId() {
         return mParentId;
@@ -106,19 +109,27 @@ public class TagModel extends Model {
         mPriority = priority;
     }
 
+    public String getColor() {
+        return mColor;
+    }
+
+    public void setColor(String color) {
+        mColor = color;
+    }
+
     @Override
     public String toString() {
-        return "Tag{" +
-                "id=" + _id +
-                ", ParentId=" + mParentId +
-                ", Tag='" + mTag + '\'' +
-                ", Slug='" + mSlug + '\'' +
-                ", Type='" + mType + '\'' +
-                ", Icon='" + mIcon + '\'' +
-                ", Description='" + mDescription + '\'' +
-                ", Priority=" + mPriority +
-                ", Created=" + mCreated +
-                '}';
+        return "TagModel{" +
+            "mParentId=" + mParentId +
+            ", mTag='" + mTag + '\'' +
+            ", mSlug='" + mSlug + '\'' +
+            ", mType=" + mType +
+            ", mIcon='" + mIcon + '\'' +
+            ", mDescription='" + mDescription + '\'' +
+            ", mPriority=" + mPriority +
+            ", mCreated=" + mCreated +
+            ", mColor='" + mColor + '\'' +
+            '}';
     }
 
     public enum Type {

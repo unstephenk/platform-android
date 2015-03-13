@@ -31,20 +31,15 @@ import com.ushahidi.android.core.usecase.user.AddUser;
 import com.ushahidi.android.core.usecase.user.FetchUser;
 import com.ushahidi.android.data.Constants;
 import com.ushahidi.android.data.api.service.UserService;
-import com.ushahidi.android.data.database.UserDatabaseHelper;
 import com.ushahidi.android.data.entity.mapper.UserAccountEntityMapper;
-import com.ushahidi.android.data.entity.mapper.UserEntityMapper;
 import com.ushahidi.android.data.repository.UserAccountDataRepository;
-import com.ushahidi.android.data.repository.UserDataRepository;
 import com.ushahidi.android.data.repository.datasource.account.UserAccountDataSourceFactory;
 import com.ushahidi.android.data.repository.datasource.user.UserDataSourceFactory;
-import com.ushahidi.android.data.validator.UrlValidator;
 import com.ushahidi.android.exception.ErrorMessageFactory;
 import com.ushahidi.android.model.DeploymentModel;
 import com.ushahidi.android.model.UserAccountModel;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.model.mapper.UserAccountModelDataMapper;
-import com.ushahidi.android.state.IUserState;
 import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.view.ILoadViewData;
 import com.ushahidi.android.util.ApiServiceUtil;
@@ -238,7 +233,7 @@ public class LoginPresenter implements IPresenter {
     }
 
     private void showErrorMessage(ErrorWrap errorWrap) {
-        String errorMessage = ErrorMessageFactory.create(mView.getContext(),
+        String errorMessage = ErrorMessageFactory.create(mView.getAppContext(),
                 errorWrap.getException());
         mView.showError(errorMessage);
     }

@@ -77,4 +77,7 @@
     <dimen name="column_width">100dp</dimen>
 
     <dimen name="tag_badge_color_size">12dp</dimen>
+
+    <dimen name="map_height">100dp</dimen>
+    <dimen name="paralax_offset">200dp</dimen>
 </resources>

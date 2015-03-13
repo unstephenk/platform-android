@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 Ushahidi.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under
+  ~ the terms of the GNU Affero General Public License as published by the Free
+  ~ Software Foundation, either version 3 of the License, or (at your option)
+  ~ any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT
+  ~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~ FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program in the file LICENSE-AGPL. If not, see
+  ~ https://www.gnu.org/licenses/agpl-3.0.html
+  -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+     android:duration="150">
+    <scale
+            android:fromXScale="1.0"
+            android:fromYScale="1.0"
+            android:toXScale="0.5"
+            android:toYScale="0.5" />
+    <alpha
+            android:fromAlpha="1.0"
+            android:toAlpha="0.0"/>
+    <translate
+            android:fromXDelta="0%"
+            android:toXDelta="25%"
+            android:fromYDelta="0%"
+            android:toYDelta="25%" />
+</set>

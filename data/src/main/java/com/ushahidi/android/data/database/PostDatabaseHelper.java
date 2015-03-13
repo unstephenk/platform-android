@@ -17,16 +17,16 @@
 
 package com.ushahidi.android.data.database;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
 import com.ushahidi.android.core.task.ThreadExecutor;
 import com.ushahidi.android.data.BuildConfig;
 import com.ushahidi.android.data.entity.PostEntity;
 import com.ushahidi.android.data.entity.PostTagEntity;
 import com.ushahidi.android.data.entity.TagEntity;
 import com.ushahidi.android.data.exception.PostNotFoundException;
-
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,14 +91,16 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
         SQLiteDatabase db = getReadableDatabase();
         try {
             db.beginTransaction();
-
+                //Delete before insertion
+                cupboard().withDatabase(db).delete(postEntity);
                 Long rows = cupboard().withDatabase(db).put(postEntity);
                 if ((rows > 0) && (postEntity.getPostTagEntityList() != null) && (
                         postEntity.getPostTagEntityList().size() > 0)) {
 
                     for (PostTagEntity postTagEntity : postEntity.getPostTagEntityList()) {
-                        postTagEntity.setPostId(postEntity.getId());
-                        cupboard().withDatabase(db).put(postTagEntity);
+                            postTagEntity.setPostId(postEntity.getId());
+                            cupboard().withDatabase(db).put(postTagEntity);
+
                     }
                 }
             db.setTransactionSuccessful();
@@ -171,7 +173,8 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
 
         for (PostTagEntity postTagEntity : postTagEntityList) {
             TagEntity tagEntity = cupboard().withDatabase(getReadableDatabase())
-                    .get(TagEntity.class, postTagEntity.getTagId());
+                .get(TagEntity.class, postTagEntity.getTagId());
+
             tagEntityList.add(tagEntity);
         }
 
@@ -184,7 +187,9 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
         this.asyncRun(new Runnable() {
             @Override
             public void run() {
-
+                // Delete existing posttag entities
+                // Lame way to avoid duplicates
+                cupboard().withDatabase(getWritableDatabase()).delete(PostTagEntity.class,null);
                 for (PostEntity postEntity : postEntities) {
                     puts(postEntity, callback);
                 }
@@ -251,9 +256,10 @@ public class PostDatabaseHelper  extends BaseDatabseHelper
     }
 
     public List<PostEntity> search(final String query) {
-        String selection = " mTitle = ? OR mContent = ?";
+        String selection = " mTitle like ? OR mContent like ?";
+        String args [] = {query+"%", query+"%"};
         // Post title holds the search term
         return cupboard().withDatabase(getReadableDatabase()).query(
-                PostEntity.class).withSelection(selection, query, query).list();
+                PostEntity.class).withSelection(selection, args).list();
     }
 }

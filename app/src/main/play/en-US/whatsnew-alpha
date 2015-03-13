@@ -1,4 +1,8 @@
-- Ability to manage deployments.
-- Post listing.
-- Ability to login to different deployments.
-- Ability to switch active deployment's users.
+- Add basic Google maps support.
+- Cluster locations that are closer. Use a dummy post data to demonstrate this.
+- Clean up post listing view. Show tags, time and post status.
+- Span post listing to be more than one column when screen size is bigger.
+- Search / filter post listing by title or description.
+- Sort by date and title.
+- Fix issue with swipe to refresh not allowing users to scroll up and down when enabled.
+- Lots of minor bug fixes.

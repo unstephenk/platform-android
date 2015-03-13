@@ -43,7 +43,6 @@ import android.content.Context;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -138,7 +137,7 @@ public class ListPostPresenterTest extends CustomAndroidTestCase {
         doNothing().when(mMockListPost)
                 .execute(any(ListPost.Callback.class));
 
-        given(mMockView.getContext()).willReturn(mMockContext);
+        given(mMockView.getAppContext()).willReturn(mMockContext);
         given(mMockApiServiceUtil.createService(PostService.class,"", "")).willReturn(
                 mMockPostService);
 

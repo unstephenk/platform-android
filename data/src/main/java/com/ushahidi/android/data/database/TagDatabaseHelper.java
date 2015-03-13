@@ -137,13 +137,9 @@ public class TagDatabaseHelper extends BaseDatabseHelper implements ITagDatabase
                 SQLiteDatabase db = null;
 
                 try {
-                    db = getWritableDatabase();
-                    db.beginTransaction();
-                    for (TagEntity tagEntity : tagEntities) {
-                        cupboard().withDatabase(db).put(tagEntity);
-                    }
-                    db.setTransactionSuccessful();
+                    cupboard().withDatabase(getWritableDatabase()).put(tagEntities);
                     callback.onTagEntityPut();
+
                 } catch (Exception e) {
                     callback.onError(e);
                 } finally {

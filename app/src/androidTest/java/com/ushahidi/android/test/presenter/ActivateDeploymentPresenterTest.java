@@ -91,7 +91,7 @@ public class ActivateDeploymentPresenterTest extends CustomAndroidTestCase {
                 .execute(anyListOf(Deployment.class), anyInt(),
                         any(ActivateDeployment.Callback.class));
 
-        given(mMockView.getContext()).willReturn(mMockContext);
+        given(mMockView.getAppContext()).willReturn(mMockContext);
 
         mActivateDeploymentPresenter.activateDeployment(mMockDeploymentModelList, anyInt());
         verify(mMockDeploymentModelDataMapper).unmap(anyListOf(DeploymentModel.class));

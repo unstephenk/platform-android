@@ -61,10 +61,10 @@ do so follow the steps below:
    
    `./gradlew spoon` Execute tests that runs on connected devices. This requires a device to be connected.
    
-8. To install on your test device:
+8. To install and run on your test device:
 
    ```
-    ./gradlew installDebug
+    ./gradlew runApp
    ```
 
 ### Release Build
@@ -81,6 +81,8 @@ releaseKeyAlias=key_alias
 feedbackEmail=<feedback_email@example.com>
 gPlaystoreServiceAccountEmailAddress=<playstore_service_account_email>
 gPlaystorePKFile=<google-playstore-pk-file.p12>
+googleMapsDebugApiKey=<replace-with-your-google-maps-api-key-for-the-debug-keystore>
+googleMapsReleaseApiKey=<replace-with-your-google-maps-api-key-for-the-release-keystore>
 ```
 
 A typical `gradle.properties` content should look like this:
@@ -92,6 +94,8 @@ releaseKeyPassword=android
 feedbackEmail=feedback-email@example.com
 gPlaystoreServiceAccountEmailAddress=9323892392132-842jajdkdadummy@developer.gserviceaccount.com
 gPlaystorePKFile=/home/username/pdummy-pk-file.p12
+googleMapsDebugApiKey=examplegooglemapapikeywiththedebugkey
+googleMapsReleaseApiKey=examplegooglemapapikeywithreleasekey
 ```
 
 Then in the project's root directory, issue:

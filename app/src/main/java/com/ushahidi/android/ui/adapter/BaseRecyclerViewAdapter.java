@@ -108,10 +108,4 @@ public abstract class BaseRecyclerViewAdapter<M extends Model>
         int getItemCount();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
 }

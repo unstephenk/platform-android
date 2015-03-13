@@ -53,6 +53,7 @@ public class TagModelDataMapper extends Model {
         tagModel.setIcon(tag.getIcon());
         tagModel.setParentId(tag.getParentId());
         tagModel.setSlug(tag.getSlug());
+        tagModel.setColor(tag.getColor());
         tagModel.setType(TagModel.Type.valueOf(tag.getType().name()));
         tagModel.setTag(tag.getTag());
 
@@ -70,6 +71,7 @@ public class TagModelDataMapper extends Model {
         tag.setIcon(tagModel.getIcon());
         tag.setTag(tagModel.getTag());
         tag.setSlug(tagModel.getSlug());
+        tag.setColor(tagModel.getColor());
         tag.setType(Tag.Type.valueOf(tagModel.getType().name()));
 
         return tag;

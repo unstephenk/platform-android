@@ -333,6 +333,15 @@
         <item name="android:fadingEdgeLength">@dimen/element_spacing_normal</item>
     </style>
 
+    <style name="TabSlidingTablet">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_gravity">center|bottom</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:textAppearance">@style/TabSliding.Label</item>
+        <item name="android:fadingEdgeLength">@dimen/element_spacing_normal</item>
+    </style>
+
     <style name="TabSliding.Label" parent="Base.TextAppearance.AppCompat.Body2">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/tab_text</item>
@@ -342,6 +351,20 @@
     <style name="TextAppearance.FloatLabel" parent="android:Widget">
         <item name="android:textColor">@color/float_label</item>
         <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Cluster circle text color -->
+    <style name="CustomClusterIcon.TextAppearance" parent="android:TextAppearance">
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CustomMarkerIcon.TextAppearance" parent="android:TextAppearance">
+        <item name="android:background">@color/theme_accent_2</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 </resources>

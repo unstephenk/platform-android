@@ -24,8 +24,6 @@ import android.util.AttributeSet;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
-import timber.log.Timber;
-
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */

@@ -27,6 +27,7 @@ import com.ushahidi.android.module.ActivityModule;
 import com.ushahidi.android.state.ApplicationState;
 import com.ushahidi.android.state.IDeploymentState;
 import com.ushahidi.android.state.IUserState;
+import com.ushahidi.android.ui.widget.MultiSwipeRefreshLayout;
 import com.ushahidi.android.ui.widget.NavDrawerItem;
 import com.ushahidi.android.util.GravatarUtil;
 
@@ -73,7 +74,7 @@ import static android.view.View.VISIBLE;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends ActionBarActivity implements MultiSwipeRefreshLayout.CanChildScrollUpCallback {
 
     private static final int ACCOUNT_BOX_EXPAND_ANIM_DURATION = 200;
     /**
@@ -170,6 +171,9 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param object to inject.
      */
     public void inject(Object object) {
+        if(activityScopeGraph == null ) {
+            injectDependencies();
+        }
         activityScopeGraph.inject(object);
     }
 
@@ -257,6 +261,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setHomeButtonEnabled(true);
         }
+        setupSwipeRefresh();
     }
 
     @Override
@@ -550,15 +555,20 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setColorSchemeResources(
-                    R.color.refresh_progress_start,
-                    R.color.refresh_progress_center,
-                    R.color.refresh_progress_end);
+                R.color.refresh_progress_start,
+                R.color.refresh_progress_center,
+                R.color.refresh_progress_end);
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
                     mApplicationState.onSwipe();
                 }
             });
+
+            if (mSwipeRefreshLayout instanceof MultiSwipeRefreshLayout) {
+                MultiSwipeRefreshLayout swipeRefreshLayout = (MultiSwipeRefreshLayout) mSwipeRefreshLayout;
+                swipeRefreshLayout.setCanChildScrollUpCallback(this);
+            }
         }
     }
 
@@ -710,5 +720,10 @@ public abstract class BaseActivity extends ActionBarActivity {
                 .beginTransaction();
         fragmentTransaction.replace(containerViewId, fragment, tag);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public boolean canSwipeRefreshChildScrollUp() {
+        return false;
     }
 }

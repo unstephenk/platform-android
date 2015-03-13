@@ -84,12 +84,6 @@ public class TagDataRepository implements ITagRepository {
                     new ValidationException("Tag cannot be null or empty")));
         }
 
-        if (Strings.isNullOrEmpty(tag.getSlug())) {
-            isValid = false;
-            tagCallback.onError(new RepositoryError(
-                    new ValidationException("Tag slug cannot be null or empty")));
-        }
-
         if (isValid) {
             final TagDataSource tagDataSource = mTagDataSourceFactory.createTagDatabaseSource();
             tagDataSource.addTag(mTagEntityMapper.unmap(tag),

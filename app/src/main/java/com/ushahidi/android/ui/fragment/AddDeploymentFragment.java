@@ -91,8 +91,8 @@ public class AddDeploymentFragment extends BaseFragment implements AddDeployment
 
 
     @Override
-    public Context getContext() {
-        return getActivity().getApplicationContext();
+    public Context getAppContext() {
+        return getActivity();
     }
 
     @Override

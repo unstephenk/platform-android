@@ -100,7 +100,7 @@ public class UpdateDeploymentPresenterTest extends CustomAndroidTestCase {
         doNothing().when(mMockUpdateDeployment)
                 .execute(any(Deployment.class), any(UpdateDeployment.Callback.class));
 
-        given(mMockView.getContext()).willReturn(mMockContext);
+        given(mMockView.getAppContext()).willReturn(mMockContext);
 
         mUpdateDeploymentPresenter.updateDeployment(mDeploymentModel);
 
@@ -113,7 +113,7 @@ public class UpdateDeploymentPresenterTest extends CustomAndroidTestCase {
         doNothing().when(mMockGetDeployment)
                 .execute(anyLong(), any(GetDeployment.Callback.class));
 
-        given(mMockView.getContext()).willReturn(mMockContext);
+        given(mMockView.getAppContext()).willReturn(mMockContext);
 
         mUpdateDeploymentPresenter.init(DUMMY_ID);
 

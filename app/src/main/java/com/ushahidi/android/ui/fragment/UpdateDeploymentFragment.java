@@ -133,7 +133,7 @@ public class UpdateDeploymentFragment extends BaseFragment
     }
 
     @Override
-    public Context getContext() {
+    public Context getAppContext() {
         return getActivity().getApplicationContext();
     }
 

@@ -31,6 +31,7 @@ import com.ushahidi.android.core.usecase.tag.FetchTag;
 import com.ushahidi.android.core.usecase.tag.ListTag;
 import com.ushahidi.android.ui.activity.PostActivity;
 import com.ushahidi.android.ui.fragment.ListPostFragment;
+import com.ushahidi.android.ui.fragment.MapPostFragment;
 
 import javax.inject.Singleton;
 
@@ -43,7 +44,7 @@ import dagger.Provides;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 @Module(library = true, complete = false, injects = {
-        ListPostFragment.class, PostActivity.class
+        ListPostFragment.class, MapPostFragment.class, PostActivity.class
 })
 public final class PostUiModule {
 
