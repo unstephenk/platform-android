@@ -17,7 +17,7 @@
 
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_padding">16dp</dimen>
+    <dimen name="activity_padding">16dp</dimen>
     <dimen name="activity_vertical_padding">16dp</dimen>
 
 
@@ -59,7 +59,7 @@
 
     <!-- nav drawer -->
     <dimen name="nav_drawer_user_profile_image_size">40dp</dimen>
-    <dimen name="nav_drawer_user_account_height">140dp</dimen>
+    <dimen name="nav_drawer_user_account_height">180dp</dimen>
     <dimen name="nav_drawer_width">260dp</dimen>
 
 
@@ -76,8 +76,15 @@
     <dimen name="card_list_padding">8dp</dimen>
     <dimen name="column_width">100dp</dimen>
 
+    <dimen name="tag_icon_color_size">5dp</dimen>
     <dimen name="tag_badge_color_size">12dp</dimen>
 
     <dimen name="map_height">100dp</dimen>
     <dimen name="paralax_offset">200dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="tab_height">48dp</dimen>
+
+    <!-- Post items -->
+    <dimen name="post_item_image_width">120dp</dimen>
+    <dimen name="post_item_image_height">75dp</dimen>
 </resources>

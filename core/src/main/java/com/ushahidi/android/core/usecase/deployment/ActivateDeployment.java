@@ -45,22 +45,22 @@ public class ActivateDeployment implements IActivateDeployment {
     private Callback mCallback;
 
     private final IDeploymentRepository.DeploymentUpdateCallback mRepositoryCallback =
-            new IDeploymentRepository.DeploymentUpdateCallback() {
+        new IDeploymentRepository.DeploymentUpdateCallback() {
 
-                @Override
-                public void onDeploymentUpdated() {
-                    notifySuccess();
-                }
+            @Override
+            public void onDeploymentUpdated() {
+                notifySuccess();
+            }
 
-                @Override
-                public void onError(ErrorWrap error) {
-                    notifyFailure(error);
-                }
+            @Override
+            public void onError(ErrorWrap error) {
+                notifyFailure(error);
+            }
 
-            };
+        };
 
     public ActivateDeployment(IDeploymentRepository deploymentRepository, ThreadExecutor threadExecutor,
-            PostExecutionThread postExecutionThread) {
+                              PostExecutionThread postExecutionThread) {
         if (deploymentRepository == null || threadExecutor == null || postExecutionThread == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null");
         }
@@ -88,8 +88,10 @@ public class ActivateDeployment implements IActivateDeployment {
 
     @Override
     public void run() {
-        for(Deployment dep: mDeployments) {
-            if(dep.getStatus() == Deployment.Status.ACTIVATED) {
+        //TODO refactor so you don't have to go through a list of deployments to find the
+        // current active deployment before making a deployment an active one.
+        for (Deployment dep : mDeployments) {
+            if (dep.getStatus() == Deployment.Status.ACTIVATED) {
                 dep.setStatus(Deployment.Status.DEACTIVATED);
                 mDeploymentRepository.updateDeployment(dep, mRepositoryCallback);
             }

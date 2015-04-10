@@ -17,8 +17,10 @@
 
 package com.ushahidi.android.presenter;
 
-import com.google.common.base.Preconditions;
+import android.accounts.AccountManager;
+import android.content.Context;
 
+import com.google.common.base.Preconditions;
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.entity.User;
 import com.ushahidi.android.core.entity.UserAccount;
@@ -44,14 +46,13 @@ import com.ushahidi.android.ui.prefs.Prefs;
 import com.ushahidi.android.ui.view.ILoadViewData;
 import com.ushahidi.android.util.ApiServiceUtil;
 
-import android.accounts.AccountManager;
-import android.content.Context;
-
 import java.util.List;
 
 import javax.inject.Inject;
 
 /**
+ * Presenter for Login view.
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class LoginPresenter implements IPresenter {
@@ -119,6 +120,7 @@ public class LoginPresenter implements IPresenter {
         @Override
         public void onAdded() {
             mView.loggedIn(mUserId);
+            mView.hideLoading();
         }
 
         @Override
@@ -151,35 +153,35 @@ public class LoginPresenter implements IPresenter {
 
     @Inject
     public LoginPresenter(Login login,
-            ListDeployment listDeployment,
-            FetchUser fetchUser,
-            AddUser addUser,
-            AccountManager accountManager,
-            UserAccountEntityMapper userAccountEntityMapper,
-            UserAccountModelDataMapper userAccountModelDataMapper,
-            DeploymentModelDataMapper deploymentModelDataMapper,
-            IUserRepository userRepository,
-            UserDataSourceFactory userDataSourceFactory,
-            Prefs prefs,
-            ApiServiceUtil apiServiceUtil,
-            Context context) {
+                          ListDeployment listDeployment,
+                          FetchUser fetchUser,
+                          AddUser addUser,
+                          AccountManager accountManager,
+                          UserAccountEntityMapper userAccountEntityMapper,
+                          UserAccountModelDataMapper userAccountModelDataMapper,
+                          DeploymentModelDataMapper deploymentModelDataMapper,
+                          IUserRepository userRepository,
+                          UserDataSourceFactory userDataSourceFactory,
+                          Prefs prefs,
+                          ApiServiceUtil apiServiceUtil,
+                          Context context) {
         mLogin = Preconditions.checkNotNull(login, "Login use case cannot be null.");
         mAccountManager = Preconditions
-                .checkNotNull(accountManager, "Account Manager cannot be null");
+            .checkNotNull(accountManager, "Account Manager cannot be null");
         mUserAccountEntityMapper = Preconditions
-                .checkNotNull(userAccountEntityMapper, "UserAccount Entity Mapper cannot be null");
+            .checkNotNull(userAccountEntityMapper, "UserAccount Entity Mapper cannot be null");
         mListDeployment = Preconditions.checkNotNull(listDeployment,
-                "List deployment use case cannot be null.");
+            "List deployment use case cannot be null.");
 
         mFetchUser = Preconditions.checkNotNull(fetchUser, "Fetch user use case cannot be null.");
         mAddUser = Preconditions.checkNotNull(addUser, "Add user use case cannot be null.");
         mUserAccountModelDataMapper = Preconditions
-                .checkNotNull(userAccountModelDataMapper, "User model data mapper cannot be null.");
+            .checkNotNull(userAccountModelDataMapper, "User model data mapper cannot be null.");
 
         mDeploymentModelDataMapper = Preconditions.checkNotNull(deploymentModelDataMapper,
-                "Deployment Mapper cannot be null.");
+            "Deployment Mapper cannot be null.");
         mUserRepository = Preconditions
-                .checkNotNull(userRepository, "User database helper cannot be null");
+            .checkNotNull(userRepository, "User database helper cannot be null");
         mUserDataSourceFactory = Preconditions.checkNotNull(userDataSourceFactory, "User data source factory cannot be null.");
         mPrefs = Preconditions.checkNotNull(prefs, "UserState cannot be null.");
         mApiServiceUtil = apiServiceUtil;
@@ -188,11 +190,11 @@ public class LoginPresenter implements IPresenter {
 
     public void setUserService(UserService userService) {
         UserAccountDataSourceFactory userAccountDataSourceFactory
-                = new UserAccountDataSourceFactory(mContext,
-                userService);
+            = new UserAccountDataSourceFactory(mContext,
+            userService);
 
         IUserAccountRepository userAccountRepository = new UserAccountDataRepository(
-                mAccountManager, userAccountDataSourceFactory, mUserAccountEntityMapper);
+            mAccountManager, userAccountDataSourceFactory, mUserAccountEntityMapper);
 
         mLogin.setUserAccountRepository(userAccountRepository);
 
@@ -203,12 +205,12 @@ public class LoginPresenter implements IPresenter {
     }
 
     public void performLogin(UserAccountModel userAccountModel) {
-
+        mView.showLoading();
         UserAccount userAccount = mUserAccountModelDataMapper.unmap(userAccountModel);
         userAccount.setId(mDeploymentModel.getId());
         UserService userService = mApiServiceUtil
-                .createService(UserService.class, mDeploymentModel.getUrl(),
-                        Constants.USHAHIDI_AUTHTOKEN_PASSWORD_TYPE);
+            .createService(UserService.class, mDeploymentModel.getUrl(),
+                Constants.USHAHIDI_AUTHTOKEN_PASSWORD_TYPE);
         this.setUserService(userService);
         mLogin.execute(userAccount, mCallback);
     }
@@ -216,7 +218,7 @@ public class LoginPresenter implements IPresenter {
     public void getUserProfile(String authToken) {
 
         UserService userService = mApiServiceUtil
-                .createService(UserService.class, mDeploymentModel.getUrl(), authToken);
+            .createService(UserService.class, mDeploymentModel.getUrl(), authToken);
         this.setUserService(userService);
         mFetchUser.execute(mFetchUserCallback);
     }
@@ -234,13 +236,13 @@ public class LoginPresenter implements IPresenter {
 
     private void showErrorMessage(ErrorWrap errorWrap) {
         String errorMessage = ErrorMessageFactory.create(mView.getAppContext(),
-                errorWrap.getException());
+            errorWrap.getException());
         mView.showError(errorMessage);
     }
 
     private void deploymentList(List<Deployment> listDeployments) {
         final List<DeploymentModel> deploymentModelsList =
-                mDeploymentModelDataMapper.map(listDeployments);
+            mDeploymentModelDataMapper.map(listDeployments);
         mView.deploymentList(deploymentModelsList);
     }
 
@@ -276,7 +278,6 @@ public class LoginPresenter implements IPresenter {
     public interface View extends ILoadViewData {
 
         /**
-         *
          * @param userModel The collection of {@link com.ushahidi.android.model.PostModel} that will
          *                  be shown.
          */

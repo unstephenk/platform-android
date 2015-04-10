@@ -103,7 +103,7 @@ public class SwipeToDismissTouchListener implements RecyclerView.OnItemTouchList
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * 4;
         mMaxFlingVelocity = vc.getScaledMaximumFlingVelocity();
         mAnimationTime = recyclerView.getContext().getResources()
-                .getInteger(android.R.integer.config_shortAnimTime);
+            .getInteger(android.R.integer.config_shortAnimTime);
         mRecyclerView = recyclerView;
         mCallbacks = callbacks;
     }
@@ -170,7 +170,7 @@ public class SwipeToDismissTouchListener implements RecyclerView.OnItemTouchList
         if (mSwipeView == null) {
             return false;
         }
-        int pos = mRecyclerView.getChildPosition(mSwipeView);
+        int pos = mRecyclerView.getChildAdapterPosition(mSwipeView);
         mAllowedSwipeDirection = mCallbacks.canDismiss(pos);
         if (mAllowedSwipeDirection != SwipeDirection.NONE) {
 
@@ -188,10 +188,10 @@ public class SwipeToDismissTouchListener implements RecyclerView.OnItemTouchList
         }
 
         mSwipeView.animate()
-                .translationX(0)
-                .alpha(1)
-                .setDuration(mAnimationTime)
-                .setListener(null);
+            .translationX(0)
+            .alpha(1)
+            .setDuration(mAnimationTime)
+            .setListener(null);
         mVelocityTracker.recycle();
         mVelocityTracker = null;
         mTranslationX = 0;
@@ -218,23 +218,23 @@ public class SwipeToDismissTouchListener implements RecyclerView.OnItemTouchList
             dismiss = true;
             dismissRight = deltaX > 0;
         } else if (mMinFlingVelocity <= absVelocityX && absVelocityX <= mMaxFlingVelocity
-                && absVelocityY < absVelocityX
-                && absVelocityY < absVelocityX && mSwiping) {
+            && absVelocityY < absVelocityX
+            && absVelocityY < absVelocityX && mSwiping) {
             // dismiss only if flinging in the same direction as dragging
             dismiss = (velocityX < 0) == (deltaX < 0);
             dismissRight = mVelocityTracker.getXVelocity() > 0;
         }
         if (dismiss) {
             // dismiss
-            final int pos = mRecyclerView.getChildPosition(mSwipeView);
+            final int pos = mRecyclerView.getChildAdapterPosition(mSwipeView);
             final View swipeViewCopy = mSwipeView;
             final SwipeDirection swipeDirection = dismissRight ? SwipeDirection.RIGHT
-                    : SwipeDirection.LEFT;
+                : SwipeDirection.LEFT;
             ++mDismissCount;
             mSwipeView.animate()
-                    .translationX(dismissRight ? mViewWidth : -mViewWidth)
-                    .alpha(0)
-                    .setDuration(mAnimationTime);
+                .translationX(dismissRight ? mViewWidth : -mViewWidth)
+                .alpha(0)
+                .setDuration(mAnimationTime);
 
             //this is instead of unreliable onAnimationEnd callback
             swipeViewCopy.postDelayed(new Runnable() {
@@ -250,10 +250,10 @@ public class SwipeToDismissTouchListener implements RecyclerView.OnItemTouchList
         } else if (mSwiping) {
             // cancel
             mSwipeView.animate()
-                    .translationX(0)
-                    .alpha(1)
-                    .setDuration(mAnimationTime)
-                    .setListener(null);
+                .translationX(0)
+                .alpha(1)
+                .setDuration(mAnimationTime)
+                .setListener(null);
         }
 
         resetMotion();
@@ -274,13 +274,13 @@ public class SwipeToDismissTouchListener implements RecyclerView.OnItemTouchList
 
             MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
             cancelEvent.setAction(MotionEvent.ACTION_CANCEL | (motionEvent.getActionIndex()
-                    << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
+                << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
             mSwipeView.onTouchEvent(cancelEvent);
         }
 
         //Prevent swipes to disallowed directions
         if ((deltaX < 0 && mAllowedSwipeDirection == SwipeDirection.RIGHT) || (deltaX > 0
-                && mAllowedSwipeDirection == SwipeDirection.LEFT)) {
+            && mAllowedSwipeDirection == SwipeDirection.LEFT)) {
             resetMotion();
             return false;
         }
@@ -289,7 +289,7 @@ public class SwipeToDismissTouchListener implements RecyclerView.OnItemTouchList
             mTranslationX = deltaX;
             mSwipeView.setTranslationX(deltaX - mSwipingSlop);
             mSwipeView.setAlpha(Math.max(0f, Math.min(1f,
-                    1f - 2f * Math.abs(deltaX) / mViewWidth)));
+                1f - 2f * Math.abs(deltaX) / mViewWidth)));
             return true;
         }
         return false;
@@ -314,7 +314,7 @@ public class SwipeToDismissTouchListener implements RecyclerView.OnItemTouchList
         if (mDismissCount == 0) {
             Collections.sort(mPendingDismisses);
             List<PendingDismissData> dismissData = new ArrayList<PendingDismissData>(
-                    mPendingDismisses);
+                mPendingDismisses);
             mCallbacks.onDismiss(mRecyclerView, dismissData);
             mPendingDismisses.clear();
         }

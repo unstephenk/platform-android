@@ -17,17 +17,16 @@
 
 package com.ushahidi.android.ui.activity;
 
-import com.ushahidi.android.R;
-import com.ushahidi.android.module.InjectModule;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.Window;
 import android.view.WindowManager;
+
+import com.ushahidi.android.R;
+import com.ushahidi.android.module.InjectModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +46,8 @@ public class AboutActivity extends BaseActivity {
 
     private static boolean isTablet(Context context) {
         return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK)
-                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+            & Configuration.SCREENLAYOUT_SIZE_MASK)
+            >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     @Override
@@ -73,10 +72,10 @@ public class AboutActivity extends BaseActivity {
 
     public void showAsPopup(Activity activity) {
         //To show activity as dialog and dim the background, you need to declare android:theme="@style/PopupTheme" on for the chosen activity on the manifest
-        activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
         activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND,
-                WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         WindowManager.LayoutParams params = activity.getWindow().getAttributes();
+        params.dimAmount = 0.5f;
         if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             params.height = WindowManager.LayoutParams.MATCH_PARENT;
         } else {

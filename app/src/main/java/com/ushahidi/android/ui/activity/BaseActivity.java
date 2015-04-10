@@ -17,20 +17,6 @@
 
 package com.ushahidi.android.ui.activity;
 
-import com.google.common.eventbus.Subscribe;
-
-import com.squareup.picasso.Picasso;
-import com.ushahidi.android.R;
-import com.ushahidi.android.UshahidiApplication;
-import com.ushahidi.android.model.UserModel;
-import com.ushahidi.android.module.ActivityModule;
-import com.ushahidi.android.state.ApplicationState;
-import com.ushahidi.android.state.IDeploymentState;
-import com.ushahidi.android.state.IUserState;
-import com.ushahidi.android.ui.widget.MultiSwipeRefreshLayout;
-import com.ushahidi.android.ui.widget.NavDrawerItem;
-import com.ushahidi.android.util.GravatarUtil;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -39,8 +25,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -56,6 +42,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.common.eventbus.Subscribe;
+import com.squareup.picasso.Picasso;
+import com.ushahidi.android.R;
+import com.ushahidi.android.UshahidiApplication;
+import com.ushahidi.android.model.UserModel;
+import com.ushahidi.android.module.ActivityModule;
+import com.ushahidi.android.state.ApplicationState;
+import com.ushahidi.android.state.IDeploymentState;
+import com.ushahidi.android.state.IUserState;
+import com.ushahidi.android.ui.widget.NavDrawerItem;
+import com.ushahidi.android.util.GravatarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +72,7 @@ import static android.view.View.VISIBLE;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public abstract class BaseActivity extends ActionBarActivity implements MultiSwipeRefreshLayout.CanChildScrollUpCallback {
+public abstract class BaseActivity extends ActionBarActivity {
 
     private static final int ACCOUNT_BOX_EXPAND_ANIM_DURATION = 200;
     /**
@@ -104,8 +102,6 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
     protected View mLoginLayout;
 
     protected View mUserProfileLayout;
-
-    protected SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Inject
     ActivityLauncher launcher;
@@ -171,7 +167,7 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
      * @param object to inject.
      */
     public void inject(Object object) {
-        if(activityScopeGraph == null ) {
+        if (activityScopeGraph == null) {
             injectDependencies();
         }
         activityScopeGraph.inject(object);
@@ -203,12 +199,26 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
         }
 
         mDrawerLayout.setStatusBarBackgroundColor(
-                getResources().getColor(R.color.theme_primary_dark));
+            getResources().getColor(R.color.theme_primary_dark));
 
         mDrawerToggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, mActionBarToolbar,
-                R.string.open, R.string.close
-        );
+            this, mDrawerLayout, mActionBarToolbar,
+            R.string.open, R.string.close
+        ) {
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
+                syncState();
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+                syncState();
+            }
+        };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
@@ -221,28 +231,6 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
             });
         }
 
-        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                onNavDrawerSlide(slideOffset);
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                onNavDrawerStateChanged(true, false);
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                onNavDrawerStateChanged(false, false);
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-                onNavDrawerStateChanged(isNavDrawerOpen(), newState != DrawerLayout.STATE_IDLE);
-            }
-        });
-
         createNavDrawerItems();
     }
 
@@ -253,6 +241,8 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
         injectViews();
         if (mLayout != 0) {
             setContentView(mLayout);
+            mUserProfileLayout = findViewById(R.id.layout_user_profile);
+            mLoginLayout = findViewById(R.id.layout_user_login);
         }
 
         mActionBar = getSupportActionBar();
@@ -261,16 +251,13 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setHomeButtonEnabled(true);
         }
-        setupSwipeRefresh();
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         createNavDrawer();
-        showLogin();
-        setupSwipeRefresh();
-
+        showLoginOrUserProfile();
         if (mDrawerToggle != null) {
             mDrawerToggle.syncState();
         }
@@ -324,22 +311,13 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
     }
 
     protected boolean isNavDrawerOpen() {
-        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(Gravity.START);
+        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START);
     }
 
     protected void closeNavDrawer() {
         if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(Gravity.START);
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         }
-    }
-
-    // Subclasses can override this for custom behavior
-    protected void onNavDrawerStateChanged(boolean isOpen, boolean isAnimating) {
-        //TODO: implement nav drawer state change
-    }
-
-    // Subclasses can override this for custom behavior upon nav drawer sliding
-    protected void onNavDrawerSlide(float offset) {
     }
 
     private void createNavDrawerItems() {
@@ -358,29 +336,30 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
         }
     }
 
-    protected void setupAndShowLoginOrUserProfile(UserModel profile) {
+    protected void displayUserProfile(UserModel profile) {
 
         if (profile != null) {
             showUserProfile(profile);
         }
     }
 
-    private void showLogin() {
-        mUserProfileLayout = findViewById(R.id.layout_user_profile);
-        mLoginLayout = findViewById(R.id.layout_user_login);
-
-        if (mLoginLayout == null) {
-            return;
-        }
-        mLoginLayout.setVisibility(VISIBLE);
-        mUserProfileLayout.setVisibility(GONE);
-        mLoginLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launcher.launchLogin();
-                closeNavDrawer();
+    private void showLoginOrUserProfile() {
+        if (mApplicationState.getUserModel() != null) {
+            showUserProfile(mApplicationState.getUserModel());
+        } else {
+            if (mLoginLayout == null) {
+                return;
             }
-        });
+            mLoginLayout.setVisibility(VISIBLE);
+            mUserProfileLayout.setVisibility(GONE);
+            mLoginLayout.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    launcher.launchLogin();
+                    closeNavDrawer();
+                }
+            });
+        }
     }
 
     private void showUserProfile(UserModel profile) {
@@ -429,17 +408,17 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
             LayoutInflater layoutInflater = LayoutInflater.from(this);
             for (UserModel userModel : userModels) {
                 View itemView = layoutInflater.inflate(R.layout.list_item_user_account,
-                        mUserAccountListContainer, false);
+                    mUserAccountListContainer, false);
 
                 TextView username = (TextView) itemView
-                        .findViewById(R.id.user_account_profile_user_name);
+                    .findViewById(R.id.user_account_profile_user_name);
                 username.setText(userModel.getUsername());
 
                 ImageView userProfileImage = (ImageView) itemView
-                        .findViewById(R.id.user_account_profile_image);
+                    .findViewById(R.id.user_account_profile_image);
                 if (userModel.getEmail() != null) {
                     Picasso.with(this).load(GravatarUtil.url(userModel.getEmail()))
-                            .into(userProfileImage);
+                        .into(userProfileImage);
                 }
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -467,7 +446,7 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
         }
 
         mUserAccountListExpandIndicator.setImageResource(mUserAccountListExpanded ?
-                R.drawable.ic_drawer_profile_collapse : R.drawable.ic_drawer_profile_expand);
+            R.drawable.ic_drawer_profile_collapse : R.drawable.ic_drawer_profile_expand);
 
         // Credits: http://goo.gl/yHfwZp
         int hideTranslateY = -mUserAccountListContainer.getHeight() / 4; // last 25% of animation
@@ -484,10 +463,10 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
             public void onAnimationEnd(Animator animation) {
 
                 mUserAccountListContainer.setVisibility(mUserAccountListExpanded
-                        ? View.VISIBLE : View.INVISIBLE);
+                    ? View.VISIBLE : View.INVISIBLE);
 
                 mDrawerItemsContainer.setVisibility(mUserAccountListExpanded
-                        ? View.INVISIBLE : View.VISIBLE);
+                    ? View.INVISIBLE : View.VISIBLE);
             }
 
             @Override
@@ -511,18 +490,18 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
     private void animateExpandView(AnimatorSet set) {
         AnimatorSet subSet = animateExpandOrCollapseView(1, 0);
         set.playSequentially(
-                ObjectAnimator.ofFloat(mUserAccountListContainer, View.ALPHA, 0)
-                        .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION),
-                subSet);
+            ObjectAnimator.ofFloat(mUserAccountListContainer, View.ALPHA, 0)
+                .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION),
+            subSet);
         set.start();
     }
 
     private void animateCollapseView(AnimatorSet set, int hideTranslateY) {
-        AnimatorSet subSet =animateExpandOrCollapseView(0, hideTranslateY);
+        AnimatorSet subSet = animateExpandOrCollapseView(0, hideTranslateY);
         set.playSequentially(
-                subSet,
-                ObjectAnimator.ofFloat(mDrawerItemsContainer, View.ALPHA, 1)
-                        .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION));
+            subSet,
+            ObjectAnimator.ofFloat(mDrawerItemsContainer, View.ALPHA, 1)
+                .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION));
         set.start();
     }
 
@@ -530,11 +509,11 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
         final int ACCOUNT_BOX_EXPAND_ANIM_DURATION = 200;
         AnimatorSet subSet = new AnimatorSet();
         subSet.playTogether(
-                ObjectAnimator.ofFloat(mUserAccountListContainer, View.ALPHA, together)
-                        .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION),
-                ObjectAnimator
-                        .ofFloat(mUserAccountListContainer, View.TRANSLATION_Y, hideTranslateY)
-                        .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION));
+            ObjectAnimator.ofFloat(mUserAccountListContainer, View.ALPHA, together)
+                .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION),
+            ObjectAnimator
+                .ofFloat(mUserAccountListContainer, View.TRANSLATION_Y, hideTranslateY)
+                .setDuration(ACCOUNT_BOX_EXPAND_ANIM_DURATION));
         return subSet;
 
     }
@@ -547,41 +526,6 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
             }
         }
         return mActionBarToolbar;
-    }
-
-    private void setupSwipeRefresh() {
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setColorSchemeResources(
-                R.color.refresh_progress_start,
-                R.color.refresh_progress_center,
-                R.color.refresh_progress_end);
-            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    mApplicationState.onSwipe();
-                }
-            });
-
-            if (mSwipeRefreshLayout instanceof MultiSwipeRefreshLayout) {
-                MultiSwipeRefreshLayout swipeRefreshLayout = (MultiSwipeRefreshLayout) mSwipeRefreshLayout;
-                swipeRefreshLayout.setCanChildScrollUpCallback(this);
-            }
-        }
-    }
-
-    protected void toggleSwipeRefreshing(boolean refreshing) {
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setRefreshing(refreshing);
-        }
-    }
-
-    protected void toggleSwipeRefresh(boolean enable) {
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setEnabled(enable);
-        }
     }
 
     @Subscribe
@@ -599,6 +543,11 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -617,7 +566,7 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
         if (view != null) {
             if (animate) {
                 view.startAnimation(AnimationUtils.loadAnimation(this,
-                        android.R.anim.fade_in));
+                    android.R.anim.fade_in));
             } else {
 
                 view.clearAnimation();
@@ -632,7 +581,7 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
         if (view != null) {
             if (animate) {
                 view.startAnimation(AnimationUtils.loadAnimation(this,
-                        android.R.anim.fade_out));
+                    android.R.anim.fade_out));
             } else {
                 view.clearAnimation();
             }
@@ -681,7 +630,7 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
      */
     protected void showToast(int message) {
         Toast.makeText(this, getText(message), Toast.LENGTH_LONG)
-                .show();
+            .show();
     }
 
     /**
@@ -691,7 +640,7 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
      */
     protected void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG)
-                .show();
+            .show();
     }
 
     /**
@@ -703,7 +652,7 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
      */
     protected void addFragment(int containerViewId, Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = this.getSupportFragmentManager()
-                .beginTransaction();
+            .beginTransaction();
         fragmentTransaction.add(containerViewId, fragment, tag);
         fragmentTransaction.commit();
     }
@@ -717,13 +666,9 @@ public abstract class BaseActivity extends ActionBarActivity implements MultiSwi
      */
     protected void replaceFragment(int containerViewId, Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = this.getSupportFragmentManager()
-                .beginTransaction();
+            .beginTransaction();
         fragmentTransaction.replace(containerViewId, fragment, tag);
         fragmentTransaction.commit();
     }
 
-    @Override
-    public boolean canSwipeRefreshChildScrollUp() {
-        return false;
-    }
 }

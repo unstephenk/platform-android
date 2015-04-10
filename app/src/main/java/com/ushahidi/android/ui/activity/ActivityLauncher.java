@@ -17,10 +17,10 @@
 
 package com.ushahidi.android.ui.activity;
 
-import com.ushahidi.android.qualifier.ActivityContext;
-
 import android.content.Context;
 import android.content.Intent;
+
+import com.ushahidi.android.qualifier.ActivityContext;
 
 import javax.inject.Inject;
 
@@ -40,7 +40,6 @@ public class ActivityLauncher {
 
     public void launchListDeployment() {
         Intent intent = DeploymentActivity.getIntent(mContext);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }
 
@@ -49,7 +48,6 @@ public class ActivityLauncher {
      */
     public void launchAddDeployment() {
         final Intent intent = AddDeploymentActivity.getIntent(mContext);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }
 
@@ -60,7 +58,6 @@ public class ActivityLauncher {
      */
     public void launchUpdateDeployment(long deploymentId) {
         final Intent intent = UpdateDeploymentActivity.getIntent(mContext, deploymentId);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }
 
@@ -69,7 +66,14 @@ public class ActivityLauncher {
      */
     public void launchLogin() {
         final Intent intent = LoginActivity.getIntent(mContext);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
+    }
+
+    /**
+     * Launches login activity
+     */
+    public void post() {
+        final Intent intent = PostActivity.getIntent(mContext);
         mContext.startActivity(intent);
     }
 }

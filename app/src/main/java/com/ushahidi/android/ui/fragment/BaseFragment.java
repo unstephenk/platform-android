@@ -17,10 +17,6 @@
 
 package com.ushahidi.android.ui.fragment;
 
-import com.andreabaccega.widget.FormAutoCompleteTextView;
-import com.andreabaccega.widget.FormEditText;
-import com.ushahidi.android.ui.activity.BaseActivity;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,6 +28,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
+
+import com.andreabaccega.widget.FormAutoCompleteTextView;
+import com.andreabaccega.widget.FormEditText;
+import com.ushahidi.android.ui.activity.BaseActivity;
 
 import butterknife.ButterKnife;
 
@@ -79,8 +79,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        //initPresenter();
     }
 
     @Override
@@ -91,7 +89,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
+                             ViewGroup container, Bundle savedInstanceState) {
         android.view.View root = null;
         if (mLayout != 0) {
             root = inflater.inflate(mLayout, container, false);
@@ -129,7 +127,7 @@ public abstract class BaseFragment extends Fragment {
         if (view != null) {
             if (animate) {
                 view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-                        android.R.anim.fade_in));
+                    android.R.anim.fade_in));
 
             } else {
 
@@ -145,7 +143,7 @@ public abstract class BaseFragment extends Fragment {
         if (view != null) {
             if (animate) {
                 view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-                        android.R.anim.fade_out));
+                    android.R.anim.fade_out));
             } else {
                 view.clearAnimation();
             }
@@ -204,7 +202,7 @@ public abstract class BaseFragment extends Fragment {
      */
     protected void showToast(int message) {
         Toast.makeText(getActivity(), getText(message), Toast.LENGTH_LONG)
-                .show();
+            .show();
     }
 
     /**
@@ -214,7 +212,7 @@ public abstract class BaseFragment extends Fragment {
      */
     protected void showToast(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG)
-                .show();
+            .show();
     }
 
     private boolean validateForm(FormEditText item, boolean isFocus) {

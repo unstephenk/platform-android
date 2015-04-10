@@ -16,7 +16,6 @@
   ~ https://www.gnu.org/licenses/agpl-3.0.html
   -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          android:background="@drawable/tag_badge"
           android:paddingLeft="8dp"
           android:paddingRight="8dp"
           android:drawablePadding="4dp"
@@ -25,4 +24,4 @@
           android:textSize="@dimen/text_size_medium"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:layout_marginRight="2dp" />
+          android:layout_marginRight="2dp"/>

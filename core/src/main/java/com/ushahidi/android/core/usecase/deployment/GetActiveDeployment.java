@@ -24,6 +24,8 @@ import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 
 /**
+ * Use case for retrieving an {@link Deployment} marked as active.
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class GetActiveDeployment implements IGetActiveDeployment{

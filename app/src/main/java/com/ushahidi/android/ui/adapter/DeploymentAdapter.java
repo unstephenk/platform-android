@@ -17,9 +17,6 @@
 
 package com.ushahidi.android.ui.adapter;
 
-import com.ushahidi.android.R;
-import com.ushahidi.android.model.DeploymentModel;
-
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -29,6 +26,9 @@ import android.widget.CheckedTextView;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+
+import com.ushahidi.android.R;
+import com.ushahidi.android.model.DeploymentModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,35 +45,31 @@ import java.util.List;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class DeploymentAdapter extends BaseRecyclerViewAdapter<DeploymentModel> implements
-        Filterable {
-
-    RecyclerviewViewHolder mRecyclerviewViewHolder = new RecyclerviewViewHolder() {
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-            ((Widgets) viewHolder).title.setText(getItem(position).getTitle());
-            ((Widgets) viewHolder).url.setText(getItem(position).getUrl());
-            ((Widgets) viewHolder).listCheckBox.setChecked(mSelectedItems.get(position, false));
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            return new Widgets(LayoutInflater.from(
-                    viewGroup.getContext())
-                    .inflate(R.layout.list_deployment_item, viewGroup, false));
-        }
-
-        @Override
-        public int getItemCount() {
-            return mItems.size();
-        }
-    };
+    Filterable {
 
     private SparseBooleanArray mSelectedItems;
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        ((Widgets) viewHolder).title.setText(getItem(position).getTitle());
+        ((Widgets) viewHolder).url.setText(getItem(position).getUrl());
+        ((Widgets) viewHolder).listCheckBox.setChecked(mSelectedItems.get(position, false));
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent) {
+        return new Widgets(LayoutInflater.from(parent.getContext()).inflate(
+            R.layout.list_deployment_item, parent, false));
+    }
+
+    @Override
+    public int getAdapterItemCount() {
+        return getItems().size();
+    }
 
     private Filter mFilter = null;
 
     public DeploymentAdapter() {
-        this.setRecyclerviewViewHolder(mRecyclerviewViewHolder);
         mSelectedItems = new SparseBooleanArray();
     }
 
@@ -117,12 +113,12 @@ public class DeploymentAdapter extends BaseRecyclerViewAdapter<DeploymentModel> 
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
             constraint = constraint.toString().toLowerCase();
-            results.values = mItems;
-            results.count = mItems.size();
+            results.values = getItems();
+            results.count = getItems().size();
             if (constraint != null && constraint.toString().length() > 0) {
                 ArrayList<DeploymentModel> filteredItems = new ArrayList<>();
                 //TODO: query the mItems from the database and use that for comparison
-                for (DeploymentModel deployment : mItems) {
+                for (DeploymentModel deployment : getItems()) {
                     if (deployment.getTitle().toLowerCase().contains(constraint.toString())) {
                         filteredItems.add(deployment);
                     }
@@ -136,7 +132,7 @@ public class DeploymentAdapter extends BaseRecyclerViewAdapter<DeploymentModel> 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
             List<DeploymentModel> deploymentModels
-                    = (ArrayList<DeploymentModel>) filterResults.values;
+                = (ArrayList<DeploymentModel>) filterResults.values;
             setItems(deploymentModels);
         }
     }
@@ -155,7 +151,7 @@ public class DeploymentAdapter extends BaseRecyclerViewAdapter<DeploymentModel> 
             url = (TextView) convertView.findViewById(R.id.deployment_description);
 
             listCheckBox = (CheckedTextView) convertView
-                    .findViewById(R.id.deployment_selected);
+                .findViewById(R.id.deployment_selected);
         }
 
     }

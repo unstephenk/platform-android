@@ -72,7 +72,7 @@ public class TagEntityMapper {
             tagEntity.setCreated(tag.getCreated());
             tagEntity.setIcon(tag.getIcon());
             tagEntity.setTag(tag.getTag());
-            tagEntity.setColor(tag.getSlug());
+            tagEntity.setColor(tag.getColor());
             tagEntity.setType(TagEntity.Type.valueOf(tag.getType().name()));
         }
         return tagEntity;
@@ -87,7 +87,7 @@ public class TagEntityMapper {
     public List<Tag> map(List<TagEntity> tagEntityList) {
         List<Tag> tagList = new ArrayList<>();
         Tag tag;
-        if(tagEntityList != null) {
+        if (tagEntityList != null) {
             for (TagEntity tagEntity : tagEntityList) {
                 tag = map(tagEntity);
                 if (tag != null) {

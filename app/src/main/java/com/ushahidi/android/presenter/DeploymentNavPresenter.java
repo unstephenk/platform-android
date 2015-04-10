@@ -60,10 +60,10 @@ public class DeploymentNavPresenter implements IPresenter {
 
     @Inject
     public DeploymentNavPresenter(
-            ListDeployment listDeployment,
-            DeploymentModelDataMapper deploymentModelDataMapper) {
+        ListDeployment listDeployment,
+        DeploymentModelDataMapper deploymentModelDataMapper) {
         if (listDeployment == null
-                || deploymentModelDataMapper == null) {
+            || deploymentModelDataMapper == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
         }
 
@@ -80,13 +80,13 @@ public class DeploymentNavPresenter implements IPresenter {
 
     private void showErrorMessage(ErrorWrap errorWrap) {
         String errorMessage = ErrorMessageFactory.create(mView.getAppContext(),
-                errorWrap.getException());
+            errorWrap.getException());
         mView.showError(errorMessage);
     }
 
     private void showDeploymentsListInView(List<Deployment> listDeployments) {
         final List<DeploymentModel> deploymentModelsList =
-                mDeploymentModelDataMapper.map(listDeployments);
+            mDeploymentModelDataMapper.map(listDeployments);
         mView.renderDeploymentList(deploymentModelsList);
         setDeployments(deploymentModelsList);
         mView.createNav();
@@ -123,16 +123,16 @@ public class DeploymentNavPresenter implements IPresenter {
          * @param deploymentModel The collection of {@link com.ushahidi.android.model.DeploymentModel}
          *                        that will be shown.
          */
-        public void renderDeploymentList(List<DeploymentModel> deploymentModel);
+        void renderDeploymentList(List<DeploymentModel> deploymentModel);
 
         /**
          * Shows an error message
          *
          * @param message A string resource representing an error.
          */
-        public void showError(String message);
+        void showError(String message);
 
-        public void createNav();
+        void createNav();
 
     }
 }

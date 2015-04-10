@@ -24,7 +24,7 @@ import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 
 /**
- * Use case for adding a new deployment
+ * Use case that adds a new {@link Deployment} to the local database.
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */

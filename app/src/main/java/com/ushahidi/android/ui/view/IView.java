@@ -20,6 +20,10 @@ package com.ushahidi.android.ui.view;
 import android.content.Context;
 
 /**
+ * Implement this interface to show error messages to the activity at implements it.
+ * It almost facilitates presenting users with data from {@link com.ushahidi.android.presenter.IPresenter}
+ * to Activities.
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public interface IView {
@@ -29,10 +33,10 @@ public interface IView {
      *
      * @param message A string resource representing an error.
      */
-    public void showError(String message);
+    void showError(String message);
 
     /**
      * Gets a {@link android.content.Context}.
      */
-    public Context getAppContext();
+    Context getAppContext();
 }

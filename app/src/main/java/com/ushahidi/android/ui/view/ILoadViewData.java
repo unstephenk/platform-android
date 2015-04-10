@@ -18,7 +18,7 @@
 package com.ushahidi.android.ui.view;
 
 /**
- * Implement this interface to load data into the view
+ * Implement this interface to show or hide views as data is being loaded.
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
@@ -27,28 +27,16 @@ public interface ILoadViewData extends IView {
     /**
      * Shows a view with a progress bar indicating a loading process.
      */
-    public void showLoading();
+    void showLoading();
 
     /**
      * Hides a loading view.
      */
-    public void hideLoading();
+    void hideLoading();
 
     /**
      * Shows a retry view in case of an error when retrieving data.
      */
-    public void showRetry();
-
-    /**
-     * Hides a retry view shown if there was an error when retrieving data.
-     */
-    public void hideRetry();
-
-    /**
-     * Shows an error message
-     *
-     * @param message A string resource representing an error.
-     */
-    public void showError(String message);
+    void showRetry(String message);
 
 }

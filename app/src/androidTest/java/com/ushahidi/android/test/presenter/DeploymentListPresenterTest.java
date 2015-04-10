@@ -17,6 +17,8 @@
 
 package com.ushahidi.android.test.presenter;
 
+import android.content.Context;
+
 import com.ushahidi.android.core.usecase.deployment.ListDeployment;
 import com.ushahidi.android.model.mapper.DeploymentModelDataMapper;
 import com.ushahidi.android.presenter.ListDeploymentPresenter;
@@ -24,8 +26,6 @@ import com.ushahidi.android.test.CustomAndroidTestCase;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import android.content.Context;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -59,7 +59,7 @@ public class DeploymentListPresenterTest extends CustomAndroidTestCase {
         MockitoAnnotations.initMocks(this);
 
         mDeploymentListPresenter = new ListDeploymentPresenter(
-                mMockListDeployment, mMockDeploymentModelDataMapper);
+            mMockListDeployment, mMockDeploymentModelDataMapper);
         mDeploymentListPresenter.setView(mMockView);
     }
 
@@ -75,13 +75,12 @@ public class DeploymentListPresenterTest extends CustomAndroidTestCase {
 
     public void testDeploymentListPresenterInit() {
         doNothing().when(mMockListDeployment)
-                .execute(any(ListDeployment.Callback.class));
+            .execute(any(ListDeployment.Callback.class));
 
         given(mMockView.getAppContext()).willReturn(mMockContext);
 
         mDeploymentListPresenter.init();
 
-        verify(mMockView).hideRetry();
         verify(mMockView).showLoading();
         verify(mMockListDeployment).execute(any(ListDeployment.Callback.class));
     }

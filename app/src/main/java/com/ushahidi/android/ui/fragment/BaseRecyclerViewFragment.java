@@ -19,12 +19,12 @@ package com.ushahidi.android.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.InflateException;
 import android.view.View;
 
 import com.ushahidi.android.model.Model;
 import com.ushahidi.android.ui.adapter.BaseRecyclerViewAdapter;
+import com.ushahidi.android.ui.widget.BloatedRecyclerView;
 
 import butterknife.InjectView;
 import timber.log.Timber;
@@ -58,7 +58,7 @@ public abstract class BaseRecyclerViewFragment<M extends Model, L extends BaseRe
      * RecyclerView
      */
     @InjectView(android.R.id.list)
-    protected RecyclerView mRecyclerView;
+    protected BloatedRecyclerView mBloatedRecyclerView;
 
     protected BaseRecyclerViewFragment(Class<L> adapterClass, int layout, int menu,
                                        int recyclerViewId) {
@@ -97,8 +97,6 @@ public abstract class BaseRecyclerViewFragment<M extends Model, L extends BaseRe
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-
-
     }
 
     @Override
@@ -107,11 +105,11 @@ public abstract class BaseRecyclerViewFragment<M extends Model, L extends BaseRe
         if (mRecyclerViewId != 0) {
             mRecyclerViewAdapter = BaseRecyclerViewFragment
                 .createInstance(mRecyclerViewAdapterClass);
-            mRecyclerView.setFocusable(true);
-            mRecyclerView.setFocusableInTouchMode(true);
-            mRecyclerView.setAdapter(mRecyclerViewAdapter);
-            mRecyclerView.setHasFixedSize(true);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mBloatedRecyclerView.setFocusable(true);
+            mBloatedRecyclerView.setFocusableInTouchMode(true);
+            mBloatedRecyclerView.setAdapter(mRecyclerViewAdapter);
+            mBloatedRecyclerView.setHasFixedSize(true);
+            mBloatedRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
     }
 }

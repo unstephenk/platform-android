@@ -14,8 +14,9 @@ buildscript {
     }
 }
 
-import org.ajoberstar.grgit.Grgit
+
 import org.ajoberstar.gradle.git.release.opinion.Strategies
+import org.ajoberstar.grgit.Grgit
 
 apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
@@ -30,8 +31,6 @@ def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone(
 def isTravis = "true".equals(System.getenv("TRAVIS"))
 
 def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
-
-def codeVersion = 20100
 
 def getFeedbackEmailAddress() {
 
@@ -71,6 +70,7 @@ def readGoogleMapsDebugApiKey() {
 def readGoogleMapsReleaseApiKey() {
     return project.hasProperty('googleMapsReleaseApiKey') ? googleMapsReleaseApiKey : ''
 }
+
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
 
@@ -169,11 +169,9 @@ release {
 
     def tagMessage = readWhatsNewFile("whatsnew-${trackProperty()}");
 
-    versionStrategy  Strategies.PRE_RELEASE_ALPHA_BETA
+    versionStrategy Strategies.PRE_RELEASE_ALPHA_BETA
 
     android.defaultConfig.versionName = project.version.toString()
-
-    android.defaultConfig.versionCode = codeVersion
 
     tagStrategy {
         generateMessage = { version -> "\n\nRelease of $version.version\n$tagMessage" }
@@ -183,7 +181,7 @@ release {
 tasks.release.dependsOn(['build', 'publishRelease'])
 
 // Build launch app from command line
-task runApp(type: Exec, dependsOn:['build','installDebug']) {
+task runApp(type: Exec, dependsOn: ['build', 'installDebug']) {
     //Linux command to launch the PostActivity when debug app is installed
     commandLine 'adb', 'shell', 'am', 'start', '-n', 'com.ushahidi.android/.ui.activity.PostActivity'
 }
@@ -207,22 +205,22 @@ dependencies {
     def core = project(':core')
     def data = project(':data')
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:22+'
-    compile 'com.android.support:appcompat-v7:22+'
-    compile 'com.android.support:cardview-v7:22+'
-    compile 'com.android.support:recyclerview-v7:22+'
-    compile 'com.google.android.gms:play-services-maps:6.5.87'
+    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:cardview-v7:22.0.0'
+    compile 'com.android.support:recyclerview-v7:22.0.0'
+    compile 'com.google.android.gms:play-services-maps:7.0.0'
     compile 'com.squareup.dagger:dagger-compiler:1.2.2'
     compile 'com.squareup.dagger:dagger:1.2.2'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.jakewharton.timber:timber:2.5.1'
     compile 'com.squareup.picasso:picasso:2.5.0'
     compile 'com.squareup:otto:1.3.6'
-    compile 'com.getbase:floatingactionbutton:1.8.0'
+    compile 'com.getbase:floatingactionbutton:1.9.0'
     compile 'com.andreabaccega:android-form-edittext:1.1.0@aar'
-    compile 'com.nispok:snackbar:2.9.0'
+    compile 'com.nispok:snackbar:2.10.6'
     compile 'com.google.maps.android:android-maps-utils:0.3.4'
-
+    compile 'com.joanzapata.android:android-iconify:1.0.9'
     compile core
     compile data
     androidTestCompile 'org.mockito:mockito-core:1.9.+'
@@ -230,7 +228,7 @@ dependencies {
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.+'
     androidTestCompile 'com.squareup.spoon:spoon-client:1.1.+'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.2+'
-    androidTestCompile ('com.squareup.assertj:assertj-android:1.0.0') {
+    androidTestCompile('com.squareup.assertj:assertj-android:1.0.0') {
         exclude module: 'support-annotations'
     }
 }

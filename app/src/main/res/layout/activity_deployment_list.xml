@@ -25,10 +25,10 @@
     <include layout="@layout/toolbar_actionbar"/>
 
     <fragment
-            android:name="com.ushahidi.android.ui.fragment.ListDeploymentFragment"
-            android:id="@+id/fragment_list_deployments"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout="@layout/list_deployment"/>
+        android:name="com.ushahidi.android.ui.fragment.ListDeploymentFragment"
+        android:id="@+id/fragment_list_deployments"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/list_deployment"/>
 
 </LinearLayout>

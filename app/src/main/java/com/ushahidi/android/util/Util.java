@@ -17,6 +17,8 @@
 
 package com.ushahidi.android.util;
 
+import android.text.TextUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -51,7 +53,9 @@ public class Util {
     }
 
     public static boolean validateHexColor(String hexColor) {
-
+        if (TextUtils.isEmpty(hexColor)) {
+            return false;
+        }
         final String HEX_PATTERN = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
         return Pattern.compile(HEX_PATTERN).matcher(hexColor).matches();
     }
@@ -77,10 +81,10 @@ public class Util {
             e.printStackTrace();
         } finally {
             try {
-                if(fos !=null) {
+                if (fos != null) {
                     fos.close();
                 }
-                if(fis !=null) {
+                if (fis != null) {
                     fis.close();
                 }
             } catch (IOException ioe) {

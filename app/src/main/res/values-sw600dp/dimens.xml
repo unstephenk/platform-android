@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~  Copyright (c) 2015 Ushahidi.
+  ~
+  ~   This program is free software: you can redistribute it and/or modify it under
+  ~   the terms of the GNU Affero General Public License as published by the Free
+  ~   Software Foundation, either version 3 of the License, or (at your option)
+  ~   any later version.
+  ~
+  ~   This program is distributed in the hope that it will be useful, but WITHOUT
+  ~   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~   FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+  ~
+  ~   You should have received a copy of the GNU Affero General Public License
+  ~   along with this program in the file LICENSE-AGPL. If not, see
+  ~   https://www.gnu.org/licenses/agpl-3.0.html
+  ~
+  -->
+
+<resources>
+    <dimen name="activity_padding">24dp</dimen>
+    <dimen name="content_padding">0dp</dimen>
+    <dimen name="nav_drawer_width">304dp</dimen>
+    <dimen name="tag_icon_color_size">10dp</dimen>
+    <dimen name="tag_badge_color_size">18dp</dimen>
+
+    <!-- Post items -->
+    <dimen name="post_item_image_width">150dp</dimen>
+    <dimen name="post_item_image_height">94dp</dimen>
+</resources>

@@ -25,11 +25,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.squareup.otto.Subscribe;
 import com.ushahidi.android.R;
@@ -39,8 +42,7 @@ import com.ushahidi.android.model.UserModel;
 import com.ushahidi.android.module.PostUiModule;
 import com.ushahidi.android.presenter.ActivateDeploymentPresenter;
 import com.ushahidi.android.presenter.DeploymentNavPresenter;
-import com.ushahidi.android.presenter.MainPresenter;
-import com.ushahidi.android.state.ApplicationState;
+import com.ushahidi.android.presenter.PostPresenter;
 import com.ushahidi.android.state.IDeploymentState;
 import com.ushahidi.android.state.IUserState;
 import com.ushahidi.android.ui.fragment.ListPostFragment;
@@ -56,13 +58,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * Post Activity
+ * Post Activity.
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawerItemListener,
     NavDrawerItem.NavDeploymentItemListener,
-    MainPresenter.View,
+    PostPresenter.View,
     DeploymentNavPresenter.View,
     ListPostFragment.PostListListener,
     ActivateDeploymentPresenter.View {
@@ -79,13 +81,15 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     DeploymentNavPresenter mDeploymentNavPresenter;
 
     @Inject
-    MainPresenter mMainPresenter;
+    PostPresenter mMainPresenter;
 
     private SearchView mSearchView = null;
 
     private String mQuery = "";
 
     private SlidingTabLayout mSlidingTabStrip;
+
+    private View mHeaderView;
 
     private ViewPager mViewPager;
 
@@ -115,6 +119,10 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
         mTabTitle.add(getString(R.string.map));
 
         mSlidingTabStrip = (SlidingTabLayout) findViewById(R.id.tabs);
+        mHeaderView = findViewById(R.id.toolbar_container);
+        ViewCompat.setElevation(mHeaderView, getResources().getDimension(R.dimen.toolbar_elevation));
+        mSlidingTabStrip.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
+        mSlidingTabStrip.setDistributeEvenly(true);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
         mAdapter = new TabPagerAdapter(getSupportFragmentManager());
@@ -127,13 +135,6 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
         mSlidingTabStrip.setTabListener(new SlidingTabLayout.TabListener() {
             @Override
             public void onTabSelected(int position) {
-                // Disable swipe to refresh if map tab is selected
-                if (position == 1) {
-                    mSwipeRefreshLayout.setEnabled(false);
-                    mSwipeRefreshLayout.setRefreshing(false);
-                } else {
-                    mSwipeRefreshLayout.setEnabled(true);
-                }
             }
 
             @Override
@@ -151,6 +152,10 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     @Override
     protected void onNewIntent(Intent intent) {
         handleSearchIntent(intent);
+    }
+
+    public static Intent getIntent(final Context context) {
+        return new Intent(context, PostActivity.class);
     }
 
     private void handleSearchIntent(Intent intent) {
@@ -181,24 +186,6 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.menu_refresh_post) {
-            enableSwipeRefresh();
-            return true;
-        } else if (id == R.id.menu_sort_by_title) {
-            if (mListPostFragment != null) {
-                mListPostFragment.sortByTitle();
-            }
-            return true;
-        } else if (id == R.id.menu_sort_by_date) {
-            if (mListPostFragment != null) {
-                mListPostFragment.sortByDate();
-            }
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -260,6 +247,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
         mDeploymentNavPresenter.resume();
         mMainPresenter.resume();
         mSlidingTabStrip.getBackground().setAlpha(255);
+
     }
 
     @Override
@@ -290,7 +278,6 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
     @Override
     protected void initNavDrawerItems() {
-
         mNavDrawerItemViews
             .add(setNavDrawerItem(R.string.manage_deployments, R.drawable.ic_action_map, 1,
                 DeploymentActivity.getIntent(this)));
@@ -311,10 +298,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     }
 
     private void setFragments() {
-
         List<Fragment> fragments = new ArrayList<>();
-
-        mListPostFragment = ListPostFragment.newInstance();
 
         fragments.add(mListPostFragment);
         fragments.add(MapPostFragment.newInstance());
@@ -410,16 +394,6 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     }
 
     @Override
-    public void hideSwipeRefresh() {
-        toggleSwipeRefreshing(false);
-    }
-
-    @Override
-    public void enableSwipeRefresh() {
-        toggleSwipeRefreshing(true);
-    }
-
-    @Override
     public void onPostClicked(final PostModel postModel) {
         showToast(postModel.getTitle());
     }
@@ -431,17 +405,12 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
 
     @Override
     public void setActiveUserProfile(UserModel userProfile) {
-        setupAndShowLoginOrUserProfile(userProfile);
+        displayUserProfile(userProfile);
     }
 
     @Subscribe
     public void onUnauthorized(IUserState.UnauthorizedAccessEvent event) {
         launcher.launchLogin();
-    }
-
-    @Subscribe
-    public void onSwipe(ApplicationState.SwipeRefreshEvent event) {
-        refresh();
     }
 
     private void refresh() {
@@ -450,9 +419,12 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
         }
     }
 
-    @Override
-    public boolean canSwipeRefreshChildScrollUp() {
-        return mListPostFragment.canCollectionViewScrollUp();
+    public Toolbar getToolbar() {
+        return getActionBarToolbar();
+    }
+
+    public android.view.View getHeader() {
+        return mHeaderView;
     }
 
     private class TabPagerAdapter extends FragmentPagerAdapter {

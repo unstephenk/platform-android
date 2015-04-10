@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~  Copyright (c) 2015 Ushahidi.
+  ~
+  ~   This program is free software: you can redistribute it and/or modify it under
+  ~   the terms of the GNU Affero General Public License as published by the Free
+  ~   Software Foundation, either version 3 of the License, or (at your option)
+  ~   any later version.
+  ~
+  ~   This program is distributed in the hope that it will be useful, but WITHOUT
+  ~   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~   FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+  ~
+  ~   You should have received a copy of the GNU Affero General Public License
+  ~   along with this program in the file LICENSE-AGPL. If not, see
+  ~   https://www.gnu.org/licenses/agpl-3.0.html
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:fab="http://schemas.android.com/apk/res-auto">
+
+    <com.ushahidi.android.ui.widget.VerticalSwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/bloated_recycleview_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.ushahidi.android.ui.widget.VerticalSwipeRefreshLayout>
+
+    <com.ushahidi.android.ui.widget.MovableFab
+        android:id="@+id/bloated_recycleview_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        fab:fab_icon="@drawable/ic_action_add"
+        fab:fab_colorNormal="@color/fab_color_primary"
+        fab:fab_colorPressed="@color/fab_color_pressed"/>
+
+    <ViewStub
+        android:id="@+id/bloated_recycleview_view_stub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:visibility="gone"/>
+
+    <ViewStub
+        android:id="@+id/bloated_recycleview_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+</RelativeLayout>

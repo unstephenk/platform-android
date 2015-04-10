@@ -22,40 +22,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <include
-            layout="@layout/list_deployment_title_header"
-            android:id="@+id/header_layout"/>
-
     <com.ushahidi.android.ui.widget.DeploymentRecyclerView
-            android:id="@id/android:list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:cacheColorHint="@android:color/transparent"
-            android:scrollbars="vertical"
-            android:layout_below="@+id/header_layout"/>
+        android:id="@id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:cacheColorHint="@android:color/transparent"
+        fab:recyclerviewEmptyView="@layout/list_empty_view"
+        android:scrollbars="vertical"/>
 
-    <TextView
-            android:id="@id/android:empty"
-            style="@style/EmptyText"
-            android:visibility="gone"
-            android:text="@string/empty_list"/>
-
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-
-        <com.ushahidi.android.ui.widget.MovableFab
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:gravity="bottom|right"
-                fab:fab_icon="@drawable/ic_action_add"
-                fab:fab_colorNormal="@color/fab_color_primary"
-                fab:fab_colorPressed="@color/fab_color_pressed"
-                android:visibility="gone"
-                android:layout_marginBottom="16dp"/>
-
-    </FrameLayout>
+    <com.ushahidi.android.ui.widget.MovableFab
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:gravity="bottom|right"
+        fab:fab_icon="@drawable/ic_action_add"
+        fab:fab_colorNormal="@color/fab_color_primary"
+        fab:fab_colorPressed="@color/fab_color_pressed"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"/>
 </RelativeLayout>

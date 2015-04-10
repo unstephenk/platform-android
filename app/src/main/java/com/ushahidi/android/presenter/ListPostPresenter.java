@@ -18,8 +18,8 @@
 package com.ushahidi.android.presenter;
 
 import com.google.common.base.Preconditions;
-
 import com.squareup.otto.Subscribe;
+import com.ushahidi.android.R;
 import com.ushahidi.android.core.entity.Post;
 import com.ushahidi.android.core.entity.Tag;
 import com.ushahidi.android.core.exception.ErrorWrap;
@@ -46,8 +46,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * {@link com.ushahidi.android.presenter.IPresenter} facilitates interactions between post list view
- * and post models.
+ * {@link com.ushahidi.android.presenter.IPresenter} facilitates interactions between
+ * {@link com.ushahidi.android.ui.activity.PostActivity} and {@link PostModel}
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
@@ -77,6 +77,8 @@ public class ListPostPresenter implements IPresenter {
 
     private final TagDataSourceFactory mTagDataSourceFactory;
 
+    public boolean isRefreshing = false;
+
     private final ListPost.Callback mListCallback = new ListPost.Callback() {
 
         @Override
@@ -89,7 +91,6 @@ public class ListPostPresenter implements IPresenter {
         public void onError(ErrorWrap error) {
             hideViewLoading();
             showErrorMessage(error);
-            showViewRetry();
         }
     };
 
@@ -105,7 +106,6 @@ public class ListPostPresenter implements IPresenter {
         public void onError(ErrorWrap error) {
             hideViewLoading();
             showErrorMessage(error);
-            showViewRetry();
         }
     };
 
@@ -123,7 +123,6 @@ public class ListPostPresenter implements IPresenter {
         public void onError(ErrorWrap error) {
             hideViewLoading();
             showErrorMessage(error);
-            showViewRetry();
         }
     };
 
@@ -212,7 +211,9 @@ public class ListPostPresenter implements IPresenter {
     @Override
     public void resume() {
         mDeploymentState.registerEvent(this);
-        loadPostListFromLocalCache();
+        if(!isRefreshing) {
+            loadPostListFromLocalCache();
+        }
     }
 
     @Override
@@ -226,11 +227,10 @@ public class ListPostPresenter implements IPresenter {
     }
 
     private void loadPostListFromLocalCache() {
-        hideViewRetry();
         showViewLoading();
         getPostListFromLocalCache();
     }
-    
+
     @Subscribe
     public void onActivatedDeploymentChanged(
         IDeploymentState.ActivatedDeploymentChangedEvent event) {
@@ -257,19 +257,20 @@ public class ListPostPresenter implements IPresenter {
         mView.hideLoading();
     }
 
-    private void showViewRetry() {
-        mView.showRetry();
-    }
-
-    private void hideViewRetry() {
-        mView.hideRetry();
+    private void showViewRetry(String message) {
+        mView.showRetry(message);
     }
 
     private void showErrorMessage(ErrorWrap errorWrap) {
         if (mView.getAppContext() != null) {
             String errorMessage = ErrorMessageFactory.create(mView.getAppContext(),
                 errorWrap.getException());
+            if (errorMessage.equals(mView.getAppContext().getString(R.string.exception_message_no_connection))) {
+                showViewRetry(errorMessage);
+            } else {
                 mView.showError(errorMessage);
+            }
+
         }
     }
 

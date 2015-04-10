@@ -17,13 +17,12 @@
 
 package com.ushahidi.android.ui.adapter;
 
-import com.google.common.base.Preconditions;
-
-import com.ushahidi.android.model.Model;
-
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.ushahidi.android.model.Model;
+import com.ushahidi.android.ui.widget.BloatedRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +34,35 @@ import java.util.List;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public abstract class BaseRecyclerViewAdapter<M extends Model>
-        extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    protected List<M> mItems;
+    private List<M> mItems;
 
-    protected RecyclerviewViewHolder mRecyclerviewViewHolder;
+    private View mInfiniteScrollView = null;
+
+    public boolean isLoadMoreChanged = false;
+
+    public abstract RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent);
+
+    /**
+     * Returns the number of items in the adapter bound to the parent RecyclerView.
+     *
+     * @return The number of items in the bound adapter
+     */
+    public abstract int getAdapterItemCount();
+
+    /**
+     * Set the header view of the adapter.
+     */
+    public void setCustomHeaderView(BloatedRecyclerView.CustomRelativeWrapper customHeaderView) {
+        this.customHeaderView = customHeaderView;
+    }
+
+    public BloatedRecyclerView.CustomRelativeWrapper getCustomHeaderView() {
+        return customHeaderView;
+    }
+
+    protected BloatedRecyclerView.CustomRelativeWrapper customHeaderView = null;
 
     public BaseRecyclerViewAdapter() {
         mItems = new ArrayList<>();
@@ -47,16 +70,23 @@ public abstract class BaseRecyclerViewAdapter<M extends Model>
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-        Preconditions
-                .checkNotNull(mRecyclerviewViewHolder, "You must call setRecyclerviewViewHolder");
-        return mRecyclerviewViewHolder.onCreateViewHolder(viewGroup, position);
-    }
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
-        Preconditions
-                .checkNotNull(mRecyclerviewViewHolder, "You must call setRecyclerviewViewHolder");
-        mRecyclerviewViewHolder.onBindViewHolder(viewHolder, position);
+        if (position == VIEW_TYPES.FOOTER) {
+            RecyclerView.ViewHolder viewHolder = new CustomViewViewHolder(mInfiniteScrollView);
+            if (getAdapterItemCount() == 0)
+                viewHolder.itemView.setVisibility(View.GONE);
+            return viewHolder;
+        } else if (position == VIEW_TYPES.HEADER) {
+            if (customHeaderView != null)
+                return new CustomViewViewHolder(customHeaderView);
+        } else if (position == VIEW_TYPES.CHANGED_FOOTER) {
+            RecyclerView.ViewHolder viewHolder = new CustomViewViewHolder(mInfiniteScrollView);
+            if (getAdapterItemCount() == 0)
+                viewHolder.itemView.setVisibility(View.GONE);
+            return viewHolder;
+        }
+
+        return onCreateViewHolder(viewGroup);
     }
 
     public List<M> getItems() {
@@ -74,8 +104,8 @@ public abstract class BaseRecyclerViewAdapter<M extends Model>
     }
 
     public void addItem(M item, int position) {
-
         mItems.add(position, item);
+        if (customHeaderView != null) position++;
         notifyItemInserted(position);
     }
 
@@ -84,28 +114,65 @@ public abstract class BaseRecyclerViewAdapter<M extends Model>
         if (position < 0) {
             return;
         }
-        mItems.remove(item);
+        mItems.remove(customHeaderView != null ? position - 1 : position);
         notifyItemRemoved(position);
+    }
+
+    public void setInfiniteScrollView(View customview) {
+        mInfiniteScrollView = customview;
+    }
+
+    public void swipeInfiniteScrollView(View customview) {
+        mInfiniteScrollView = customview;
+        isLoadMoreChanged = true;
+    }
+
+    public View getInfiniteScrollView() {
+        return mInfiniteScrollView;
     }
 
     @Override
     public int getItemCount() {
-        Preconditions
-                .checkNotNull(mRecyclerviewViewHolder, "You must call setRecyclerviewViewHolder");
-        return mRecyclerviewViewHolder.getItemCount();
+
+        int headerOrFooter = 0;
+
+        if (customHeaderView != null) {
+            headerOrFooter++;
+        }
+
+        if (mInfiniteScrollView != null) {
+            headerOrFooter++;
+        }
+
+        return getAdapterItemCount() + headerOrFooter;
     }
 
-    public void setRecyclerviewViewHolder(RecyclerviewViewHolder recyclerviewViewHolder) {
-        mRecyclerviewViewHolder = recyclerviewViewHolder;
+    @Override
+    public int getItemViewType(int position) {
+        if (position == getItemCount() - 1 && mInfiniteScrollView != null) {
+            if (isLoadMoreChanged) {
+                return VIEW_TYPES.CHANGED_FOOTER;
+            } else {
+                return VIEW_TYPES.FOOTER;
+            }
+
+        } else if (position == 0 && customHeaderView != null) {
+            return VIEW_TYPES.HEADER;
+        } else
+            return VIEW_TYPES.NORMAL;
     }
 
-    public interface RecyclerviewViewHolder {
+    class CustomViewViewHolder extends RecyclerView.ViewHolder {
+        public CustomViewViewHolder(View itemView) {
+            super(itemView);
+        }
 
-        void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position);
-
-        RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position);
-
-        int getItemCount();
     }
 
+    private class VIEW_TYPES {
+        public static final int NORMAL = 0;
+        public static final int HEADER = 1;
+        public static final int FOOTER = 2;
+        public static final int CHANGED_FOOTER = 3;
+    }
 }

@@ -17,15 +17,6 @@
 
 package com.ushahidi.android.ui.fragment;
 
-import com.andreabaccega.widget.FormAutoCompleteTextView;
-import com.andreabaccega.widget.FormEditText;
-import com.ushahidi.android.R;
-import com.ushahidi.android.data.Constants;
-import com.ushahidi.android.model.DeploymentModel;
-import com.ushahidi.android.model.UserAccountModel;
-import com.ushahidi.android.presenter.LoginPresenter;
-import com.ushahidi.android.ui.adapter.DeploymentSpinnerAdapter;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -34,9 +25,19 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+
+import com.andreabaccega.widget.FormAutoCompleteTextView;
+import com.andreabaccega.widget.FormEditText;
+import com.ushahidi.android.R;
+import com.ushahidi.android.data.Constants;
+import com.ushahidi.android.model.DeploymentModel;
+import com.ushahidi.android.model.UserAccountModel;
+import com.ushahidi.android.presenter.LoginPresenter;
+import com.ushahidi.android.ui.adapter.DeploymentSpinnerAdapter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,7 +54,7 @@ import butterknife.OnItemSelected;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class LoginFragment extends BaseFragment
-        implements LoginPresenter.View, RadioGroup.OnCheckedChangeListener {
+    implements LoginPresenter.View, RadioGroup.OnCheckedChangeListener {
 
     public static final String LOGIN_FRAGMENT_TAG = "login_fragment";
 
@@ -80,6 +81,9 @@ public class LoginFragment extends BaseFragment
 
     @InjectView(R.id.active_email)
     FormAutoCompleteTextView mEmailAutoComplete;
+
+    @InjectView(R.id.login_progress_bar)
+    ProgressBar mProgressBar;
 
     @Inject
     LoginPresenter mLoginPresenter;
@@ -125,6 +129,7 @@ public class LoginFragment extends BaseFragment
             }
         });
         mLoginPresenter.getDeploymentList();
+        mRegisterRadioButton.setEnabled(false);
     }
 
     @OnClick(R.id.login_submit_btn)
@@ -135,7 +140,7 @@ public class LoginFragment extends BaseFragment
     @OnItemSelected(R.id.select_deployment)
     public void onItemSelected(int position) {
         mSelectedDeploymentModel = mDeploymentSpinnerArrayAdapter.getDeploymentModels()
-                .get(position);
+            .get(position);
         mLoginPresenter.setSelectedDeployment(mSelectedDeploymentModel);
     }
 
@@ -152,7 +157,6 @@ public class LoginFragment extends BaseFragment
                     userAccountModel.setPassword(mPassword.getText().toString().trim());
                     userAccountModel.setAuthTokenType(Constants.USHAHIDI_AUTHTOKEN_PASSWORD_TYPE);
                     mLoginPresenter.performLogin(userAccountModel);
-
                     break;
                 case R.id.radio_btn_register:
                     final String email = mEmailAutoComplete.getText().toString().trim();
@@ -176,37 +180,36 @@ public class LoginFragment extends BaseFragment
             mUserAccountModel.setId(userId);
             mLoginListener.finish();
             mLoginListener.setAccountAuthenticatorResult(mUserAccountModel,
-                    mSelectedDeploymentModel.getId());
+                mSelectedDeploymentModel.getId());
         }
     }
 
     @Override
     public void deploymentList(List<DeploymentModel> deploymentModelList) {
         mDeploymentSpinnerArrayAdapter = new DeploymentSpinnerAdapter(getAppContext(),
-                deploymentModelList);
+            deploymentModelList);
         mSpinner.setAdapter(mDeploymentSpinnerArrayAdapter);
 
-        // Select active deployment by default
+        // By default, select the active deployment.
         mSpinner.setSelection(mLoginPresenter.getActiveDeploymentPosition(deploymentModelList));
     }
 
     @Override
     public void showLoading() {
-
+        mLoginButton.setVisibility(View.GONE);
+        mProgressBar.setIndeterminate(true);
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-
+        mLoginButton.setVisibility(View.VISIBLE);
+        mProgressBar.setIndeterminate(false);
+        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
-    public void showRetry() {
-
-    }
-
-    @Override
-    public void hideRetry() {
+    public void showRetry(String message) {
 
     }
 
@@ -246,7 +249,7 @@ public class LoginFragment extends BaseFragment
                     }
                     List<String> emails = new ArrayList<>(emailSet);
                     mEmailAutoComplete.setAdapter(new ArrayAdapter<>(getActivity(),
-                            android.R.layout.simple_spinner_dropdown_item, emails));
+                        android.R.layout.simple_spinner_dropdown_item, emails));
                 }
                 break;
         }

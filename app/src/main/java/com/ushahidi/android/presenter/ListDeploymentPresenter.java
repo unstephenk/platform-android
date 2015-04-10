@@ -52,7 +52,6 @@ public class ListDeploymentPresenter implements IPresenter {
         public void onError(ErrorWrap error) {
             hideViewLoading();
             showErrorMessage(error);
-            showViewRetry();
         }
     };
 
@@ -60,10 +59,10 @@ public class ListDeploymentPresenter implements IPresenter {
 
     @Inject
     public ListDeploymentPresenter(
-            ListDeployment listDeployment,
-            DeploymentModelDataMapper deploymentModelDataMapper) {
+        ListDeployment listDeployment,
+        DeploymentModelDataMapper deploymentModelDataMapper) {
         if (listDeployment == null
-                || deploymentModelDataMapper == null) {
+            || deploymentModelDataMapper == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
         }
 
@@ -93,7 +92,6 @@ public class ListDeploymentPresenter implements IPresenter {
     }
 
     private void loadList() {
-        hideViewRetry();
         showViewLoading();
         getDeploymentList();
     }
@@ -114,23 +112,21 @@ public class ListDeploymentPresenter implements IPresenter {
         mView.hideLoading();
     }
 
-    private void showViewRetry() {
-        mView.showRetry();
+    private void showViewRetry(String message) {
+        mView.showRetry(message);
     }
 
-    private void hideViewRetry() {
-        mView.hideRetry();
-    }
 
     private void showErrorMessage(ErrorWrap errorWrap) {
         String errorMessage = ErrorMessageFactory.create(mView.getAppContext(),
-                errorWrap.getException());
+            errorWrap.getException());
         mView.showError(errorMessage);
+        showViewRetry(errorMessage);
     }
 
     private void showDeploymentsListInView(List<Deployment> listDeployments) {
         final List<DeploymentModel> deploymentModelsList =
-                mDeploymentModelDataMapper.map(listDeployments);
+            mDeploymentModelDataMapper.map(listDeployments);
         mView.renderDeploymentList(deploymentModelsList);
     }
 

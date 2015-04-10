@@ -1,12 +1,12 @@
 package com.ushahidi.android.ui.activity;
 
-import com.ushahidi.android.R;
-import com.ushahidi.android.module.DeploymentUiModule;
-import com.ushahidi.android.ui.fragment.AddDeploymentFragment;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.ushahidi.android.R;
+import com.ushahidi.android.module.DeploymentUiModule;
+import com.ushahidi.android.ui.fragment.AddDeploymentFragment;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class AddDeploymentActivity extends BaseActivity implements
-        AddDeploymentFragment.AddDeploymentListener {
+    AddDeploymentFragment.AddDeploymentListener {
 
     public AddDeploymentActivity() {
         super(R.layout.activity_add_deployment, 0);
@@ -35,7 +35,7 @@ public class AddDeploymentActivity extends BaseActivity implements
 
     private void init() {
         addFragment(R.id.fragment_container, AddDeploymentFragment.newInstance(),
-                AddDeploymentFragment.ADD_FRAGMENT_TAG);
+            AddDeploymentFragment.ADD_FRAGMENT_TAG);
     }
 
     @Override
@@ -53,6 +53,7 @@ public class AddDeploymentActivity extends BaseActivity implements
     @Override
     public void onAddNavigateOrReloadList() {
         launcher.launchListDeployment();
+        finish();
     }
 
     @Override

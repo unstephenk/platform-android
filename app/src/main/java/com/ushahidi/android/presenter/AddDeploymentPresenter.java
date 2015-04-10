@@ -1,7 +1,6 @@
 package com.ushahidi.android.presenter;
 
 import com.google.common.base.Preconditions;
-
 import com.ushahidi.android.core.entity.Deployment;
 import com.ushahidi.android.core.exception.ErrorWrap;
 import com.ushahidi.android.core.usecase.deployment.AddDeployment;
@@ -40,10 +39,10 @@ public class AddDeploymentPresenter implements IPresenter {
 
     @Inject
     public AddDeploymentPresenter(AddDeployment addDeployment,
-            DeploymentModelDataMapper deploymentModelDataMapper) {
+                                  DeploymentModelDataMapper deploymentModelDataMapper) {
         mAddDeployment = Preconditions.checkNotNull(addDeployment, "AddDeployment cannot be null");
         mDeploymentModelDataMapper = Preconditions.checkNotNull(deploymentModelDataMapper,
-                "DeploymentModelDataMapper cannot be null");
+            "DeploymentModelDataMapper cannot be null");
     }
 
     public void setView(View view) {
@@ -65,13 +64,13 @@ public class AddDeploymentPresenter implements IPresenter {
 
     public void addDeployment(DeploymentModel deploymentModel) {
         final Deployment deployment =
-                mDeploymentModelDataMapper.unmap(deploymentModel);
+            mDeploymentModelDataMapper.unmap(deploymentModel);
         mAddDeployment.execute(deployment, mCallback);
     }
 
     private void showErrorMessage(ErrorWrap errorWrap) {
         String errorMessage = ErrorMessageFactory.create(mView.getAppContext(),
-                errorWrap.getException());
+            errorWrap.getException());
         mView.showError(errorMessage);
     }
 
@@ -85,6 +84,6 @@ public class AddDeploymentPresenter implements IPresenter {
         /**
          * Reloads the list or navigates to a different screen depending on the device
          */
-        public void navigateOrReloadList();
+        void navigateOrReloadList();
     }
 }

@@ -20,12 +20,16 @@
              android:id="@+id/layout_user_login"
              android:layout_width="match_parent"
              android:layout_height="@dimen/nav_drawer_user_account_height"
-             android:paddingLeft="@dimen/keyline_1"
-             android:paddingRight="@dimen/keyline_1"
-             android:paddingTop="@dimen/keyline_1"
              android:background="?attr/colorAccent">
 
-    <com.ushahidi.android.ui.widget.BezelImageView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/keyline_1"
+        android:paddingRight="@dimen/keyline_1"
+        android:paddingTop="@dimen/profile_pic_top_padding">
+
+        <com.ushahidi.android.ui.widget.BezelImageView
             android:id="@+id/anonymous_user_image"
             android:layout_width="@dimen/nav_drawer_user_profile_image_size"
             android:layout_height="@dimen/nav_drawer_user_profile_image_size"
@@ -33,11 +37,14 @@
             android:scaleType="centerCrop"
             ushApp:maskDrawable="@drawable/circle_mask"/>
 
-    <TextView
+        <TextView
             android:id="@+id/user_login_title"
             style="@style/NavDrawer.Login"
-            android:layout_alignParentEnd="true"
+            android:text="@string/login"
             android:layout_alignParentBottom="true"
-            android:text="@string/login"/>
+            android:paddingBottom="@dimen/keyline_1"
+            />
+
+    </RelativeLayout>
 
 </FrameLayout>

@@ -17,23 +17,20 @@
 
 package com.ushahidi.android.ui.activity;
 
-import com.ushahidi.android.R;
-import com.ushahidi.android.data.Constants;
-import com.ushahidi.android.model.UserAccountModel;
-import com.ushahidi.android.module.AccountModule;
-import com.ushahidi.android.state.IUserState;
-import com.ushahidi.android.ui.fragment.LoginFragment;
-
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.ushahidi.android.R;
+import com.ushahidi.android.data.Constants;
+import com.ushahidi.android.model.UserAccountModel;
+import com.ushahidi.android.module.AccountModule;
+import com.ushahidi.android.ui.fragment.LoginFragment;
+
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
@@ -59,7 +56,7 @@ public class LoginActivity extends BaseActivity implements LoginFragment.LoginLi
         super.onCreate(savedInstanceState);
         init();
         mAccountAuthenticatorResponse = getIntent().getParcelableExtra(
-                AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
+            AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
 
         if (mAccountAuthenticatorResponse != null) {
             mAccountAuthenticatorResponse.onRequestContinued();
@@ -79,7 +76,7 @@ public class LoginActivity extends BaseActivity implements LoginFragment.LoginLi
 
             } else {
                 mAccountAuthenticatorResponse.onError(
-                        AccountManager.ERROR_CODE_CANCELED, "canceled");
+                    AccountManager.ERROR_CODE_CANCELED, "canceled");
             }
             mAccountAuthenticatorResponse = null;
         }
@@ -88,7 +85,7 @@ public class LoginActivity extends BaseActivity implements LoginFragment.LoginLi
 
     @Override
     public void setAccountAuthenticatorResult(UserAccountModel userAccountModel,
-            Long deploymentId) {
+                                              Long deploymentId) {
         Bundle bundle = new Bundle();
         bundle.putString(AccountManager.KEY_ACCOUNT_NAME, userAccountModel.getAccountName());
         bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, Constants.USHAHIDI_AUTHTOKEN_PASSWORD_TYPE);
@@ -111,6 +108,6 @@ public class LoginActivity extends BaseActivity implements LoginFragment.LoginLi
 
     private void init() {
         addFragment(R.id.fragment_container, LoginFragment.newInstance(),
-                LoginFragment.LOGIN_FRAGMENT_TAG);
+            LoginFragment.LOGIN_FRAGMENT_TAG);
     }
 }

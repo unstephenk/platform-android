@@ -72,4 +72,9 @@
     <color name="cluster_solid_color">#eb0000</color>
     <color name="published">#388E3C</color>
     <color name="draft">#eb0000</color>
+
+    <!-- List pressed -->
+    <color name="pressed_color">#2033b5e5</color>
+    <color name="selected_item_color">#edfbf1</color>
+    <color name="item_disable_color">#66999999</color>
 </resources>

@@ -18,6 +18,7 @@
 package com.ushahidi.android.module;
 
 import com.ushahidi.android.ui.activity.AboutActivity;
+import com.ushahidi.android.ui.activity.MainActivity;
 import com.ushahidi.android.ui.activity.SendFeedbackActivity;
 import com.ushahidi.android.ui.activity.SettingsActivity;
 import com.ushahidi.android.ui.fragment.AboutFragment;
@@ -30,8 +31,8 @@ import dagger.Module;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 @Module(library = true, complete = false,
-        injects = {SettingsFragment.class, SettingsActivity.class, AboutFragment.class,
-                AboutActivity.class, SendFeedbackActivity.class, SendFeedbackFragment.class})
+    injects = {MainActivity.class, SettingsFragment.class, SettingsActivity.class, AboutFragment.class,
+        AboutActivity.class, SendFeedbackActivity.class, SendFeedbackFragment.class})
 public class InjectModule {
 
 }

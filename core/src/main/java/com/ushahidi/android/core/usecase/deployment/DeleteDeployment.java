@@ -24,7 +24,7 @@ import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 
 /**
- * Deletes deployment
+ * Use case that deletes a {@link Deployment} from the local database.
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */

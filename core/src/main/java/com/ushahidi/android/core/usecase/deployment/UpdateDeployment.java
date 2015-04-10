@@ -24,7 +24,7 @@ import com.ushahidi.android.core.task.PostExecutionThread;
 import com.ushahidi.android.core.task.ThreadExecutor;
 
 /**
- * Implements update deployment use case
+ * Use case that updates an existing {@link Deployment}
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */

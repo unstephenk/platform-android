@@ -17,13 +17,6 @@
 
 package com.ushahidi.android.ui.activity;
 
-import com.ushahidi.android.R;
-import com.ushahidi.android.model.DeploymentModel;
-import com.ushahidi.android.module.DeploymentUiModule;
-import com.ushahidi.android.ui.fragment.AddDeploymentFragment;
-import com.ushahidi.android.ui.fragment.ListDeploymentFragment;
-import com.ushahidi.android.ui.fragment.UpdateDeploymentFragment;
-
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +25,13 @@ import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.widget.FrameLayout;
+
+import com.ushahidi.android.R;
+import com.ushahidi.android.model.DeploymentModel;
+import com.ushahidi.android.module.DeploymentUiModule;
+import com.ushahidi.android.ui.fragment.AddDeploymentFragment;
+import com.ushahidi.android.ui.fragment.ListDeploymentFragment;
+import com.ushahidi.android.ui.fragment.UpdateDeploymentFragment;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -42,9 +42,9 @@ import java.util.List;
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class DeploymentActivity extends BaseActivity
-        implements ListDeploymentFragment.DeploymentListListener,
-        UpdateDeploymentFragment.DeploymentUpdateListener,
-        AddDeploymentFragment.AddDeploymentListener {
+    implements ListDeploymentFragment.DeploymentListListener,
+    UpdateDeploymentFragment.DeploymentUpdateListener,
+    AddDeploymentFragment.AddDeploymentListener {
 
     private FrameLayout addDeploymentLayout;
 
@@ -64,22 +64,18 @@ public class DeploymentActivity extends BaseActivity
 
     private void init() {
 
-        addDeploymentLayout
-                = (FrameLayout) findViewById(R.id.add_deployment_fragment_container);
+        //addDeploymentLayout
+        //      = (FrameLayout) findViewById(R.id.add_deployment_fragment_container);
 
         mListDeploymentFragment = (ListDeploymentFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_list_deployments);
+            .findFragmentById(R.id.fragment_list_deployments);
 
-        if (addDeploymentLayout != null) {
-            addFragment(R.id.add_deployment_fragment_container, AddDeploymentFragment.newInstance(),
-                    AddDeploymentFragment.ADD_FRAGMENT_TAG);
-        }
 
         // Actionbar title
-        setTitle(null);
+        //setTitle(null);
     }
 
-    private void replaceFragment(Long deploymentId) {
+    /*private void replaceFragment(Long deploymentId) {
         replaceFragment(R.id.add_deployment_fragment_container,
                 UpdateDeploymentFragment.newInstance(deploymentId),
                 UpdateDeploymentFragment.UPDATE_FRAGMENT_TAG);
@@ -88,12 +84,12 @@ public class DeploymentActivity extends BaseActivity
     private void replaceFragment() {
         replaceFragment(R.id.add_deployment_fragment_container, AddDeploymentFragment.newInstance(),
                 AddDeploymentFragment.ADD_FRAGMENT_TAG);
-    }
+    }*/
 
     private void refreshList() {
         if (mListDeploymentFragment != null) {
             mListDeploymentFragment.refreshList();
-            replaceFragment();
+            //replaceFragment();
         }
     }
 
@@ -127,17 +123,17 @@ public class DeploymentActivity extends BaseActivity
         super.onCreateOptionsMenu(menu);
 
         mSearchView =
-                (SearchView) menu.findItem(R.id.menu_add_search).getActionView();
+            (SearchView) menu.findItem(R.id.menu_add_search).getActionView();
         initSearchView();
         return true;
     }
 
     private void initSearchView() {
         final SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
         mSearchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+            searchManager.getSearchableInfo(getComponentName()));
         mSearchView.clearFocus();
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -171,8 +167,8 @@ public class DeploymentActivity extends BaseActivity
             mSearchView.setQuery(mQuery, false);
         }
         SearchView.SearchAutoComplete searchAutoComplete
-                = (SearchView.SearchAutoComplete) mSearchView
-                .findViewById(android.support.v7.appcompat.R.id.search_src_text);
+            = (SearchView.SearchAutoComplete) mSearchView
+            .findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchAutoComplete.setHintTextColor(getResources().getColor(android.R.color.white));
         searchAutoComplete.setTextSize(14);
     }
@@ -197,12 +193,7 @@ public class DeploymentActivity extends BaseActivity
 
     @Override
     public void onDeploymentClicked(DeploymentModel deploymentModel) {
-
-        if (addDeploymentLayout != null) {
-            replaceFragment(deploymentModel.getId());
-        } else {
-            launcher.launchUpdateDeployment(deploymentModel.getId());
-        }
+        launcher.launchUpdateDeployment(deploymentModel.getId());
     }
 
     @Override
@@ -217,7 +208,7 @@ public class DeploymentActivity extends BaseActivity
 
     @Override
     public void onCancelUpdate() {
-        replaceFragment();
+        //replaceFragment();
     }
 
     @Override
@@ -227,6 +218,6 @@ public class DeploymentActivity extends BaseActivity
 
     @Override
     public void onCancelAdd() {
-        replaceFragment();
+        //replaceFragment();
     }
 }

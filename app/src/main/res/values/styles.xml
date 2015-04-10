@@ -146,9 +146,11 @@
     </style>
 
     <style name="ListTextHeader" parent="TextHeader">
+        <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
     </style>
+
     <style name="ListTextBody" parent="TextBody">
         <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
@@ -320,13 +322,13 @@
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">start|center_vertical</item>
+        <item name="android:layout_gravity">start|left</item>
         <item name="android:layout_marginRight">16dp</item>
     </style>
 
     <style name="TabSliding">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_height">@dimen/tab_height</item>
         <item name="android:layout_gravity">center|bottom</item>
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:textAppearance">@style/TabSliding.Label</item>

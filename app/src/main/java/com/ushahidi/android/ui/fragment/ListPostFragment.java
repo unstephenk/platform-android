@@ -20,27 +20,31 @@ package com.ushahidi.android.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.enums.SnackbarType;
+import com.nispok.snackbar.listeners.ActionClickListener;
+import com.nispok.snackbar.listeners.EventListener;
 import com.ushahidi.android.R;
-import com.ushahidi.android.core.usecase.post.ListPost;
 import com.ushahidi.android.model.PostModel;
 import com.ushahidi.android.presenter.ListPostPresenter;
 import com.ushahidi.android.ui.adapter.PostAdapter;
+import com.ushahidi.android.ui.animators.FadeInAnimator;
+import com.ushahidi.android.ui.listener.ObservableScrollState;
+import com.ushahidi.android.ui.listener.ObservableScrollViewListener;
+import com.ushahidi.android.ui.listener.RecyclerViewItemTouchListenerAdapter;
+import com.ushahidi.android.ui.widget.MovableFab;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -54,24 +58,32 @@ import butterknife.InjectView;
  */
 public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAdapter>
     implements
-    ListPostPresenter.View, RecyclerView.OnItemTouchListener {
+    ListPostPresenter.View, RecyclerViewItemTouchListenerAdapter.RecyclerViewOnItemClickListener {
 
     @Inject
     ListPostPresenter mPostListPresenter;
 
-    @InjectView(android.R.id.empty)
     TextView mEmptyView;
+
+    @InjectView(R.id.list_post_progress_bar)
+    ProgressBar mProgressBar;
+
+    MovableFab mPostFab;
+
+    private static final String IS_REFERESHING = "refreshing";
+
+    private boolean isRefreshing = false;
 
     private PostListListener mPostListListener;
 
-    private GridLayoutManager mLinearLayoutManager;
-
-    private GestureDetectorCompat mGestureDetector;
-
     private static ListPostFragment mListPostFragment;
 
+    private RecyclerViewItemTouchListenerAdapter mRecyclerViewItemTouchListenerAdapter;
+
+    private LinearLayoutManager mLinearLayoutManager;
+
     public ListPostFragment() {
-        super(PostAdapter.class, R.layout.list_post, 0,
+        super(PostAdapter.class, R.layout.list_post, R.menu.list_post,
             android.R.id.list);
     }
 
@@ -93,22 +105,32 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initRecyclerView();
         mPostListPresenter.init();
+        initRecyclerView();
+        if (savedInstanceState != null) {
+            isRefreshing = savedInstanceState.getBoolean(IS_REFERESHING, false);
+        }
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(IS_REFERESHING, isRefreshing);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        // Calling this here because when called in the onResume method the activity doesn't
-        // attached in time and causing getActivity() to return a null value.
+        mPostListPresenter.isRefreshing = isRefreshing;
         mPostListPresenter.resume();
+        if (isRefreshing) {
+            refreshLists();
+        }
     }
 
     @Override
@@ -122,46 +144,82 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
         mPostListPresenter.setView(this);
     }
 
-    private void setEmptyView() {
-        if (mRecyclerViewAdapter != null && mRecyclerViewAdapter.getItemCount() == 0) {
-            mEmptyView.setVisibility(View.VISIBLE);
-        } else {
-            mEmptyView.setVisibility(View.GONE);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.menu_refresh_post) {
+
+            refreshWithSwipeToRefresh();
+            return true;
+        } else if (id == R.id.menu_sort_by_title) {
+            sortByTitle();
+
+            return true;
+        } else if (id == R.id.menu_sort_by_date) {
+
+            mListPostFragment.sortByDate();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Fetches post via the API with SwipeRefresh enabled.
+     */
+    private void refreshWithSwipeToRefresh() {
+        mBloatedRecyclerView.setRefreshing(true);
+        isRefreshing = true;
+        refreshLists();
+    }
+
+    private void setEmptyView() {
+        mEmptyView = (TextView) mBloatedRecyclerView.getmEmptyView().findViewById(android.R.id.empty);
     }
 
     private void initRecyclerView() {
-        mRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        mRecyclerViewItemTouchListenerAdapter = new RecyclerViewItemTouchListenerAdapter(
+            mBloatedRecyclerView.recyclerView, this);
+
+        mPostFab = mBloatedRecyclerView.getDefaultFloatingActionButton();
+        mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        mBloatedRecyclerView.setAdapter(mRecyclerViewAdapter);
+        mBloatedRecyclerView.setItemAnimator(new FadeInAnimator());
+        mBloatedRecyclerView.addItemDividerDecoration(getActivity());
+        mBloatedRecyclerView.displayDefaultFloatingActionButton(true);
+        mBloatedRecyclerView.recyclerView.addOnItemTouchListener(mRecyclerViewItemTouchListenerAdapter);
+
+        // Upon  successful refresh, disable swipe to refresh
+        mBloatedRecyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onChanged() {
-                super.onChanged();
-                setEmptyView();
+            public void onRefresh() {
+                refreshLists();
+                mLinearLayoutManager.scrollToPosition(0);
             }
         });
-        mRecyclerView.addOnItemTouchListener(this);
 
-        // Calculate the number of columns based on screen size.
-        // Screen size of 300 - 500 will have 1 column and tablet size
-        // will have 2 - 3 columns
-        // Get the screen width in dip and divide by 300 (assuming it's the smallest possible screen
-        // size for a phone ) to get the number of columns.
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        display.getMetrics(displayMetrics);
+        // Show or hide Toolbar and FAB upon scrolling
+        mBloatedRecyclerView.setScrollViewCallbacks(new ObservableScrollViewListener() {
+            @Override
+            public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+                // Do nothing
+            }
 
-        float density = getResources().getDisplayMetrics().density;
-        float dpWidth = displayMetrics.widthPixels / density;
-        //
-        int columns = Math.round(dpWidth / 300);
+            @Override
+            public void onDownMotionEvent() {
+                // Do nothing
+            }
 
-        mLinearLayoutManager = new GridLayoutManager(getAppContext(), columns);
-        mLinearLayoutManager.setSmoothScrollbarEnabled(true);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mGestureDetector = new GestureDetectorCompat(getActivity(),
-            new RecyclerViewOnGestureListener());
-
-        mRecyclerView.setAdapter(mRecyclerViewAdapter);
-        setEmptyView();
+            @Override
+            public void onUpOrCancelMotionEvent(ObservableScrollState observableScrollState) {
+                if (observableScrollState == ObservableScrollState.DOWN) {
+                    mBloatedRecyclerView.hideDefaultFloatingActionButton();
+                } else if (observableScrollState == ObservableScrollState.UP) {
+                    mBloatedRecyclerView.showDefaultFloatingActionButton();
+                }
+            }
+        });
     }
 
     public void search(String query) {
@@ -215,63 +273,120 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
 
     @Override
     public void showLoading() {
-        mPostListListener.enableSwipeRefresh();
+        mProgressBar.setVisibility(View.VISIBLE);
+        mProgressBar.setIndeterminate(true);
     }
 
     @Override
     public void hideLoading() {
-        mPostListListener.hideSwipeRefresh();
+        mBloatedRecyclerView.setRefreshing(false);
+        isRefreshing = false;
+        mLinearLayoutManager.scrollToPosition(0);
+        mProgressBar.setVisibility(View.GONE);
+        mProgressBar.setIndeterminate(false);
     }
 
     @Override
-    public void showRetry() {
-        //TODO: implement this
-    }
+    public void showRetry(String message) {
+        SnackbarManager.show(Snackbar.with(getActivity())
+            .type(SnackbarType.MULTI_LINE)
+            .text(message)
+            .actionLabel(getActivity().getString(R.string.retry))
+            .actionColorResource(R.color.undo_text_color)
+            .duration(Snackbar.SnackbarDuration.LENGTH_LONG)
+            .actionListener(new ActionClickListener() {
+                @Override
+                public void onActionClicked(Snackbar snackbar) {
+                    refreshWithSwipeToRefresh();
+                }
+            })
+            .eventListener(new EventListener() {
+                @Override
+                public void onShow(Snackbar snackbar) {
+                    mPostFab.moveUp(snackbar.getHeight());
+                }
 
-    @Override
-    public void hideRetry() {
-        //TODO: implement this
+                @Override
+                public void onShowByReplace(Snackbar snackbar) {
+                    // Do nothing
+                }
+
+                @Override
+                public void onShown(Snackbar snackbar) {
+                    // Do nothing
+                }
+
+                @Override
+                public void onDismiss(Snackbar snackbar) {
+                    mPostFab.moveDown(0);
+                }
+
+                @Override
+                public void onDismissByReplace(Snackbar snackbar) {
+                    // Do nothing
+                }
+
+                @Override
+                public void onDismissed(Snackbar snackbar) {
+
+                }
+            }));
     }
 
     public boolean canCollectionViewScrollUp() {
-        return ViewCompat.canScrollVertically(mRecyclerView, -1);
+        return ViewCompat.canScrollVertically(mBloatedRecyclerView, -1);
     }
 
     public void sortByDate() {
-        if(mRecyclerViewAdapter !=null) {
+        if (mRecyclerViewAdapter != null) {
             mRecyclerViewAdapter.sortByDate();
         }
     }
 
     public void sortByTitle() {
-        if(mRecyclerViewAdapter !=null) {
+        if (mRecyclerViewAdapter != null) {
             mRecyclerViewAdapter.sortByTitle();
         }
     }
 
-
-    public RecyclerView getRecyclerView() {
-        return mRecyclerView;
-    }
-
-    public LinearLayoutManager getLinearLayoutManager() {
-        return mLinearLayoutManager;
-    }
-
     @Override
     public void showError(String message) {
-        showToast(message);
-    }
+        SnackbarManager.show(Snackbar.with(getActivity())
+            .type(SnackbarType.MULTI_LINE)
+            .text(message)
+            .actionLabel(getActivity().getString(R.string.retry))
+            .actionColorResource(R.color.undo_text_color)
+            .attachToRecyclerView(mBloatedRecyclerView.recyclerView)
+            .eventListener(new EventListener() {
+                @Override
+                public void onShow(Snackbar snackbar) {
+                    mPostFab.moveUp(snackbar.getHeight());
+                }
 
-    @Override
-    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent motionEvent) {
-        mGestureDetector.onTouchEvent(motionEvent);
-        return false;
-    }
+                @Override
+                public void onShowByReplace(Snackbar snackbar) {
 
-    @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+                }
 
+                @Override
+                public void onShown(Snackbar snackbar) {
+
+                }
+
+                @Override
+                public void onDismiss(Snackbar snackbar) {
+                    mPostFab.moveDown(0);
+                }
+
+                @Override
+                public void onDismissByReplace(Snackbar snackbar) {
+                }
+
+                @Override
+                public void onDismissed(Snackbar snackbar) {
+                    // Do nothing
+                }
+            }));
     }
 
     private void onItemClick(int position) {
@@ -281,26 +396,21 @@ public class ListPostFragment extends BaseRecyclerViewFragment<PostModel, PostAd
         }
     }
 
+    @Override
+    public void onItemClick(RecyclerView parent, View clickedView, int position) {
+        onItemClick(position);
+    }
+
+    @Override
+    public void onItemLongClick(RecyclerView parent, View clickedView, int position) {
+        //Do nothing
+    }
+
     /**
      * Listens for post list events
      */
     public interface PostListListener {
-
         void onPostClicked(final PostModel postModel);
-
-        void hideSwipeRefresh();
-
-        void enableSwipeRefresh();
     }
 
-    private class RecyclerViewOnGestureListener extends
-        GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
-            onItemClick(mRecyclerView.getChildPosition(view));
-            return super.onSingleTapConfirmed(e);
-        }
-    }
 }

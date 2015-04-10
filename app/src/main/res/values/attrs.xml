@@ -51,6 +51,28 @@
     </declare-styleable>
     <declare-styleable name="FloatLabelLayout">
         <attr name="floatLabelTextAppearance" format="reference"/>
-        <attr name="floatLabelSidePadding" format="reference|dimension"/>
+        <attr name="floatLabelPaddingLeft" format="reference|dimension"/>
+        <attr name="floatLabelPaddingRight" format="reference|dimension"/>
+        <attr name="floatLabelPaddingTop" format="reference|dimension"/>
+        <attr name="floatLabelPaddingBottom" format="reference|dimension"/>
+        <!-- The hint to display in the floating label -->
+        <attr name="floatLabelHint" format="reference|string"/>
+    </declare-styleable>
+
+    <!-- BloatedRecyclerView -->
+    <declare-styleable name="BloatedRecyclerView">
+        <attr name="recyclerviewClipToPadding" format="boolean"/>
+        <attr name="recyclerviewPadding" format="dimension"/>
+        <attr name="recyclerviewPaddingTop" format="dimension"/>
+        <attr name="recyclerviewPaddingBottom" format="dimension"/>
+        <attr name="recyclerviewPaddingLeft" format="dimension"/>
+        <attr name="recyclerviewPaddingRight" format="dimension"/>
+        <attr name="recyclerviewEmptyView" format="reference"/>
+        <attr name="recyclerviewFloatingActionView" format="reference"/>
+        <attr name="recyclerviewScrollbars" format="enum">
+            <enum name="none" value="0"/>
+            <enum name="vertical" value="1"/>
+            <enum name="horizontal" value="2"/>
+        </attr>
     </declare-styleable>
 </resources>

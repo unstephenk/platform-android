@@ -18,23 +18,23 @@
   -->
 
 <resources
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:ignore="MissingTranslation">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
 
     <string name="app_name">Ushahidi Android</string>
 
     <string name="empty_list">Empty list.</string>
-    <string name="required_field_error">This field is required</string>
+    <string name="required_field_error">This field is required.</string>
     <!--Exception messages -->
-    <string name="exception_message_generic">Oops, an application error occurred</string>
+    <string name="exception_message_generic">Oops, an application error occurred.</string>
     <string name="exception_message_no_connection">There is no internet connection</string>
-    <string name="exception_message_deployment_not_found">Cannot retrieve deployment data.</string>
-    <string name="exception_message_deployment_not_added">Could not add a deployment</string>
+    <string name="exception_message_deployment_not_found">Deployment not found.</string>
+    <string name="exception_message_deployment_not_added">Could not add the deployment.</string>
 
     <!-- Add Deployment -->
-    <string name="add_deployment_title_hint">Deployment Title Required</string>
-    <string name="add_deployment_description_hint">Deployment Description Optional</string>
-    <string name="add_deployment_url_hint">Deployment URL Required</string>
+    <string name="add_deployment_title_hint">The title of the deployment</string>
+    <string name="add_deployment_description_hint">Please enter details of the deployment.</string>
+    <string name="add_deployment_url_hint">The API URL of the deployment</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
     <string name="menu_create_account">Create account</string>
@@ -102,6 +102,7 @@
     <string name="device_model">Model</string>
     <string name="search_posts">Search Posts</string>
     <string name="login_failed">Login failed, check your username and password.</string>
+    <string name="retry">Retry</string>
 
     <!-- enable auto sync -->
     <string name="chk_enable_auto_sync">Enable Auto Sync</string>

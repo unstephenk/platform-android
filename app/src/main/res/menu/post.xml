@@ -18,32 +18,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:ushahidiApp="http://schemas.android.com/apk/res-auto">
     <item
-            android:id="@+id/menu_search_post"
-            android:icon="@drawable/ic_action_search"
-            android:title="@string/search"
-            android:orderInCategory="1"
-            ushahidiApp:actionViewClass="android.support.v7.widget.SearchView"
-            ushahidiApp:showAsAction="collapseActionView|always"/>
-
+        android:id="@+id/menu_search_post"
+        android:icon="@drawable/ic_action_search"
+        android:title="@string/search"
+        android:orderInCategory="1"
+        ushahidiApp:actionViewClass="android.support.v7.widget.SearchView"
+        ushahidiApp:showAsAction="collapseActionView|always"/>
     <item
-            android:id="@+id/menu_filter_posts"
-            android:title="@string/sort"
-            android:icon="@drawable/ic_action_filter"
-            android:orderInCategory="1"
-            ushahidiApp:showAsAction="ifRoom">
-        <menu>
-        <item
-                android:id="@+id/menu_sort_by_title"
-                android:title="@string/sort_by_title"/>
-        <item
-                android:id="@+id/menu_sort_by_date"
-                android:title="@string/sort_by_date"/>
-        </menu>
-            </item>
-    <item
-            android:id="@+id/menu_refresh_post"
-            android:title="@string/refresh"
-            android:icon="@drawable/ic_action_reload"
-            android:orderInCategory="1"
-            ushahidiApp:showAsAction="never"/>
+        android:id="@+id/menu_refresh_post"
+        android:title="@string/refresh"
+        android:icon="@drawable/ic_action_reload"
+        android:orderInCategory="1"
+        ushahidiApp:showAsAction="never"/>
 </menu>

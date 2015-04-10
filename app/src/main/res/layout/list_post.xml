@@ -20,38 +20,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@id/android:list"
-            android:padding="@dimen/grid_spacing"
-            android:scrollbars="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:columnWidth="@dimen/column_width"
-            android:clipToPadding="false"/>
+    <com.ushahidi.android.ui.widget.BloatedRecyclerView
+        android:id="@id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        fab:recyclerviewEmptyView="@layout/list_empty_view"
+        fab:recyclerviewClipToPadding="true"
+        fab:recyclerviewScrollbars="vertical"/>
 
-    <TextView
-            android:id="@id/android:empty"
-            style="@style/EmptyText"
-            android:visibility="gone"
-            android:text="@string/empty_post_list"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/post_fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:gravity="bottom|right"
-                fab:fab_icon="@drawable/ic_action_add"
-                fab:fab_colorNormal="@color/fab_color_primary"
-                fab:fab_colorPressed="@color/fab_color_pressed"
-                android:layout_marginBottom="16dp"/>
-
-    </FrameLayout>
-
+    <ProgressBar
+        android:id="@+id/list_post_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        style="?android:attr/progressBarStyle"/>
 </RelativeLayout>

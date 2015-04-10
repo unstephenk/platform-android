@@ -17,15 +17,6 @@
 
 package com.ushahidi.android.ui.widget;
 
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.SnackbarManager;
-import com.nispok.snackbar.listeners.ActionClickListener;
-import com.nispok.snackbar.listeners.EventListener;
-import com.ushahidi.android.R;
-import com.ushahidi.android.model.DeploymentModel;
-import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
-import com.ushahidi.android.ui.adapter.DeploymentAdapter;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
@@ -37,6 +28,15 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.listeners.ActionClickListener;
+import com.nispok.snackbar.listeners.EventListener;
+import com.ushahidi.android.R;
+import com.ushahidi.android.model.DeploymentModel;
+import com.ushahidi.android.presenter.DeleteDeploymentPresenter;
+import com.ushahidi.android.ui.adapter.DeploymentAdapter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,7 +47,7 @@ import java.util.List;
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-public class DeploymentRecyclerView extends RecyclerView {
+public class DeploymentRecyclerView extends BloatedRecyclerView implements RecyclerView.OnItemTouchListener {
 
     public static final int INVALID_POSITION = -1;
 
@@ -82,46 +82,7 @@ public class DeploymentRecyclerView extends RecyclerView {
         mActivity = (Activity) context;
         mPendingDeletedDeployments = new ArrayList<>();
         mDeploymentAdapter = (DeploymentAdapter) getAdapter();
-    }
-
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-
-        final int action = ev.getActionMasked();
-        final int x = (int) ev.getRawX();
-
-        // Get the right most part of the item in the list
-        // This will enable us to have a bigger touch area for the checkbox
-        if (action == MotionEvent.ACTION_DOWN && x < getWidth() / 7) {
-            mSelectionMode = true;
-            mStartPosition = pointToPosition(ev);
-        }
-
-        // Resume regular touch event if it's not in the selection mode.
-        // The area of the screen being touched is not where the checkbox is.
-        if (!mSelectionMode) {
-            return super.onTouchEvent(ev);
-        }
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (pointToPosition(ev) != mStartPosition) {
-                    mSelectionMode = false;
-                }
-                break;
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_UP:
-            default:
-                mSelectionMode = false;
-                int mItemPosition = pointToPosition(ev);
-                if (mStartPosition != INVALID_POSITION) {
-                    setItemChecked(mItemPosition);
-                }
-        }
-
-        return true;
+        recyclerView.addOnItemTouchListener(this);
     }
 
     private int pointToPosition(MotionEvent motionEvent) {
@@ -129,14 +90,14 @@ public class DeploymentRecyclerView extends RecyclerView {
         Rect rect = new Rect();
         View downView = null;
 
-        int childCount = getChildCount();
+        int childCount = recyclerView.getChildCount();
         int[] listViewCoords = new int[2];
         getLocationOnScreen(listViewCoords);
         int x = (int) motionEvent.getRawX() - listViewCoords[0];
         int y = (int) motionEvent.getRawY() - listViewCoords[1];
         View child;
         for (int i = 0; i < childCount; i++) {
-            child = getChildAt(i);
+            child = recyclerView.getChildAt(i);
             child.getHitRect(rect);
             if (rect.contains(x, y)) {
                 downView = child;
@@ -145,7 +106,7 @@ public class DeploymentRecyclerView extends RecyclerView {
         }
 
         if (downView != null) {
-            return getChildPosition(downView);
+            return recyclerView.getChildAdapterPosition(downView);
         }
         return INVALID_POSITION;
     }
@@ -168,7 +129,7 @@ public class DeploymentRecyclerView extends RecyclerView {
 
         if (mDeploymentAdapter != null) {
             mPendingDeletedDeployments.add(new PendingDeletedDeployment(position,
-                    mDeploymentAdapter.getItem(position)));
+                mDeploymentAdapter.getItem(position)));
 
         }
 
@@ -205,10 +166,6 @@ public class DeploymentRecyclerView extends RecyclerView {
         mDeleteDeploymentPresenter = deleteDeploymentPresenter;
     }
 
-    public int getNumberOfItemsDeleted() {
-        return mNumberOfItemsDeleted;
-    }
-
     private void setItemsForDeletion() {
 
         for (PendingDeletedDeployment pendingDeletedDeployment : mPendingDeletedDeployments) {
@@ -225,63 +182,105 @@ public class DeploymentRecyclerView extends RecyclerView {
         Collections.sort(mPendingDeletedDeployments, cmp);
 
         SnackbarManager.show(Snackbar.with(getContext())
-                .text(mActivity
-                        .getString(R.string.items_deleted, mPendingDeletedDeployments.size()))
-                .actionLabel(getContext().getString(R.string.undo))
-                .actionColorResource(R.color.undo_text_color)
-                .attachToRecyclerView(this)
-                .actionListener(new ActionClickListener() {
-                    @Override
-                    public void onActionClicked(Snackbar snackbar) {
-                        // Restore items
-                        for (DeploymentRecyclerView.PendingDeletedDeployment pendingDeletedDeployment : mPendingDeletedDeployments) {
-                            mDeploymentAdapter.addItem(pendingDeletedDeployment.deploymentModel,
-                                    pendingDeletedDeployment.position);
-                        }
-                        clearItems();
+            .text(mActivity
+                .getString(R.string.items_deleted, mPendingDeletedDeployments.size()))
+            .actionLabel(getContext().getString(R.string.undo))
+            .actionColorResource(R.color.undo_text_color)
+            .attachToRecyclerView(recyclerView)
+            .actionListener(new ActionClickListener() {
+                @Override
+                public void onActionClicked(Snackbar snackbar) {
+                    // Restore items
+                    for (DeploymentRecyclerView.PendingDeletedDeployment pendingDeletedDeployment : mPendingDeletedDeployments) {
+                        mDeploymentAdapter.addItem(pendingDeletedDeployment.deploymentModel,
+                            pendingDeletedDeployment.position);
                     }
-                })
-                .eventListener(new EventListener() {
-                    @Override
-                    public void onShow(Snackbar snackbar) {
-                        mMovableFab.moveUp(snackbar.getHeight() + 80);
-                    }
+                    clearItems();
+                }
+            })
+            .eventListener(new EventListener() {
+                @Override
+                public void onShow(Snackbar snackbar) {
+                    mMovableFab.moveUp(snackbar.getHeight());
+                }
 
-                    @Override
-                    public void onShowByReplace(Snackbar snackbar) {
+                @Override
+                public void onShowByReplace(Snackbar snackbar) {
 
-                    }
+                }
 
-                    @Override
-                    public void onShown(Snackbar snackbar) {
+                @Override
+                public void onShown(Snackbar snackbar) {
 
-                    }
+                }
 
-                    @Override
-                    public void onDismiss(Snackbar snackbar) {
-                        mMovableFab.moveDown(snackbar.getHeight() + 80);
-                        if (!snackbar.isActionClicked()) {
-                            if (mPendingDeletedDeployments.size() > 0) {
-                                mNumberOfItemsDeleted = mPendingDeletedDeployments.size();
-                                for (PendingDeletedDeployment pendingDeletedDeployment : mPendingDeletedDeployments) {
-                                    mDeleteDeploymentPresenter
-                                            .deleteDeployment(
-                                                    pendingDeletedDeployment.deploymentModel);
-                                }
-                                clearItems();
+                @Override
+                public void onDismiss(Snackbar snackbar) {
+                    mMovableFab.moveDown(0);
+                    if (!snackbar.isActionClicked()) {
+                        if (mPendingDeletedDeployments.size() > 0) {
+                            mNumberOfItemsDeleted = mPendingDeletedDeployments.size();
+                            for (PendingDeletedDeployment pendingDeletedDeployment : mPendingDeletedDeployments) {
+                                mDeleteDeploymentPresenter
+                                    .deleteDeployment(
+                                        pendingDeletedDeployment.deploymentModel);
                             }
+                            clearItems();
                         }
                     }
+                }
 
-                    @Override
-                    public void onDismissByReplace(Snackbar snackbar) {
-                    }
+                @Override
+                public void onDismissByReplace(Snackbar snackbar) {
+                }
 
-                    @Override
-                    public void onDismissed(Snackbar snackbar) {
+                @Override
+                public void onDismissed(Snackbar snackbar) {
 
-                    }
-                }));
+                }
+            }));
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent ev) {
+        final int action = ev.getActionMasked();
+        final int x = (int) ev.getRawX();
+
+        // Get the right most part of the item in the list
+        // This will enable us to have a bigger touch area for the checkbox
+        if (action == MotionEvent.ACTION_DOWN && x < getWidth() / 7) {
+            mSelectionMode = true;
+            mStartPosition = pointToPosition(ev);
+        }
+
+        // Resume regular touch event if it's not in the selection mode.
+        // The area of the screen being touched is not where the checkbox is.
+        if (!mSelectionMode) {
+            return super.onTouchEvent(ev);
+        }
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (pointToPosition(ev) != mStartPosition) {
+                    mSelectionMode = false;
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+            default:
+                mSelectionMode = false;
+                int mItemPosition = pointToPosition(ev);
+                if (mStartPosition != INVALID_POSITION) {
+                    setItemChecked(mItemPosition);
+                }
+        }
+        return true;
+    }
+
+    @Override
+    public void onTouchEvent(RecyclerView rv, MotionEvent ev) {
+
     }
 
     public static class PendingDeletedDeployment implements Comparable<PendingDeletedDeployment> {
@@ -307,7 +306,7 @@ public class DeploymentRecyclerView extends RecyclerView {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             actionMode.getMenuInflater()
-                    .inflate(R.menu.list_deployment_contextual_actionbar_menu, menu);
+                .inflate(R.menu.list_deployment_contextual_actionbar_menu, menu);
             return true;
         }
 

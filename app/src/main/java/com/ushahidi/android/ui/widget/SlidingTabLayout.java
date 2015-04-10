@@ -17,8 +17,6 @@
 
 package com.ushahidi.android.ui.widget;
 
-import com.ushahidi.android.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
@@ -31,7 +29,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.ushahidi.android.R;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
@@ -60,6 +61,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private TabListener mTabListener;
 
+    private boolean mDistributeEvenly;
+
     public SlidingTabLayout(Context context) {
         this(context, null);
     }
@@ -85,16 +88,16 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
         if (a.hasValue(R.styleable.SlidingTabLayout_indicatorHeight)) {
             mTabStrip.setSelectedIndicatorHeight(
-                    a.getDimensionPixelSize(R.styleable.SlidingTabLayout_indicatorHeight, 0));
+                a.getDimensionPixelSize(R.styleable.SlidingTabLayout_indicatorHeight, 0));
         }
 
         if (a.hasValue(R.styleable.SlidingTabLayout_selectedColor)) {
             mTabStrip.setSelectedIndicatorColor(
-                    a.getColor(R.styleable.SlidingTabLayout_selectedColor, 0));
+                a.getColor(R.styleable.SlidingTabLayout_selectedColor, 0));
         }
 
         mTabViewTextAppearance = a.getResourceId(
-                R.styleable.SlidingTabLayout_android_textAppearance, 0);
+            R.styleable.SlidingTabLayout_android_textAppearance, 0);
 
         if (a.hasValue(R.styleable.SlidingTabLayout_dividerColor)) {
             mTabStrip.setDividerColor(a.getColor(R.styleable.SlidingTabLayout_dividerColor, 0));
@@ -127,6 +130,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     public void setTabListener(TabListener tabListener) {
         mTabListener = tabListener;
+    }
+
+    public void setDistributeEvenly(boolean distributeEvenly) {
+        mDistributeEvenly = distributeEvenly;
     }
 
     /**
@@ -163,7 +170,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
             // selectableItemBackground to ensure that the View has a pressed state
             TypedValue outValue = new TypedValue();
             getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground,
-                    outValue, true);
+                outValue, true);
             textView.setBackgroundResource(outValue.resourceId);
         }
 
@@ -189,7 +196,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
             if (mTabViewLayoutId != 0) {
                 // If there is a custom tab view layout id set, try and inflate it
                 tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip,
-                        false);
+                    false);
                 tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
             }
 
@@ -199,6 +206,14 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
             if (tabTitleView == null && TextView.class.isInstance(tabView)) {
                 tabTitleView = (TextView) tabView;
+            }
+
+            if (mDistributeEvenly) {
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) tabView.getLayoutParams();
+                if (lp != null) {
+                    lp.width = 0;
+                    lp.weight = 1;
+                }
             }
 
             if (mTabViewTextAppearance != 0) {
@@ -271,13 +286,13 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
             View selectedTitle = mTabStrip.getChildAt(position);
             int extraOffset = (selectedTitle != null)
-                    ? (int) (positionOffset * selectedTitle.getWidth())
-                    : 0;
+                ? (int) (positionOffset * selectedTitle.getWidth())
+                : 0;
             scrollToTab(position, extraOffset);
 
             if (mViewPagerPageChangeListener != null) {
                 mViewPagerPageChangeListener.onPageScrolled(position, positionOffset,
-                        positionOffsetPixels);
+                    positionOffsetPixels);
             }
         }
 

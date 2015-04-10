@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~  Copyright (c) 2015 Ushahidi.
+  ~
+  ~   This program is free software: you can redistribute it and/or modify it under
+  ~   the terms of the GNU Affero General Public License as published by the Free
+  ~   Software Foundation, either version 3 of the License, or (at your option)
+  ~   any later version.
+  ~
+  ~   This program is distributed in the hope that it will be useful, but WITHOUT
+  ~   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  ~   FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+  ~
+  ~   You should have received a copy of the GNU Affero General Public License
+  ~   along with this program in the file LICENSE-AGPL. If not, see
+  ~   https://www.gnu.org/licenses/agpl-3.0.html
+  ~
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".ui.LoginActivity">
+
+    <include layout="@layout/toolbar_actionbar"/>
+
+    <FrameLayout
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_padding"
+        android:layout_marginRight="@dimen/activity_padding"
+        android:layout_marginEnd="@dimen/activity_padding"
+        android:layout_marginStart="@dimen/activity_padding"
+        android:layout_marginTop="16dp">
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/content_padding"
+            android:layout_marginRight="@dimen/content_padding"
+            android:layout_marginEnd="@dimen/content_padding"
+            android:layout_marginStart="@dimen/content_padding"
+            android:background="@android:color/white"/>
+    </FrameLayout>
+
+</LinearLayout>

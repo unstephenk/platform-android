@@ -16,5 +16,11 @@
   -->
 
 <resources>
-    <dimen name="activity_horizontal_padding">64dp</dimen>
+    <dimen name="activity_horizontal">64dp</dimen>
+    <dimen name="activity_padding">64dp</dimen>
+    <dimen name="tag_icon_color_size">15dp</dimen>
+    <dimen name="tag_badge_color_size">20dp</dimen>
+    <!-- Post items -->
+    <dimen name="post_item_image_width">180dp</dimen>
+    <dimen name="post_item_image_height">113dp</dimen>
 </resources>

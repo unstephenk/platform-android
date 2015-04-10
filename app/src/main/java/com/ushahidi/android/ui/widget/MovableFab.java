@@ -17,21 +17,29 @@
 
 package com.ushahidi.android.ui.widget;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+
+import com.getbase.floatingactionbutton.FloatingActionButton;
 
 /**
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class MovableFab extends FloatingActionButton {
 
-    private static final int TRANSLATE_DURATION_MILLIS = 200;
+    private static final int TRANSLATE_DURATION_MILLIS = 500;
 
     private final Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
+
+    private boolean mHidden = false;
+
+    private float mYDisplayed = -1;
+
+    private float mYHidden = -1;
 
     public MovableFab(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -48,16 +56,41 @@ public class MovableFab extends FloatingActionButton {
 
     public void moveUp(int level) {
         int translationY = -level;
-        move(translationY);
+        animate().translationY(translationY).setInterpolator(
+            new AccelerateInterpolator(2)).start();
     }
 
     public void moveDown(int level) {
-        move(level);
+        animate().translationY(level).setInterpolator(
+            new DecelerateInterpolator(2)).start();
+
     }
 
     private void move(int level) {
         animate().setInterpolator(mInterpolator)
-                .setDuration(TRANSLATE_DURATION_MILLIS)
-                .translationYBy(level);
+            .setDuration(TRANSLATE_DURATION_MILLIS)
+            .translationYBy(level);
     }
+
+    public void hide(boolean hide) {
+        // If the hidden state is being updated
+        if (mHidden != hide) {
+
+            // Store the new hidden state
+            mHidden = hide;
+
+            animate().setInterpolator(mInterpolator)
+                .setDuration(TRANSLATE_DURATION_MILLIS)
+                .translationY(mHidden ? mYHidden : mYDisplayed);
+        }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        if (mYDisplayed == -1) {
+            mYDisplayed = getY();
+        }
+    }
+
 }

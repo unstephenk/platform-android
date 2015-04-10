@@ -19,68 +19,100 @@
               xmlns:ushApp="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center|center_vertical|center_horizontal">
+              android:layout_height="match_parent">
 
-    <FrameLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/element_spacing_normal"
+            android:animateLayoutChanges="true">
 
-        <ScrollView
+            <com.ushahidi.android.ui.widget.FontSupportedTextView
+                android:id="@+id/textview_deployment_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_deployment_description_hint"
+                android:padding="@dimen/element_spacing_normal"
+                android:textStyle="bold"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                ushApp:fontFile="RobotoCondensed-Regular.ttf"/>
+
+            <com.ushahidi.android.ui.widget.FloatLabelLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="false">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/element_spacing_normal"
+                ushApp:floatLabelTextAppearance="@style/TextAppearance.FloatLabel">
 
-            <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/activity_horizontal_padding"
-                    android:paddingLeft="@dimen/activity_vertical_padding"
-                    android:paddingRight="@dimen/activity_vertical_padding">
+                <com.andreabaccega.widget.FormEditText
+                    android:id="@+id/add_deployment_title"
+                    style="@style/FormInputText"
+                    android:hint="@string/add_deployment_title_hint"
+                    android:maxLines="1"
+                    android:inputType="textCapWords"
+                    android:imeOptions="actionNext"
+                    ushApp:emptyErrorString="@string/add_deployment_empty_title"
+                    android:nextFocusDown="@+id/add_deployment_url"/>
 
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+            </com.ushahidi.android.ui.widget.FloatLabelLayout>
 
-                    <LinearLayout
-                            style="@style/LabelInputTextLayout">
+            <com.ushahidi.android.ui.widget.FloatLabelLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/element_spacing_normal"
+                ushApp:floatLabelTextAppearance="@style/TextAppearance.FloatLabel">
 
-                        <TextView
-                                android:id="@+id/titleLabel"
-                                style="@style/FormLabel"
-                                android:text="@string/add_deployment_title_hint"/>
+                <com.andreabaccega.widget.FormEditText
+                    android:id="@+id/add_deployment_url"
+                    style="@style/FormUriInputText"
+                    android:hint="@string/add_deployment_url_hint"
+                    android:layout_gravity="center"
+                    ushApp:testType="webUrl"
+                    android:imeOptions="actionDone"/>
+            </com.ushahidi.android.ui.widget.FloatLabelLayout>
+        </LinearLayout>
+    </ScrollView>
 
-                        <com.andreabaccega.widget.FormEditText
-                                android:id="@+id/add_deployment_title"
-                                style="@style/FormInputText"
-                                android:inputType="textCapWords"
-                                ushApp:emptyErrorString="@string/add_deployment_empty_title"/>
-                    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerVertical"/>
 
-                    <LinearLayout
-                            style="@style/LabelInputTextLayout">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="?android:buttonBarStyle">
 
-                        <TextView
-                                android:id="@+id/add_deployment_url_label"
-                                style="@style/FormLabel"
-                                android:text="@string/add_deployment_url_hint"/>
+        <Button
+            android:id="@+id/add_deployment_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="@string/cancel"
+            android:textColor="@color/theme_accent_2"
+            style="?android:buttonBarButtonStyle"
+            android:layout_toStartOf="@+id/add_deployment_add"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/add_deployment_add"/>
 
-                        <com.andreabaccega.widget.FormEditText
-                                android:id="@+id/add_deployment_url"
-                                style="@style/FormUriInputText"
-                                android:hint="http://www.deployment.com"
-                                android:layout_gravity="center"
-                                ushApp:testType="webUrl"/>
-                    </LinearLayout>
+        <Button
+            android:id="@+id/add_deployment_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/add"
+            style="?android:buttonBarButtonStyle"/>
 
-                </LinearLayout>
-            </FrameLayout>
-        </ScrollView>
+    </RelativeLayout>
 
-    </FrameLayout>
-
-    <!-- Button bar -->
-    <include layout="@layout/add_deployment_bottom_bar"/>
 </LinearLayout>
