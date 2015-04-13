@@ -22,7 +22,7 @@ allprojects {
         androidTargetSdkVersion = 22
         androidCompileSdkVersion = 22
         androidApplicationId = 'com.ushahidi.android'
-        androidVersionCode = 3
+        androidVersionCode = 20101
         androidVersionName = "1.0" // This will be overwritten by gradle-git plugin
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
     }
