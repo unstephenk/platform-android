@@ -1,0 +1,11 @@
+- Redone post listing view to look more polished.
+- Switching between deployments works.
+- Upon first launch, app prompts to setup a deployment.
+- Added basic Google maps support.
+- Cluster locations that are closer. Use a dummy post data to demonstrate this.
+- Cleaned up post listing view. Show tags, time and post status.
+- Span post listing to be more than one column when screen size is bigger.
+- Search / filter post listing by title or description.
+- Sort by date and title.
+- Fixed issue with swipe to refresh not allowing users to scroll up and down when enabled.
+- Lots of minor bug fixes.
