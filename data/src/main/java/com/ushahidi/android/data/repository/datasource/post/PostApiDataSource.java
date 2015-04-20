@@ -46,7 +46,7 @@ public class PostApiDataSource implements PostDataSource {
     }
 
     @Override
-    public void getPostEntityList(final PostEntityListCallback postEntityListCallback) {
+    public void getPostEntityList(final long deploymentId, final PostEntityListCallback postEntityListCallback) {
         mPostApi.getPostEntityList(new PostApi.PostEntityListCallback() {
             @Override
             public void onPostEntityListLoaded(List<PostEntity> postEntityList) {
@@ -63,13 +63,13 @@ public class PostApiDataSource implements PostDataSource {
 
     @Override
     public void getPostEntityById(long postId,
-            PostEntityDetailsCallback postEntityDetailsCallback) {
+                                  PostEntityDetailsCallback postEntityDetailsCallback) {
         //TODO Implement GET via the API
     }
 
     @Override
     public void deletePostEntity(PostEntity postEntity,
-            PostEntityDeletedCallback callback) {
+                                 PostEntityDeletedCallback callback) {
         //TODO implement DELETE via the API
     }
 
@@ -79,7 +79,7 @@ public class PostApiDataSource implements PostDataSource {
     }
 
     private void putPostEntityList(final List<PostEntity> postEntityList,
-            final PostEntityListCallback postListCallback) {
+                                   final PostEntityListCallback postListCallback) {
         mPostDatabaseHelper.put(postEntityList, new IPostDatabaseHelper.IPostEntityPutCallback() {
             @Override
             public void onPostEntityPut() {

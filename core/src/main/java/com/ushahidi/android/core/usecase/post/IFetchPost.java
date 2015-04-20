@@ -31,9 +31,10 @@ public interface IFetchPost extends IInteractor {
     /**
      * Executes this use case.
      *
-     * @param callback A {@link IListPost.Callback} used to notify the client.
+     * @param callback     A {@link IListPost.Callback} used to notify the client.
+     * @param deploymentId A {@link com.ushahidi.android.core.entity.Deployment} ID
      */
-    void execute(Callback callback);
+    void execute(long deploymentId, Callback callback);
 
     /**
      * Notify client when a list of posts are successfully loaded or an error occurred in the

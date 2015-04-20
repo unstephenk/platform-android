@@ -35,7 +35,7 @@ public class PostDatabaseDataSource implements PostDataSource {
 
     @Override
     public void putPostEntity(final PostEntity postEntity,
-            final PostEntityAddCallback postCallback) {
+                              final PostEntityAddCallback postCallback) {
         mPostDatabaseHelper.put(postEntity, new PostDatabaseHelper.IPostEntityPutCallback() {
             @Override
             public void onPostEntityPut() {
@@ -50,7 +50,7 @@ public class PostDatabaseDataSource implements PostDataSource {
     }
 
     @Override
-    public void getPostEntityList(final PostEntityListCallback postListCallback) {
+    public void getPostEntityList(final long deploymentId, final PostEntityListCallback postListCallback) {
         mPostDatabaseHelper.getPostEntities(new PostDatabaseHelper.IPostEntitiesCallback() {
             @Override
             public void onPostEntitiesLoaded(List<PostEntity> postEntities) {
@@ -66,7 +66,7 @@ public class PostDatabaseDataSource implements PostDataSource {
 
     @Override
     public void getPostEntityById(long postId,
-            final PostEntityDetailsCallback postDetailsCallback) {
+                                  final PostEntityDetailsCallback postDetailsCallback) {
         mPostDatabaseHelper.get(postId, new PostDatabaseHelper.IPostEntityCallback() {
             @Override
             public void onPostEntityLoaded(PostEntity postEntity) {
@@ -82,7 +82,7 @@ public class PostDatabaseDataSource implements PostDataSource {
 
     @Override
     public void deletePostEntity(PostEntity postEntity,
-            final PostEntityDeletedCallback callback) {
+                                 final PostEntityDeletedCallback callback) {
         mPostDatabaseHelper.delete(postEntity, new PostDatabaseHelper.IPostEntityDeletedCallback() {
             @Override
             public void onPostEntityDeleted() {

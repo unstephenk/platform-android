@@ -40,19 +40,22 @@ public class ListPost implements IListPost {
 
     private Callback mCallback;
 
+    //TODO initialize this in the execute method
+    private long mDeploymentId;
+
     private final IPostRepository.PostListCallback mRepositoryCallback =
-            new IPostRepository.PostListCallback() {
+        new IPostRepository.PostListCallback() {
 
-                @Override
-                public void onPostListLoaded(List<Post> postList) {
-                    notifySuccess(postList);
-                }
+            @Override
+            public void onPostListLoaded(List<Post> postList) {
+                notifySuccess(postList);
+            }
 
-                @Override
-                public void onError(ErrorWrap errorWrap) {
-                    notifyFailure(errorWrap);
-                }
-            };
+            @Override
+            public void onError(ErrorWrap errorWrap) {
+                notifyFailure(errorWrap);
+            }
+        };
 
     /**
      * Default constructor.
@@ -63,7 +66,7 @@ public class ListPost implements IListPost {
      *                            has been executed.
      */
     public ListPost(ThreadExecutor threadExecutor,
-            PostExecutionThread postExecutionThread) {
+                    PostExecutionThread postExecutionThread) {
 
         if (threadExecutor == null || postExecutionThread == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
@@ -75,7 +78,7 @@ public class ListPost implements IListPost {
 
     public void setPostRepository(IPostRepository postRepository) {
 
-        if(postRepository == null) {
+        if (postRepository == null) {
             throw new IllegalArgumentException("IPostRepository cannot be null");
         }
         mIPostRepository = postRepository;
@@ -92,10 +95,10 @@ public class ListPost implements IListPost {
 
     @Override
     public void run() {
-        if(mIPostRepository == null) {
+        if (mIPostRepository == null) {
             throw new NullPointerException("You must call setPostRepository(...)");
         }
-        mIPostRepository.getPostList(mRepositoryCallback);
+        mIPostRepository.getPostList(mDeploymentId, mRepositoryCallback);
     }
 
     private void notifySuccess(final List<Post> postList) {

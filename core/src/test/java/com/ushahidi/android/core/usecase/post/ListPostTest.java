@@ -28,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -57,7 +58,7 @@ public class ListPostTest {
         MockitoAnnotations.initMocks(this);
 
         mListPost = new ListPost(mMockThreadExecutor,
-                mMockPostExecutionThread);
+            mMockPostExecutionThread);
         mListPost.setPostRepository(mMockPostRepository);
     }
 
@@ -66,7 +67,7 @@ public class ListPostTest {
         doNothing().when(mMockThreadExecutor).execute(any(IInteractor.class));
 
         ListPost.Callback mockListPostCallback = mock(
-                ListPost.Callback.class);
+            ListPost.Callback.class);
 
         mListPost.execute(mockListPostCallback);
 
@@ -80,15 +81,15 @@ public class ListPostTest {
     public void testListPostRun() {
         doNothing().when(mMockThreadExecutor).execute(any(IInteractor.class));
         ListPost.Callback mockListPostCallback = mock(
-                ListPost.Callback.class);
-        doNothing().when(mMockPostRepository).getPostList(
-                any(IPostRepository.PostListCallback.class));
+            ListPost.Callback.class);
+        doNothing().when(mMockPostRepository).getPostList(anyLong(),
+            any(IPostRepository.PostListCallback.class));
 
         mListPost.execute(mockListPostCallback);
         mListPost.run();
 
-        verify(mMockPostRepository).getPostList(
-                any(IPostRepository.PostListCallback.class));
+        verify(mMockPostRepository).getPostList(anyLong(),
+            any(IPostRepository.PostListCallback.class));
 
         verify(mMockThreadExecutor).execute(any(IInteractor.class));
         verifyNoMoreInteractions(mMockPostRepository);

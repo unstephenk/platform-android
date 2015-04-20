@@ -116,7 +116,8 @@ public class ListPostPresenter implements IPresenter {
 
             //After a successful tag fetch via the API, pull post
             setPostService(createPostService());
-            mFetchPost.execute(mCallback);
+            
+            mFetchPost.execute(mPrefs.getActiveDeploymentId().get(), mCallback);
         }
 
         @Override
@@ -211,7 +212,7 @@ public class ListPostPresenter implements IPresenter {
     @Override
     public void resume() {
         mDeploymentState.registerEvent(this);
-        if(!isRefreshing) {
+        if (!isRefreshing) {
             loadPostListFromLocalCache();
         }
     }

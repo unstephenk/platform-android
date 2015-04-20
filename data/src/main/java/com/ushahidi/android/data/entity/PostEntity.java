@@ -74,6 +74,8 @@ public class PostEntity extends Entity {
     @Ignore
     private List<PostTagEntity> mPostTagEntityList;
 
+    private long mDeploymentId;
+
     private transient List<TagEntity> mTags;
 
     public List<PostTagEntity> getPostTagEntityList() {
@@ -90,7 +92,7 @@ public class PostEntity extends Entity {
     }
 
     public void setParent(Long parent) {
-        if(this.parent !=null) {
+        if (this.parent != null) {
             mParent = this.parent.getId();
         }
         mParent = parent;
@@ -194,24 +196,34 @@ public class PostEntity extends Entity {
         mTags = tags;
     }
 
+    public long getDeploymentId() {
+        return mDeploymentId;
+    }
+
+    public void setDeploymentId(long deploymentId) {
+        mDeploymentId = deploymentId;
+    }
+
     @Override
     public String toString() {
         return "PostEntity{" +
-                "_id=" + getId() +
-                ", mParent=" + mParent +
-                ", mUser=" + mUser +
-                ", mType='" + mType + '\'' +
-                ", mTitle='" + mTitle + '\'' +
-                ", mSlug='" + mSlug + '\'' +
-                ", mContent='" + mContent + '\'' +
-                ", mAuthorEmail='" + mAuthorEmail + '\'' +
-                ", mAuthorRealname='" + mAuthorRealname + '\'' +
-                ", mStatus='" + mStatus + '\'' +
-                ", mCreated=" + mCreated +
-                ", mUpdated=" + mUpdated +
-                ", mValues='" + mValues + '\'' +
-                ", mTags=" + mTags +
-                '}';
+            "parent=" + parent +
+            ", mParent=" + mParent +
+            ", mUser=" + mUser +
+            ", mType='" + mType + '\'' +
+            ", mTitle='" + mTitle + '\'' +
+            ", mSlug='" + mSlug + '\'' +
+            ", mContent='" + mContent + '\'' +
+            ", mAuthorEmail='" + mAuthorEmail + '\'' +
+            ", mAuthorRealname='" + mAuthorRealname + '\'' +
+            ", mStatus='" + mStatus + '\'' +
+            ", mCreated=" + mCreated +
+            ", mUpdated=" + mUpdated +
+            ", mValues=" + mValues +
+            ", mPostTagEntityList=" + mPostTagEntityList +
+            ", mDeploymentId=" + mDeploymentId +
+            ", mTags=" + mTags +
+            '}';
     }
 
     public static class Parent {

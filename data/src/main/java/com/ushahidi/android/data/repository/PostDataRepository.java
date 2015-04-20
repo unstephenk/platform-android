@@ -19,7 +19,6 @@ package com.ushahidi.android.data.repository;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-
 import com.ushahidi.android.core.entity.Post;
 import com.ushahidi.android.core.exception.ErrorWrap;
 import com.ushahidi.android.core.repository.IPostRepository;
@@ -47,19 +46,19 @@ public class PostDataRepository implements IPostRepository {
 
 
     public PostDataRepository(PostDataSourceFactory postDataSourceFactory,
-            PostEntityMapper entityMapper) {
+                              PostEntityMapper entityMapper) {
 
         mPostDataSourceFactory = Preconditions
-                .checkNotNull(postDataSourceFactory, "PostDataSourceFactory cannot be null.");
+            .checkNotNull(postDataSourceFactory, "PostDataSourceFactory cannot be null.");
         mPostEntityMapper = Preconditions
-                .checkNotNull(entityMapper, "Entity mapper cannot be null");
+            .checkNotNull(entityMapper, "Entity mapper cannot be null");
     }
 
     public static synchronized PostDataRepository getInstance(PostDataSourceFactory
-            postDataSourceFactory, PostEntityMapper entityMapper) {
+                                                                  postDataSourceFactory, PostEntityMapper entityMapper) {
         if (sInstance == null) {
             sInstance = new PostDataRepository(postDataSourceFactory,
-                    entityMapper);
+                entityMapper);
         }
         return sInstance;
     }
@@ -73,49 +72,49 @@ public class PostDataRepository implements IPostRepository {
      */
     @Override
     public void putPost(Post post,
-            final PostAddCallback postCallback) {
+                        final PostAddCallback postCallback) {
         // Check for required fields
         boolean isValid = true;
         if (Strings.isNullOrEmpty(post.getTitle())) {
             isValid = false;
             postCallback.onError(new RepositoryError(
-                    new ValidationException("Post URL cannot be null or empty")));
+                new ValidationException("Post URL cannot be null or empty")));
         }
 
         if (Strings.isNullOrEmpty(post.getContent())) {
             isValid = false;
             postCallback.onError(
-                    new RepositoryError(
-                            new ValidationException("Post content cannot be empty or null")));
+                new RepositoryError(
+                    new ValidationException("Post content cannot be empty or null")));
         }
 
         if (isValid) {
             final PostDataSource postDataSource = mPostDataSourceFactory
-                    .createPostDatabaseDataSource();
+                .createPostDatabaseDataSource();
             postDataSource.putPostEntity(mPostEntityMapper.unmap(post),
-                    new PostDataSource.PostEntityAddCallback() {
-                        @Override
-                        public void onPostEntityAdded() {
-                            postCallback.onPostAdded();
-                        }
+                new PostDataSource.PostEntityAddCallback() {
+                    @Override
+                    public void onPostEntityAdded() {
+                        postCallback.onPostAdded();
+                    }
 
-                        @Override
-                        public void onError(Exception e) {
-                            postCallback.onError(new RepositoryError(e));
-                        }
-                    });
+                    @Override
+                    public void onError(Exception e) {
+                        postCallback.onError(new RepositoryError(e));
+                    }
+                });
 
         }
     }
 
     @Override
-    public void getPostList(final PostListCallback postListCallback) {
+    public void getPostList(final long deploymentId, final PostListCallback postListCallback) {
         final PostDataSource postDataSource = mPostDataSourceFactory.createPostDatabaseDataSource();
-        postDataSource.getPostEntityList(new PostDataSource.PostEntityListCallback() {
+        postDataSource.getPostEntityList(deploymentId, new PostDataSource.PostEntityListCallback() {
             @Override
             public void onPostEntityListLoaded(List<PostEntity> postEntityList) {
                 final List<Post> posts = mPostEntityMapper
-                        .map(postEntityList);
+                    .map(postEntityList);
                 postListCallback.onPostListLoaded(posts);
             }
 
@@ -132,16 +131,17 @@ public class PostDataRepository implements IPostRepository {
      *
      * @param postListCallback A {@link PostListCallback} for notifying clients about post fetch
      *                         status.
+     * @param deploymentId     An ID of {@link com.ushahidi.android.data.entity.DeploymentEntity}
      */
     @Override
-    public void getPostListViaApi(final PostListCallback postListCallback) {
+    public void getPostListViaApi(final long deploymentId, final PostListCallback postListCallback) {
         final PostDataSource postDataSource = mPostDataSourceFactory.createPostApiDataSource();
-        postDataSource.getPostEntityList(new PostDataSource.PostEntityListCallback() {
+        postDataSource.getPostEntityList(deploymentId, new PostDataSource.PostEntityListCallback() {
             @Override
             public void onPostEntityListLoaded(List<PostEntity> postEntityList) {
 
                 final List<Post> posts = mPostEntityMapper
-                        .map(postEntityList);
+                    .map(postEntityList);
                 postListCallback.onPostListLoaded(posts);
                 //cache to local db
                 put(posts);
@@ -156,7 +156,7 @@ public class PostDataRepository implements IPostRepository {
 
     @Override
     public void getPostById(long postId,
-            final PostDetailsCallback postDetailsCallback) {
+                            final PostDetailsCallback postDetailsCallback) {
         final PostDataSource postDataSource = mPostDataSourceFactory.createPostDatabaseDataSource();
         postDataSource.getPostEntityById(postId, new PostDataSource.PostEntityDetailsCallback() {
             @Override
@@ -181,20 +181,20 @@ public class PostDataRepository implements IPostRepository {
      */
     @Override
     public void deletePost(final Post post,
-            final PostDeletedCallback callback) {
+                           final PostDeletedCallback callback) {
         final PostDataSource postDataSource = mPostDataSourceFactory.createPostDatabaseDataSource();
         postDataSource.deletePostEntity(mPostEntityMapper.unmap(post),
-                new PostDataSource.PostEntityDeletedCallback() {
-                    @Override
-                    public void onPostEntityDeleted() {
-                        callback.onPostDeleted();
-                    }
+            new PostDataSource.PostEntityDeletedCallback() {
+                @Override
+                public void onPostEntityDeleted() {
+                    callback.onPostDeleted();
+                }
 
-                    @Override
-                    public void onError(Exception e) {
-                        callback.onError(new RepositoryError(e));
-                    }
-                });
+                @Override
+                public void onError(Exception e) {
+                    callback.onError(new RepositoryError(e));
+                }
+            });
     }
 
     @Override
@@ -216,8 +216,8 @@ public class PostDataRepository implements IPostRepository {
 
     private void put(List<Post> posts) {
 
-        for(Post post : posts) {
-            putPost(post, new PostAddCallback(){
+        for (Post post : posts) {
+            putPost(post, new PostAddCallback() {
 
                 @Override
                 public void onPostAdded() {
@@ -228,7 +228,7 @@ public class PostDataRepository implements IPostRepository {
                 public void onError(ErrorWrap error) {
 
                 }
-            } );
+            });
         }
     }
 }

@@ -24,9 +24,9 @@ import com.ushahidi.android.model.DeploymentModel;
  */
 public interface IDeploymentState extends Istate {
 
-    public void setActiveDeployment(DeploymentModel deploymentModel);
+    void setActiveDeployment(DeploymentModel deploymentModel);
 
-    public static class ActivatedDeploymentChangedEvent {
+    class ActivatedDeploymentChangedEvent {
 
     }
 

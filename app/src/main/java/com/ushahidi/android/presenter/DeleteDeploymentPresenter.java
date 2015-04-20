@@ -59,15 +59,16 @@ public class DeleteDeploymentPresenter implements IPresenter {
             showErrorMessage(error);
         }
     };
-    
+
     private void cleanActiveDeploymentState() {
         if (mDeploymentModelToBeDeleted != null && mDeploymentModelToBeDeleted.getStatus() == DeploymentModel.Status.ACTIVATED) {
             // Delete the active deployment URL saved in the shared prefs
             mPrefs.getActiveDeploymentUrl().delete();
-
+            // Delete the active deployments ID
+            mPrefs.getActiveDeploymentId().delete();
             // Delete the active user's account
             mPrefs.getActiveUserAccount().delete();
-
+            // Delete the access token from the shared prefs
             mPrefs.getAccessToken().delete();
         }
     }

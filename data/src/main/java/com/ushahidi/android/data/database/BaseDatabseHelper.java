@@ -47,9 +47,9 @@ public abstract class BaseDatabseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "ushahidi.db";
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
-    private static final int LAST_DATABASE_NUKE_VERSION = 0;
+    private static final int LAST_DATABASE_NUKE_VERSION = 1;
 
     private static final Class[] ENTITIES = new Class[]{DeploymentEntity.class, UserEntity.class,
             TagEntity.class, MediaEntity.class, PostTagEntity.class, PostEntity.class};

@@ -17,11 +17,12 @@
 
 package com.ushahidi.android.ui.prefs;
 
+import android.content.SharedPreferences;
+
 import com.ushahidi.android.data.pref.BooleanPreference;
+import com.ushahidi.android.data.pref.LongPreference;
 import com.ushahidi.android.data.pref.StringPreference;
 import com.ushahidi.android.ui.widget.TimePickerPreference;
-
-import android.content.SharedPreferences;
 
 import javax.inject.Inject;
 
@@ -45,6 +46,10 @@ public class Prefs {
         return new StringPreference(getSharedPreferences(), "access_token", null);
     }
 
+    public LongPreference getActiveDeploymentId() {
+        return new LongPreference(getSharedPreferences(), "active_deployment_id", 0);
+    }
+
     public SharedPreferences getSharedPreferences() {
         return mSharedPreferences;
     }
@@ -55,7 +60,7 @@ public class Prefs {
 
     public StringPreference getSyncFrequency() {
         return new StringPreference(mSharedPreferences, "post_sync_frequency",
-                TimePickerPreference.DEFAULT_TIME_FREQUENCY);
+            TimePickerPreference.DEFAULT_TIME_FREQUENCY);
     }
 
     public StringPreference getActiveUserAccount() {

@@ -30,25 +30,23 @@ import java.util.List;
  */
 public class FetchPost implements IFetchPost {
 
-    private IPostRepository mIPostRepository;
-
+    private IPostRepository mPostRepository;
     private final ThreadExecutor mThreadExecutor;
-
     private final PostExecutionThread mPostExecutionThread;
-
+    private long mDeploymentId;
     private final IPostRepository.PostListCallback mRepositoryCallback =
-            new IPostRepository.PostListCallback() {
+        new IPostRepository.PostListCallback() {
 
-                @Override
-                public void onPostListLoaded(List<Post> postList) {
-                    notifySuccess(postList);
-                }
+            @Override
+            public void onPostListLoaded(List<Post> postList) {
+                notifySuccess(postList);
+            }
 
-                @Override
-                public void onError(ErrorWrap errorWrap) {
-                    notifyFailure(errorWrap);
-                }
-            };
+            @Override
+            public void onError(ErrorWrap errorWrap) {
+                notifyFailure(errorWrap);
+            }
+        };
 
     private IFetchPost.Callback mCallback;
 
@@ -61,7 +59,7 @@ public class FetchPost implements IFetchPost {
      *                            has been executed.
      */
     public FetchPost(ThreadExecutor threadExecutor,
-            PostExecutionThread postExecutionThread) {
+                     PostExecutionThread postExecutionThread) {
         if (threadExecutor == null || postExecutionThread == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
         }
@@ -70,28 +68,30 @@ public class FetchPost implements IFetchPost {
     }
 
     @Override
-    public void execute(IFetchPost.Callback callback) {
-        if (callback == null) {
+    public void execute(long deploymentId, IFetchPost.Callback callback) {
+        if (deploymentId < 0 || callback == null) {
             throw new IllegalArgumentException("Callback cannot be null!!!");
         }
+
+        mDeploymentId = deploymentId;
         mCallback = callback;
         mThreadExecutor.execute(this);
     }
 
     public void setPostRepository(IPostRepository postRepository) {
 
-        if(postRepository == null) {
+        if (postRepository == null) {
             throw new IllegalArgumentException("IPostRepository cannot be null");
         }
-        mIPostRepository = postRepository;
+        mPostRepository = postRepository;
     }
 
     @Override
     public void run() {
-        if(mIPostRepository == null) {
+        if (mPostRepository == null) {
             throw new NullPointerException("You must call setPostRepository(...)");
         }
-        mIPostRepository.getPostListViaApi(mRepositoryCallback);
+        mPostRepository.getPostListViaApi(mDeploymentId, mRepositoryCallback);
     }
 
     private void notifySuccess(final List<Post> postList) {

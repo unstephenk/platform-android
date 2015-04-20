@@ -29,9 +29,9 @@ public interface PostDataSource {
     /**
      * Add/Update a {@link com.ushahidi.android.data.entity.PostEntity}.
      *
-     * @param postEntity   The post entity to be saved.
+     * @param postEntity         The post entity to be saved.
      * @param postEntityCallback A {@link PostEntityAddCallback} used for notifying clients about the status of
-     *                     the operation.
+     *                           the operation.
      * @author Ushahidi Team <team@ushahidi.com>
      */
     void putPostEntity(PostEntity postEntity, PostEntityAddCallback postEntityCallback);
@@ -41,18 +41,19 @@ public interface PostDataSource {
      *
      * @param postListCallback A {@link PostEntityListCallback} used for notifying clients about the
      *                         status of the operation.
+     * @param deploymentId     An ID of {@link com.ushahidi.android.data.entity.DeploymentEntity}
      */
-    void getPostEntityList(PostEntityListCallback postListCallback);
+    void getPostEntityList(final long deploymentId, PostEntityListCallback postListCallback);
 
     /**
      * Get an {@link com.ushahidi.android.data.entity.PostEntity} by id.
      *
-     * @param postEntityId              The post entity id used for retrieving post data.
+     * @param postEntityId        The post entity id used for retrieving post data.
      * @param postDetailsCallback A {@link PostEntityDetailsCallback} used for notifying clients about the
      *                            status of the operation.
      */
     void getPostEntityById(final long postEntityId,
-            PostEntityDetailsCallback postDetailsCallback);
+                           PostEntityDetailsCallback postDetailsCallback);
 
     /**
      * Delete a {@link com.ushahidi.android.data.entity.PostEntity}

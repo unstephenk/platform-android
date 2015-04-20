@@ -38,14 +38,13 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.mockito.Mockito.mock;
 
 /**
  * Tests {@link PostEntityMapper}
  *
  * @author Ushahidi Team <team@ushahidi.com>
  */
-@Config(manifest=Config.NONE)
+@Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner.class)
 public class PostEntityMapperTest extends BaseTestCase {
 
@@ -78,7 +77,7 @@ public class PostEntityMapperTest extends BaseTestCase {
     private static final List<TagEntity> DUMMY_TAG_ENTITIES = new ArrayList<>();
 
     private static final String DUMMY_POST_TITLE = "post title";
-
+    private static final Long DUMMY_DEPLOYMENT_ID = 14;
 
 
     private PostEntityMapper mPostEntityMapper;
@@ -122,6 +121,7 @@ public class PostEntityMapperTest extends BaseTestCase {
         mPostEntity.setType(DUMMY_TYPE);
         mPostEntity.setTags(DUMMY_TAG_ENTITIES);
         mPostEntity.setTitle(DUMMY_POST_TITLE);
+        mPostEntity.setDeploymentId(DUMMY_DEPLOYMENT_ID);
 
         Post post = mPostEntityMapper.map(mPostEntity);
 
@@ -135,6 +135,7 @@ public class PostEntityMapperTest extends BaseTestCase {
         assertThat(post.getType(), is(DUMMY_TYPE));
         assertThat(post.getTags(), is(DUMMY_TAGS));
         assertThat(post.getTitle(), is(DUMMY_POST_TITLE));
+        assertThat(post.getDeploymentId(), is(DUMMY_DEPLOYMENT_ID));
     }
 
     @Test
@@ -152,6 +153,7 @@ public class PostEntityMapperTest extends BaseTestCase {
         mPost.setType(DUMMY_TYPE);
         mPost.setTags(DUMMY_TAGS);
         mPost.setTitle(DUMMY_POST_TITLE);
+        mPost.setDeploymentId(DUMMY_DEPLOYMENT_ID);
 
         PostEntity postEntity = mPostEntityMapper.unmap(mPost);
 
@@ -165,5 +167,6 @@ public class PostEntityMapperTest extends BaseTestCase {
         assertThat(postEntity.getType(), is(DUMMY_TYPE));
         assertThat(postEntity.getTags(), is(DUMMY_TAG_ENTITIES));
         assertThat(postEntity.getTitle(), is(DUMMY_POST_TITLE));
+        assertThat(postEntity.getDeploymentId(), is(DUMMY_DEPLOYMENT_ID));
     }
 }

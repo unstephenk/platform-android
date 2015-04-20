@@ -390,6 +390,7 @@ public class PostActivity extends BaseActivity implements NavDrawerItem.NavDrawe
     @Override
     public void getActiveDeployment(DeploymentModel deploymentModel) {
         mPrefs.getActiveDeploymentUrl().set(deploymentModel.getUrl());
+        mPrefs.getActiveDeploymentId().set(deploymentModel.getId());
         mDeploymentState.setActiveDeployment(deploymentModel);
     }
 

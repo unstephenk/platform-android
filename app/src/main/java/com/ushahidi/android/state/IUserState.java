@@ -8,21 +8,21 @@ import com.ushahidi.android.model.UserModel;
  */
 public interface IUserState extends Istate {
 
-    public void setUserProfile(UserModel userProfile);
+    void setUserProfile(UserModel userProfile);
 
-    public void setActiveUserAccount(UserAccountModel account);
+    void setActiveUserAccount(UserAccountModel account);
 
-    public void unauthorized();
+    void unauthorized();
 
-    public static class AccountChangedEvent {
-
-    }
-
-    public static class UserProfileChangedEvent {
+    class AccountChangedEvent {
 
     }
 
-    public static class UnauthorizedAccessEvent {
+    class UserProfileChangedEvent {
+
+    }
+
+    class UnauthorizedAccessEvent {
 
     }
 }

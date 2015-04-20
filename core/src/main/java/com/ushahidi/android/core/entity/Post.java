@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * An {@link Entity} class representing a deployment
+ *
  * @author Ushahidi Team <team@ushahidi.com>
  */
 public class Post extends Entity {
@@ -46,6 +48,8 @@ public class Post extends Entity {
     private Date mCreated;
 
     private Date mUpdated;
+
+    private long mDeploymentId;
 
     // Store the raw JSON for this field. This is a dynamic field
     // and can't predict its keys.
@@ -149,22 +153,30 @@ public class Post extends Entity {
         mTags = tags;
     }
 
+    public long getDeploymentId() {
+        return mDeploymentId;
+    }
+
+    public void setDeploymentId(long deploymentId) {
+        mDeploymentId = deploymentId;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
-                "_id=" + getId() +
-                ", mParent=" + mParent +
-                ", mType='" + mType + '\'' +
-                ", mTitle='" + mTitle + '\'' +
-                ", mSlug='" + mSlug + '\'' +
-                ", mContent='" + mContent + '\'' +
-                ", mAuthorEmail='" + mAuthorEmail + '\'' +
-                ", mAuthorRealname='" + mAuthorRealname + '\'' +
-                ", mStatus='" + mStatus + '\'' +
-                ", mCreated=" + mCreated +
-                ", mUpdated=" + mUpdated +
-                ", mValues='" + mValues + '\'' +
-                ", mTags=" + mTags +
-                '}';
+            "mParent=" + mParent +
+            ", mType='" + mType + '\'' +
+            ", mTitle='" + mTitle + '\'' +
+            ", mSlug='" + mSlug + '\'' +
+            ", mContent='" + mContent + '\'' +
+            ", mAuthorEmail='" + mAuthorEmail + '\'' +
+            ", mAuthorRealname='" + mAuthorRealname + '\'' +
+            ", mStatus='" + mStatus + '\'' +
+            ", mCreated=" + mCreated +
+            ", mUpdated=" + mUpdated +
+            ", mDeploymentId=" + mDeploymentId +
+            ", mValues=" + mValues +
+            ", mTags=" + mTags +
+            '}';
     }
 }

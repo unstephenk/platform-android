@@ -34,7 +34,7 @@ public interface IPostRepository extends ISearchRepository<Post> {
      *
      * @param post         The Post to be saved.
      * @param postCallback A {@link PostAddCallback} used for notifying clients about
-     *                           the status of the operation.
+     *                     the status of the operation.
      * @author Ushahidi Team <team@ushahidi.com>
      */
     void putPost(Post post, PostAddCallback postCallback);
@@ -43,27 +43,29 @@ public interface IPostRepository extends ISearchRepository<Post> {
      * Get a list of {@link com.ushahidi.android.core.entity.Post}.
      *
      * @param postListCallback A {@link PostListCallback} used for notifying clients
-     *                               about the status of the operation.
+     *                         about the status of the operation.
+     * @param deploymentId     An {@link com.ushahidi.android.core.entity.Deployment}
      */
-    void getPostList(PostListCallback postListCallback);
+    void getPostList(long deploymentId, PostListCallback postListCallback);
 
     /**
      * Get a list of {@link com.ushahidi.android.core.entity.Post}.
      *
      * @param postListCallback A {@link PostListCallback} used for notifying clients
-     *                               about the status of the operation.
+     *                         about the status of the operation.
+     * @param deploymentId     An ID of {@link com.ushahidi.android.core.entity.Deployment}
      */
-    void getPostListViaApi(final PostListCallback postListCallback);
+    void getPostListViaApi(long deploymentId, final PostListCallback postListCallback);
 
     /**
      * Get an {@link com.ushahidi.android.core.entity.Post} by id.
      *
      * @param postId              The post id used for retrieving post data.
      * @param postDetailsCallback A {@link PostDetailsCallback} used for notifying
-     *                                  clients about the status of the operation.
+     *                            clients about the status of the operation.
      */
     void getPostById(final long postId,
-            PostDetailsCallback postDetailsCallback);
+                     PostDetailsCallback postDetailsCallback);
 
     /**
      * Delete a {@link com.ushahidi.android.core.entity.Post}

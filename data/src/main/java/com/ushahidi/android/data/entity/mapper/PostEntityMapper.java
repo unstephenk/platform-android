@@ -33,11 +33,8 @@ public class PostEntityMapper {
 
     private TagEntityMapper mTagEntityMapper;
 
-    private UserEntityMapper mUserEntityMapper;
-
     public PostEntityMapper() {
         mTagEntityMapper = new TagEntityMapper();
-        mUserEntityMapper = new UserEntityMapper();
     }
 
     /**
@@ -45,7 +42,7 @@ public class PostEntityMapper {
      * com.ushahidi.android.core.entity.Post}
      *
      * @param postEntity The {@link com.ushahidi.android.data.entity.PostEntity} to be
-     *                         mapped
+     *                   mapped
      * @return The {@link com.ushahidi.android.core.entity.Post} entity
      */
     public Post map(PostEntity postEntity) {
@@ -65,6 +62,7 @@ public class PostEntityMapper {
             post.setAuthorRealname(postEntity.getAuthorRealname());
             post.setContent(postEntity.getContent());
             post.setStatus(postEntity.getStatus());
+            post.setDeploymentId(postEntity.getDeploymentId());
 
         }
 
@@ -88,6 +86,7 @@ public class PostEntityMapper {
             postEntity.setAuthorRealname(post.getAuthorRealname());
             postEntity.setContent(post.getContent());
             postEntity.setStatus(post.getStatus());
+            postEntity.setDeploymentId(post.getDeploymentId());
         }
         return postEntity;
     }

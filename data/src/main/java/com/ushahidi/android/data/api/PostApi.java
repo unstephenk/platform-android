@@ -17,14 +17,12 @@
 
 package com.ushahidi.android.data.api;
 
-import com.google.common.base.Preconditions;
+import android.content.Context;
 
+import com.google.common.base.Preconditions;
 import com.ushahidi.android.data.api.model.Posts;
 import com.ushahidi.android.data.api.service.PostService;
 import com.ushahidi.android.data.exception.NetworkConnectionException;
-
-import android.content.Context;
-import android.util.Log;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
