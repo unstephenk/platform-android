@@ -17,6 +17,6 @@
   -->
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
                        android:accountType="com.ushahidi.android.account"
-                       android:icon="@drawable/ic_launcher"
-                       android:smallIcon="@drawable/ic_launcher"
+                       android:icon="@drawable/ic_launcher_ushahidi"
+                       android:smallIcon="@drawable/ic_launcher_ushahidi"
                        android:label="@string/app_name"/>
