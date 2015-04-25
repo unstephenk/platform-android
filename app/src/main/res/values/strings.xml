@@ -21,7 +21,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
 
-    <string name="app_name">Ushahidi Android</string>
+    <string name="app_name_ushahidi">Ushahidi</string>
 
     <string name="empty_list">Empty list.</string>
     <string name="required_field_error">This field is required.</string>

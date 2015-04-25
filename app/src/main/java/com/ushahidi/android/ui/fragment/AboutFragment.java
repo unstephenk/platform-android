@@ -79,7 +79,7 @@ public class AboutFragment extends BaseFragment {
             inFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date buildTime = inFormat.parse(BuildConfig.BUILD_TIME);
             bBuilder.append(DATE_DISPLAY_FORMAT.format(buildTime));
-            buildDateView.setText(bBuilder.toString());
+            buildDateView.setText(bBuilder.toString() + "Test");
         } catch (ParseException e) {
             throw new RuntimeException("Unable to decode build time: " + BuildConfig.BUILD_TIME,
                     e);

@@ -25,11 +25,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/app_name"
+            android:text="Ushahidi"
             android:layout_gravity="center"
             android:id="@+id/app_name"
             android:textSize="@dimen/text_size_xlarge"
             android:textIsSelectable="false"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/current_device"
+            android:layout_gravity="center"
+            android:text="Device Information" />
 
     <TextView
             android:layout_width="wrap_content"
@@ -44,4 +52,5 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/build_date"
             android:layout_gravity="center"/>
+
 </LinearLayout>

@@ -103,7 +103,7 @@ public class SendFeedbackPresenter implements IPresenter {
                     mContext.getString(R.string.device_brand) + ": " + Build.BRAND + "\n" + // Brand
                     mContext.getString(R.string.device_os) + ": v" + Build.VERSION.RELEASE + " ("
                     + Build.VERSION.INCREMENTAL + ")\n" + // OS
-                    mContext.getString(R.string.app_name) + ": " + packageInfo.versionName;
+                    mContext.getString(R.string.app_name_ushahidi) + ": " + packageInfo.versionName;
         } catch (Exception e) {
             mView.showError(mContext.getString(R.string.could_not_get_device_info));
         }
